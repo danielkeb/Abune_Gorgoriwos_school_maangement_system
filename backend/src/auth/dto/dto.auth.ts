@@ -13,7 +13,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   middle_name: string;
-
   @IsNotEmpty()
   @IsString()
   last_name: string;
