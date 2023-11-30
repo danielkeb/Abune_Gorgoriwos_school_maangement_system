@@ -33,4 +33,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   phone: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+
 }
