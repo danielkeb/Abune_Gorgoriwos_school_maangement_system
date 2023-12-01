@@ -51,23 +51,23 @@ model User {
 }
 
 model Teacher {
-  id              Int    @id @default(autoincrement())
+  // id              Int    @id @default(autoincrement())
   education_level String
 
-  user_Id Int
+  user_Id Int @id
   user    User @relation(fields: [user_Id], references: [id])
 
   @@map("teachers")
 }
 
 model Student {
-  id              Int     @id @default(autoincrement())
+  // id              Int     @id @default(autoincrement())
   enrollment_date String
   careof_contact1 String
   careof_contact2 String?
   grade           Int
 
-  user_Id Int
+  user_Id Int @id
   user    User @relation(fields: [user_Id], references: [id])
 
   @@map("students")
