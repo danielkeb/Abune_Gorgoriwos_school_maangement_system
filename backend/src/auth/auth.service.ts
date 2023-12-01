@@ -6,14 +6,19 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto, DtoSignin } from './dto';
 import * as argon from 'argon2';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt/dist';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Injectable()
 export class AuthService {
-  constructor(private prismaService: PrismaService) {}
-  async signUp(school_id, dto: CreateUserDto) {
+  constructor(
+    private prismaService: PrismaService,
+    private config: ConfigService,
+    private jwt: JwtService,
+  ) {}
+  async signUp(school_id: number, dto: CreateUserDto) {
     const hash = await argon.hash(dto.password);
-
     const findUser = await this.prismaService.user.findUnique({
       where: {
         email: dto.email,
@@ -49,8 +54,33 @@ export class AuthService {
       throw new ForbiddenException('Username or password Incorrect!');
     }
 
-    return 'User Loged IN';
+    return this.signToken(user.email, user.id, user.role);
+  }
 
-    return user;
+  async signToken(
+    email: string,
+    id: number,
+    role: string,
+  ): Promise<{ token_access: string }> {
+    const payLoad = {
+      sub: id,
+      email,
+      role,
+    };
+    const hide = this.config.get('JWT_SECRET');
+
+    //  ,{
+    //   expiresIn:"15m",
+    //   secret:hide
+    //  }
+
+    const token = await this.jwt.signAsync(payLoad, {
+      expiresIn: '40m',
+      secret: hide,
+    });
+
+    return {
+      token_access: token,
+    };
   }
 }
