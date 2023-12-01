@@ -1,35 +1,48 @@
-import { Injectable,ForbiddenException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotAcceptableException,
+  
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto, DtoSignin } from './dto';
 import * as argon from 'argon2'
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from "@nestjs/jwt/dist";
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 
 @Injectable()
 export class AuthService {
   constructor(private prismaService: PrismaService, private config:ConfigService,  private jwt: JwtService ) {}
   async signUp(school_id:number, dto: CreateUserDto) {
-
-    const hash= await argon.hash(dto.password)
+     const hash= await argon.hash(dto.password)
+    const findUser = await this.prismaService.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (findUser) {
+      throw new NotAcceptableException('user already exist');
+    }
     const addUser = await this.prismaService.user.create({
       data: {
         school_Id: school_id,
-      ...dto,
-       password:hash
-        
-      
+        ...dto,
+        password: hash,
       },
     });
-    return addUser;
+    if (addUser) {
+      return addUser;
+    } else {
+      throw new ExceptionsHandler();
+    }
   }
 
-
-  async signIn(dto:DtoSignin){
-
+  async signIn(dto: DtoSignin) {
     const user = await this.prismaService.user.findUnique({
       where: {
-        email: dto.email
+        email: dto.email,
       },
     })
        if(!user) throw new ForbiddenException("User NOt found!");
