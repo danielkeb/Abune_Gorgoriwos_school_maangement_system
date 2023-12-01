@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   IsEmail,
   IsInt,
@@ -5,6 +6,9 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+=======
+import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+>>>>>>> 432a02fbb77cd2311d9370708dd1d844b91d587f
 
 export class DtoStudent {
   @IsNotEmpty()

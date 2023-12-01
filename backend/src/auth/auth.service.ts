@@ -76,7 +76,7 @@ export class AuthService {
           grade: dto.grade,
         },
       });
-      return student;
+      return {addUser,student};
     } else if (dto.role === 'teacher') {
       const teacher = await this.prismaService.teacher.create({
         data: {
@@ -84,7 +84,7 @@ export class AuthService {
           education_level: dto.education_level,
         },
       });
-      return teacher;
+      return {addUser,teacher};
     }
 
     if (addUser) {
