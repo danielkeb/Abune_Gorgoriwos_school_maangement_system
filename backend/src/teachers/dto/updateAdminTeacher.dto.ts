@@ -1,31 +1,31 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class UpdateAdminDto {
-  @IsOptional()
+export class UpdateAdminTeacherDto {
   @IsString()
-  @IsEmail()
-  email?: string;
+  @IsOptional()
+  phone?: string;
 
-  @IsOptional()
   @IsString()
-  frist_name?: string;
-
   @IsOptional()
-  @IsString()
-  middle_name?: string;
-  @IsOptional()
-  @IsString()
-  last_name?: string;
-
-  @IsOptional()
-  @IsString()
-  address?: string;
-
-  @IsOptional()
-  @IsString()
   username?: string;
 
-  @IsOptional()
   @IsString()
-  phone?: string;
+  @IsOptional()
+  education_level?: string;
+
+  @IsString()
+  @IsOptional()
+  first_name?: string;
+
+  @IsString()
+  @IsOptional()
+  last_name?: string;
+
+  @IsString()
+  @IsOptional()
+  middle_name?: string;
+
+  @IsString()
+  @IsOptional()
+  address?: string;
 }
