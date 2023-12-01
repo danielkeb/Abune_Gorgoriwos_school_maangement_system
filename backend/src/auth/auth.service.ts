@@ -2,10 +2,13 @@ import { Injectable,ForbiddenException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto, DtoSignin } from './dto';
 import * as argon from 'argon2'
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from "@nestjs/jwt/dist";
+
 
 @Injectable()
 export class AuthService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prismaService: PrismaService, private config:ConfigService,  private jwt: JwtService ) {}
   async signUp(school_id:number, dto: CreateUserDto) {
 
     const hash= await argon.hash(dto.password)
@@ -40,13 +43,39 @@ export class AuthService {
        }
   
       
-        return  "User Loged IN"
+       
   
      
     
   
       
-        return   user
+        
+        return this.signToken(user.email, user.id,user.role)
     
   }
+
+  async signToken(email:string, id:number,role:string):Promise<{token_access:string}> {
+    const payLoad= {
+     sub:id,
+     email,
+     role
+    }
+    const hide= this.config.get('JWT_SECRET')
+
+   //  ,{
+   //   expiresIn:"15m",
+   //   secret:hide
+   //  }
+
+const token=  await this.jwt.signAsync(payLoad,{
+ expiresIn:'40m',
+ secret:hide
+})
+
+    return {
+     token_access:token
+    }
+
+    
+   }
 }

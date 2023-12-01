@@ -9,4 +9,8 @@ export class SchoolsController {
   schoolRegistered(@Body() dto: DtoSchool) {
     return this.schoolService.schoolRegistered(dto);
   }
+  @Post('update:id')
+  schoolUpdate(){
+
+  }
 }

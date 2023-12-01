@@ -9,7 +9,6 @@ export class DtoSignin{
 
     @IsNotEmpty()
     @IsString()
-    @IsEmail()
     password: string;
 
 }
