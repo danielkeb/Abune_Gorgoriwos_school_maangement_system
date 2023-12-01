@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class DtoStudent {
   @IsNotEmpty()
@@ -50,7 +56,7 @@ export class DtoStudent {
   careOf_contact2?: string;
 
   @IsOptional()
-  @IsString()
+  @IsInt()
   grade?: number;
 
   @IsOptional()
