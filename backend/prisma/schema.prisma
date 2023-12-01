@@ -36,6 +36,7 @@ model User {
   role        String
   address     String?
   phone       String
+  password    String
 
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
