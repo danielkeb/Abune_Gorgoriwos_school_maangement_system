@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DtoSchool } from './dto';
 
@@ -12,5 +12,21 @@ export class SchoolsService {
       },
     });
     return school;
+  }
+  async schoolUpdate(id: number, dto: DtoSchool) {
+    const school = await this.prisamService.school.findUnique({
+      where: { id: id },
+    });
+
+    if (!school || school.id === id) {
+      throw new ForbiddenException('Access to resources denied');
+    }
+    const updateSchool = await this.prisamService.school.update({
+      where: { id: id },
+      data: {
+        ...dto,
+      },
+    });
+    return updateSchool;
   }
 }

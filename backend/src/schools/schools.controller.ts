@@ -1,7 +1,17 @@
-import { Controller, Body, Post } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Post,
+  UseGuards,
+  ParseIntPipe,
+  Param,
+  Patch,
+} from '@nestjs/common';
 import { SchoolsService } from './schools.service';
 import { DtoSchool } from './dto';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('schools')
 export class SchoolsController {
   constructor(private schoolService: SchoolsService) {}
@@ -9,6 +19,8 @@ export class SchoolsController {
   schoolRegistered(@Body() dto: DtoSchool) {
     return this.schoolService.schoolRegistered(dto);
   }
-  @Post('update:id')
-  schoolUpdate() {}
+  @Patch('update/:id')
+  schoolUpdate(@Param('id', ParseIntPipe) id: number, @Body() dto: DtoSchool) {
+    return this.schoolService.schoolUpdate(id, dto);
+  }
 }

@@ -4,7 +4,7 @@ import {
   NotAcceptableException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto, DtoSignin } from './dto';
+import { DtoSignin, DtoStudent } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt/dist';
@@ -17,7 +17,31 @@ export class AuthService {
     private config: ConfigService,
     private jwt: JwtService,
   ) {}
-  async signUp(school_id: number, dto: CreateUserDto) {
+  // async signUp(school_id: number, dto: CreateUserDto) {
+  //   const hash = await argon.hash(dto.password);
+  //   const findUser = await this.prismaService.user.findUnique({
+  //     where: {
+  //       email: dto.email,
+  //     },
+  //   });
+  //   if (findUser) {
+  //     throw new NotAcceptableException('user already exist');
+  //   }
+  //   const addUser = await this.prismaService.user.create({
+  //     data: {
+  //       school_Id: school_id,
+  //       ...dto,
+  //       password: hash,
+  //     },
+  //   });
+  //   if (addUser) {
+  //     return addUser;
+  //   } else {
+  //     throw new ExceptionsHandler();
+  //   }
+  // }
+
+  async signUpStudent(school_id: number, dto: DtoStudent) {
     const hash = await argon.hash(dto.password);
     const findUser = await this.prismaService.user.findUnique({
       where: {
@@ -30,10 +54,39 @@ export class AuthService {
     const addUser = await this.prismaService.user.create({
       data: {
         school_Id: school_id,
-        ...dto,
+        frist_name: dto.frist_name,
+        middle_name: dto.middle_name,
+        email: dto.email,
+        last_name: dto.last_name,
+        role: dto.role,
+        address: dto.address,
+        username: dto.username,
+        phone: dto.phone,
         password: hash,
       },
     });
+
+    if (dto.role === 'student') {
+      const student = await this.prismaService.student.create({
+        data: {
+          user_Id: addUser.id,
+          enrollment_date: dto.enrollment_date,
+          careof_contact1: dto.careOf_contact1,
+          careof_contact2: dto.careOf_contact2,
+          grade: dto.grade,
+        },
+      });
+      return student;
+    } else if (dto.role === 'teacher') {
+      const teacher = await this.prismaService.teacher.create({
+        data: {
+          user_Id: addUser.id,
+          education_level: dto.education_level,
+        },
+      });
+      return teacher;
+    }
+
     if (addUser) {
       return addUser;
     } else {
