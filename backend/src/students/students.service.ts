@@ -24,7 +24,7 @@ export class StudentsService {
       },
     });
     const studentTable = await this.prismaService.teacher.update({
-      where: { id: studentId },
+      where: { user_Id: studentId },
       data: {
         education_level: dto.education_level,
       },
