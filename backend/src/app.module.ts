@@ -4,6 +4,8 @@ import { UsersModule } from './users/users.module';
 import { TeachersModule } from './teachers/teachers.module';
 import { StudentsModule } from './students/students.module';
 import { AuthModule } from './auth/auth.module';
+import { SubjectsModule } from './subjects/subjects.module';
+import { ServiceController } from './service/service.controller';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { AuthModule } from './auth/auth.module';
     TeachersModule,
     StudentsModule,
     AuthModule,
+    SubjectsModule,
   ],
+  controllers: [ServiceController],
 })
 export class AppModule {}

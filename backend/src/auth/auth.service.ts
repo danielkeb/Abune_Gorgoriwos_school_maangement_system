@@ -73,7 +73,8 @@ export class AuthService {
           enrollment_date: dto.enrollment_date,
           careof_contact1: dto.careOf_contact1,
           careof_contact2: dto.careOf_contact2,
-          grade: dto.grade,
+          gradeId:5
+       
         },
       });
       return {addUser,student};
