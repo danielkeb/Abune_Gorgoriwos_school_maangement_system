@@ -21,7 +21,7 @@ export class StudentsController {
   ) {
     return this.studentsService.studentUpdate(id, dto);
   }
-  @Patch('updateStudent')
+  @Patch('updateStudent/:id')
   updateStudentByAdmin(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: DtoAdmin,

@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DtoSchool } from './dto';
 
@@ -18,15 +18,12 @@ export class SchoolsService {
       where: { id: id },
     });
 
-    if (!school || school.id === id) {
-      throw new ForbiddenException('Access to resources denied');
-    }
     const updateSchool = await this.prisamService.school.update({
       where: { id: id },
       data: {
         ...dto,
       },
     });
-    return updateSchool;
+    return { updateSchool, school };
   }
 }
