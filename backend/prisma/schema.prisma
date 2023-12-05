@@ -55,6 +55,9 @@ model Teacher {
 
   user_Id Int  @id
   user    User @relation(fields: [user_Id], references: [id])
+   result Result[]
+ subject Subject[]
+ gradelevel GradeLevel[]
 
 createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
@@ -67,13 +70,60 @@ model Student {
   enrollment_date String
   careof_contact1 String
   careof_contact2 String?
-  grade           Int
 
   user_Id Int  @id
   user    User @relation(fields: [user_Id], references: [id])
 
-createdAT DateTime @default(now())
-  updatedAT DateTime @updatedAt
+  gradelevel     GradeLevel  @relation(fields: [gradeId], references: [id])
+  gradeId   Int
+  subject Subject[]
+  result Result[]
 
   @@map("students")
+}
+
+model GradeLevel {
+  id      Int      @id @default(autoincrement())
+  grade   String
+  section String
+  student Student[]
+  subject Subject[]
+ result Result[]
+  teacher    Teacher    @relation(fields: [teacherId], references: [ user_Id])   
+   teacherId  Int 
+  // other fields specific to GradeLevel
+}
+
+model Subject {
+  id   Int    @id @default(autoincrement())
+  name String
+  // other fields specific to Subject
+    student Student[]
+     result Result[]
+  teacher    Teacher    @relation(fields: [teacherId], references: [ user_Id])   
+    teacherId  Int  
+
+  gradelevel GradeLevel[]
+}
+
+model Result {
+  id     Int @id @default(autoincrement())
+  assignmentScore Int
+  midtermScore Int
+  finalExamScore Int
+  totalScore Int
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [user_Id])
+
+  subjectId Int
+  subject   Subject @relation(fields: [subjectId], references: [id])
+
+  gradeLevelId Int
+  gradeLevel   GradeLevel @relation(fields: [gradeLevelId], references: [id])
+
+  teacherId Int
+  teacher   Teacher @relation(fields: [teacherId], references: [user_Id])
+
+  @@map("results")
 }
