@@ -19,6 +19,7 @@ export class DtoStudent {
   @IsNotEmpty()
   @IsString()
   middle_name: string;
+
   @IsNotEmpty()
   @IsString()
   last_name: string;
@@ -57,7 +58,7 @@ export class DtoStudent {
 
   @IsOptional()
   @IsInt()
-  grade?: number;
+  gradeId?: number;
 
   @IsOptional()
   @IsString()

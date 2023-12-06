@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // schools.controller.ts
 // import {
 //   Controller,
@@ -44,7 +45,6 @@ import { SchoolsService } from './schools.service';
 import { DtoSchool } from './dto';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 
-@UseGuards(JwtGuard)
 @Controller('schools')
 export class SchoolsController {
   constructor(private schoolService: SchoolsService) {}

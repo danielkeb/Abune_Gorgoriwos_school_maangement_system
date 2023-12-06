@@ -6,6 +6,7 @@ import { StudentsModule } from './students/students.module';
 import { AuthModule } from './auth/auth.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { ServiceController } from './service/service.controller';
+import { GradeLevelModule } from './grade-level/grade-level.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ServiceController } from './service/service.controller';
     StudentsModule,
     AuthModule,
     SubjectsModule,
+    GradeLevelModule,
   ],
   controllers: [ServiceController],
 })

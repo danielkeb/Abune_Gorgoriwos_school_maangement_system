@@ -73,9 +73,10 @@ model Student {
 
   user_Id Int  @id
   user    User @relation(fields: [user_Id], references: [id])
-
-  gradelevel     GradeLevel  @relation(fields: [gradeId], references: [id])
+  
   gradeId   Int
+  gradelevel     GradeLevel  @relation(fields: [gradeId], references: [id])
+  
   subject Subject[]
   result Result[]
 

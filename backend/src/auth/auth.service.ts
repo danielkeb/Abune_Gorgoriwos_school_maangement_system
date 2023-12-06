@@ -73,11 +73,10 @@ export class AuthService {
           enrollment_date: dto.enrollment_date,
           careof_contact1: dto.careOf_contact1,
           careof_contact2: dto.careOf_contact2,
-          gradeId:5
-       
+          gradeId: dto.gradeId,
         },
       });
-      return {addUser,student};
+      return { addUser, student };
     } else if (dto.role === 'teacher') {
       const teacher = await this.prismaService.teacher.create({
         data: {
@@ -85,7 +84,7 @@ export class AuthService {
           education_level: dto.education_level,
         },
       });
-      return {addUser,teacher};
+      return { addUser, teacher };
     }
 
     if (addUser) {
