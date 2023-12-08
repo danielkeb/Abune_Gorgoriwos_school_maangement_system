@@ -58,7 +58,7 @@ export class DtoStudent {
 
   @IsOptional()
   @IsInt()
-  gradeId?: number;
+  gradeId: number;
 
   @IsOptional()
   @IsString()

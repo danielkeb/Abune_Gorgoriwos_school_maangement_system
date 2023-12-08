@@ -5,8 +5,8 @@ import { TeachersModule } from './teachers/teachers.module';
 import { StudentsModule } from './students/students.module';
 import { AuthModule } from './auth/auth.module';
 import { SubjectsModule } from './subjects/subjects.module';
-import { ServiceController } from './service/service.controller';
 import { GradeLevelModule } from './grade-level/grade-level.module';
+import { ResultModule } from './result/result.module';
 
 @Module({
   imports: [
@@ -17,7 +17,8 @@ import { GradeLevelModule } from './grade-level/grade-level.module';
     AuthModule,
     SubjectsModule,
     GradeLevelModule,
+    ResultModule,
   ],
-  controllers: [ServiceController],
+  
 })
 export class AppModule {}

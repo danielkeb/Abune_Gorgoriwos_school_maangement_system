@@ -6,16 +6,30 @@ import { GradeLevel } from './dto';
 export class GradeLevelService {
   constructor(private prismaService: PrismaService) {}
   async addGradeLevel(id: number, dto: GradeLevel) {
-    const addGrade = this.prismaService.gradeLevel.create({
-      data: {
-        grade: dto.grade,
-        section: dto.section,
-        teacherId: dto.teacher_id,
-      },
+    //check if the Teacher existd!
+    const findTeacher = await this.prismaService.teacher.findUnique({
+      where: { user_Id: dto.teacher_id },
     });
-    return addGrade;
+
+    if (findTeacher) {
+      //If  Teacher existed we create the gradeLevel
+      const addGrade = await this.prismaService.gradeLevel.create({
+        data: {
+          grade: dto.grade,
+          section: dto.section,
+          teacherId: dto.teacher_id,
+        },
+      });
+      return addGrade;
+    } else {
+      //We return error message!
+      return {
+        msg: 'Please Insert a vald Teacher Id',
+      };
+    }
   }
   async updateGradeLevel(gradeId: number, dto: GradeLevel) {
+    // update the gradeLevel
     const updateGrade = await this.prismaService.gradeLevel.update({
       where: {
         id: gradeId,

@@ -67,6 +67,7 @@ export class AuthService {
     });
 
     if (dto.role === 'student') {
+  
       const student = await this.prismaService.student.create({
         data: {
           user_Id: addUser.id,
@@ -76,7 +77,8 @@ export class AuthService {
           gradeId: dto.gradeId,
         },
       });
-      return { addUser, student };
+      const quickSelect= await this.prismaService.student.findUnique({where:{user_Id:addUser.id},include:{user:true, }})
+      return { msg:"student registered", data:quickSelect };
     } else if (dto.role === 'teacher') {
       const teacher = await this.prismaService.teacher.create({
         data: {
@@ -100,7 +102,7 @@ export class AuthService {
         email: dto.email,
       },
     });
-    if (!user) throw new ForbiddenException('User NOt found!');
+    if (!user) throw new ForbiddenException('User Not found!');
 
     const pwMatches = await argon.verify(user.password, dto.password);
     if (!pwMatches) {
