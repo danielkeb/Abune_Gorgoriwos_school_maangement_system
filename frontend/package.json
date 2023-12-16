@@ -1,27 +1,59 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "private": true,
+  "name": "tokyo-free-black-nextjs-admin-dashboard",
+  "version": "1.0.0",
+  "title": "Tokyo Free Black NextJS Typescript Admin Dashboard",
+  "description": "High performance React template built with lots of powerful MUI (Material-UI) components across multiple product niches for fast & perfect apps development processes",
+  "author": {
+    "name": "BloomUI.com",
+    "url": "https://bloomui.com"
+  },
+  "private": false,
+  "dependencies": {
+    "@emotion/cache": "11.7.1",
+    "@emotion/react": "11.9.0",
+    "@emotion/server": "11.4.0",
+    "@emotion/styled": "11.8.1",
+    "@mui/core": "5.0.0-alpha.54",
+    "@mui/icons-material": "5.8.2",
+    "@mui/lab": "5.0.0-alpha.84",
+    "@mui/material": "5.8.2",
+    "@mui/styles": "5.8.0",
+    "@types/node": "17.0.39",
+    "@types/nprogress": "0.2.0",
+    "@types/numeral": "2.0.2",
+    "@types/react": "17.0.40",
+    "@types/react-dom": "17.0.13",
+    "apexcharts": "3.35.3",
+    "axios": "^1.6.2",
+    "clsx": "1.1.1",
+    "context-api": "0.0.2",
+    "date-fns": "2.28.0",
+    "i": "^0.3.7",
+    "next": "12.1.6",
+    "next-images": "1.8.4",
+    "nprogress": "0.2.0",
+    "numeral": "2.0.6",
+    "react": "17.0.2",
+    "react-apexcharts": "1.4.0",
+    "react-custom-scrollbars-2": "4.4.0",
+    "react-dom": "17.0.2",
+    "typescript": "4.7.3"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.0.3"
+    "export": "next export",
+    "lint": "next lint",
+    "lint-fix": "next lint --fix",
+    "format": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\" --config ./.prettierrc"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "postcss": "^8",
-    "tailwindcss": "^3.3.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.3"
+    "eslint": "8.17.0",
+    "eslint-config-next": "12.1.6",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "next-transpile-modules": "9.0.0",
+    "prettier": "2.6.2"
   }
 }
