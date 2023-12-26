@@ -19,6 +19,5 @@ import { ResultModule } from './result/result.module';
     GradeLevelModule,
     ResultModule,
   ],
-  
 })
 export class AppModule {}
