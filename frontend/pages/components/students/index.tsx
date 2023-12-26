@@ -54,7 +54,7 @@ function Students() {
         return;
       }
 
-      const response = await axios.post('http://localhost:3333/signUp', formData);
+      const response = await axios.post('http://localhost:3333/auth/signUp/2', formData);
 
       console.log('Registration successful:', response.data);
       // You might want to redirect the user to another page or show a success message

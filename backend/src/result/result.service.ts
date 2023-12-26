@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AddResultkDto } from './dto';
+import { AddResultkDto, UpdateResultDto } from './dto';
 
 @Injectable()
 export class ResultService {
@@ -18,6 +18,17 @@ export class ResultService {
             msg:"Result Created!",
             data: marksheet
         }
+    }
+
+    async updateMark(dto:UpdateResultDto, resultId:number){
+        const marksheet= await this.prisma.result.update({where:{id:resultId}, data:{...dto}})
+
+
+        return {
+            msg:"Marksheet Updated",
+            data:marksheet
+        }
+       
     }
 }
 
