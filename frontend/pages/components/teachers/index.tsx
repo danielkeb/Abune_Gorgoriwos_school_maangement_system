@@ -29,7 +29,6 @@ function Teachers() {
     username: '',
     phone: '',
     password: '',
-    gradeId: 0,
     education_level: '',
   });
 
@@ -42,18 +41,27 @@ function Teachers() {
     });
   };
 
+  const validateForm = () => {
+    const requiredFields = ['username', 'password', 'email', 'frist_name', 'last_name'];
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        setError(`Please enter ${field.replace('_', ' ')}.`);
+        return false;
+      }
+    }
+    setError('');
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      return;
+    }
+
     try {
-      // Perform any additional validation if needed
-      if (!formData.username || !formData.password) {
-        setError('Please enter both username and password.');
-        return;
-      }
-
       const response = await axios.post('http://localhost:3333/auth/signUp/3', formData);
-
       console.log('Registration successful:', response.data);
       // You might want to redirect the user to another page or show a success message
     } catch (error) {
@@ -87,7 +95,7 @@ function Teachers() {
               <CardHeader title="Teacher register form" />
               <Divider />
               <CardContent>
-                <form onSubmit={handleSubmit}>
+                
                   <Box
                     component="form"
                     sx={{
@@ -95,6 +103,7 @@ function Teachers() {
                     }}
                     noValidate
                     autoComplete="off"
+                    onSubmit={handleSubmit}
                   >
                     <TextField
                       required
@@ -169,15 +178,6 @@ function Teachers() {
                       value={formData.password}
                       onChange={(e) => handleFieldChange('password', e.target.value)}
                     />
-                   
-                    <TextField
-                      id="gradeId"
-                      label="Grade ID"
-                      type="number"
-                      variant="outlined"
-                      value={formData.gradeId}
-                      onChange={(e) => handleFieldChange('gradeId', e.target.value)}
-                    />
                     <TextField
                       id="education_level"
                       label="Education Level"
@@ -185,14 +185,15 @@ function Teachers() {
                       value={formData.education_level}
                       onChange={(e) => handleFieldChange('education_level', e.target.value)}
                     />
-                  </Box>
-                  <Button type="submit" variant="contained" color="primary">
+                      <Button type="submit" variant="contained" color="primary">
                     Register
                   </Button>
 
                   {/* Error message */}
                   {error && <p style={{ color: 'red' }}>{error}</p>}
-                </form>
+                  </Box>
+                
+                
               </CardContent>
             </Card>
           </Grid>

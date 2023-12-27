@@ -32,15 +32,18 @@ function Students() {
     enrollment_date: '',
     careOf_contact1: '',
     careOf_contact2: '',
-    gradeId: 0,
+    gradeId: '',
   });
 
   const [error, setError] = useState('');
 
   const handleFieldChange = (field, value) => {
+    const parsedValue = field === 'gradeId' ? parseInt(value, 10) || '' : value;
+
     setFormData({
       ...formData,
       [field]: value,
+      [field]: parsedValue,
     });
   };
 
@@ -49,7 +52,7 @@ function Students() {
 
     try {
       // Perform any additional validation if needed
-      if (!formData.username || !formData.password) {
+      if (!formData.username || !formData.password || !formData.enrollment_date || !formData.careOf_contact1 || !formData.address || !formData.username) {
         setError('Please enter both username and password.');
         return;
       }
@@ -89,7 +92,6 @@ function Students() {
               <CardHeader title="students register form" />
               <Divider />
               <CardContent>
-                <form onSubmit={handleSubmit}>
                   <Box
                     component="form"
                     sx={{
@@ -97,6 +99,7 @@ function Students() {
                     }}
                     noValidate
                     autoComplete="off"
+                    onSubmit={handleSubmit}
                   >
                     <TextField
                       required
@@ -200,14 +203,15 @@ function Students() {
                       value={formData.gradeId}
                       onChange={(e) => handleFieldChange('gradeId', e.target.value)}
                     />
-                  </Box>
-                  <Button type="submit" variant="contained" color="primary">
+                      <Button type="submit" variant="contained" color="primary">
                     Register
                   </Button>
 
                   {/* Error message */}
                   {error && <p style={{ color: 'red' }}>{error}</p>}
-                </form>
+                  </Box>
+                
+           
               </CardContent>
             </Card>
           </Grid>
