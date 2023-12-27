@@ -4,44 +4,36 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
-const AddSchools = () => {
-  const [schoolName, setSchoolName] = useState('');
-  const [schoolAddress, setSchoolAddress] = useState('');
-  const [schoolPhone, setSchoolPhone] = useState('');
+const AddClass = () => {
+  const [GradeName, setGradeName] = useState('');
+  const [sectionName, setSectionName] = useState('');
+  const [Id, setId] = useState('');
   const [error,] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     // Perform validation if needed
-    if (!schoolName || !schoolAddress || !schoolPhone) {
+    if (!GradeName || !sectionName || !Id) {
       console.error('Validation failed: All fields are required.');
       return;
     }
-    
-  
-    // Prepare data for API request
-    // const formData = {
-    //   school_name: schoolName,
-    //   school_address: schoolAddress,
-    //   school_phone: schoolPhone,
-    // };
   
     try {
       // Make a POST request to the Nest.js API endpoint
-      const response = await axios.post('http://localhost:3333/schools/register',{
-        school_name: schoolName,
-        school_address: schoolAddress,
-        school_phone: schoolPhone,
+      const response = await axios.post('http://localhost:3333/grade/add',{
+        grade: GradeName,
+        section: sectionName,
+        teacher_id: parseInt(Id),
       });
       
       // Handle the response as needed (e.g., show success or error message)
       if (response.status === 201) {
         console.log('School registered successfully');
         // Reset form fields if needed
-        setSchoolName('');
-        setSchoolAddress('');
-        setSchoolPhone('');
+        setGradeName('');
+        setSectionName('');
+        setId('');
       } else {
         console.error('Error registering school:', response.statusText);
       }
@@ -63,25 +55,25 @@ const AddSchools = () => {
     >
       <div>
         <TextField
-          id="schoolName"
-          label="School Name"
+          id="GradeName"
+          label="Class"
           variant="outlined"
-          value={schoolName}
-          onChange={(e) => setSchoolName(e.target.value)}
+          value={GradeName}
+          onChange={(e) => setGradeName(e.target.value)}
         />
         <TextField
-          id="schoolAddress"
-          label="School Address"
+          id="sectionName"
+          label="Section"
           variant="outlined"
-          value={schoolAddress}
-          onChange={(e) => setSchoolAddress(e.target.value)}
+          value={sectionName}
+          onChange={(e) => setSectionName(e.target.value)}
         />
         <TextField
-          id="schoolPhone"
-          label="School Phone"
+          id="Id"
+          label="teacher id"
           variant="outlined"
-          value={schoolPhone}
-          onChange={(e) => setSchoolPhone(e.target.value)}
+          value={Id}
+          onChange={(e) => setId(e.target.value)}
         />
       </div>
       <div>
@@ -91,7 +83,7 @@ const AddSchools = () => {
         {/* Add other form fields as needed */}
       </div>
       <Button type="submit" variant="contained" color="primary">
-        Register School
+        Add class
       </Button>
       
       {/* Display validation error */}
@@ -102,4 +94,4 @@ const AddSchools = () => {
   );
 };
 
-export default AddSchools;
+export default AddClass;
