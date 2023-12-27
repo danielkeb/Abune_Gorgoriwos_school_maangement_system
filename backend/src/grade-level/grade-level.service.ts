@@ -16,8 +16,7 @@ export class GradeLevelService {
       const addGrade = await this.prismaService.gradeLevel.create({
         data: {
           grade: dto.grade,
-          section: dto.section,
-          teacherId: dto.teacher_id,
+          teacherId: dto.teacher_id
         },
       });
       return addGrade;
@@ -36,10 +35,17 @@ export class GradeLevelService {
       },
       data: {
         grade: dto.grade,
-        section: dto.section,
         teacherId: dto.teacher_id,
       },
     });
     return updateGrade;
+  }
+
+  async getGradeLevel(){
+    const gradeLevel= await this.prismaService.gradeLevel.findMany({select:{id:true, section:true, grade:true}})
+
+    return gradeLevel;
+
+
   }
 }

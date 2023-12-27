@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -24,5 +25,11 @@ export class GradeLevelController {
     @Body() dto: GradeLevel,
   ) {
     return this.gradeLevelService.updateGradeLevel(gradeId, dto);
+  }
+
+  @Get("get")
+  getGradeLevel(){
+    return this.gradeLevelService.getGradeLevel()
+
   }
 }

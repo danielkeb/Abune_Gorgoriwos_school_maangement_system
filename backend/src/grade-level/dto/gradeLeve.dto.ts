@@ -5,9 +5,9 @@ export class GradeLevel {
   @IsString()
   grade: string;
 
-  @IsNotEmpty()
-  @IsString()
-  section: string;
+  // @IsNotEmpty()
+  // @IsInt()
+  // section_id: number;
 
   @IsNotEmpty()
   @IsInt()

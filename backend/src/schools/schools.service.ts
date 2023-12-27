@@ -26,4 +26,15 @@ export class SchoolsService {
     });
     return { updateSchool, school };
   }
+
+  async schoolsGet(){
+    const getSchool= await this.prisamService.school.findMany({select:{id:true, school_name:true, }})
+
+    return getSchool
+  }
+  async getSchoolById(id:number){
+    const singleSchool= await this.prisamService.school.findUnique({where:{id}, select:{id:true, school_name:true}})
+
+    return singleSchool;
+  }
 }
