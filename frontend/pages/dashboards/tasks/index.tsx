@@ -125,10 +125,10 @@ function DashboardTasks() {
       <Head>
         <title>Tasks Dashboard</title>
       </Head>
-      <PageTitleWrapper>
+      <PageTitleWrapper   >
         <PageHeader />
       </PageTitleWrapper>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" >
         <TabsContainerWrapper>
           <Tabs
             onChange={handleTabsChange}

@@ -22,11 +22,11 @@ import {
   styled
 } from '@mui/material';
 import { formatDistance, subMinutes, subHours } from 'date-fns';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
+// import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
+// import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import Label from 'src/components/Label';
-import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
-import AlarmTwoToneIcon from '@mui/icons-material/AlarmTwoTone';
+// import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
+// import AlarmTwoToneIcon from '@mui/icons-material/AlarmTwoTone';
 import Link from 'src/components/Link';
 
 const AvatarSuccess = styled(Avatar)(
@@ -152,7 +152,7 @@ function SidebarContent() {
               size="small"
               color="primary"
             >
-              <SettingsTwoToneIcon fontSize="small" />
+             
             </IconButton>
           </Box>
 
@@ -180,7 +180,7 @@ function SidebarContent() {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchTwoToneIcon />
+      
             </InputAdornment>
           )
         }}
@@ -367,7 +367,7 @@ function SidebarContent() {
               }}
             />
             <AvatarSuccess>
-              <CheckTwoToneIcon />
+      
             </AvatarSuccess>
             <Typography
               sx={{
@@ -403,7 +403,7 @@ function SidebarContent() {
         <Typography variant="h4">Daily Design Meeting</Typography>
 
         <Box py={3} display="flex" alignItems="flex-start">
-          <AlarmTwoToneIcon />
+
           <Box pl={1}>
             <Typography
               variant="subtitle2"
@@ -471,7 +471,7 @@ function SidebarContent() {
         <Typography variant="h4">Investors Council Meeting</Typography>
 
         <Box py={3} display="flex" alignItems="flex-start">
-          <AlarmTwoToneIcon />
+
           <Box pl={1}>
             <Typography
               variant="subtitle2"

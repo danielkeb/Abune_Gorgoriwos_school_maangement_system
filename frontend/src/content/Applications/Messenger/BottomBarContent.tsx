@@ -8,8 +8,8 @@ import {
   InputBase,
   useTheme
 } from '@mui/material';
-import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
-import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
+// import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
+// import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
 
 const MessageInputWrapper = styled(InputBase)(
   ({ theme }) => `
@@ -65,13 +65,11 @@ function BottomBarContent() {
         <Tooltip arrow placement="top" title="Attach a file">
           <label htmlFor="messenger-upload-file">
             <IconButton sx={{ mx: 1 }} color="primary" component="span">
-              <AttachFileTwoToneIcon fontSize="small" />
+             
             </IconButton>
           </label>
         </Tooltip>
-        <Button startIcon={<SendTwoToneIcon />} variant="contained">
-          Send
-        </Button>
+   
       </Box>
     </Box>
   );

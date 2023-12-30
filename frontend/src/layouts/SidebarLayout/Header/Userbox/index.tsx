@@ -12,16 +12,18 @@ import {
   List,
   ListItem,
   ListItemText,
+  MenuItem,
   Popover,
   Typography
 } from '@mui/material';
+import Link from 'next/link';
 
-import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
+// import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
-import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
+// import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+// import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -61,7 +63,7 @@ const UserBoxDescription = styled(Typography)(
 function HeaderUserbox() {
   const user = {
     name: 'Daniel kebede',
-    avatar: '/static/images/avatars/1.jpg',
+    avatar: '',
     jobtitle: 'super Admin'
   };
 
@@ -116,24 +118,33 @@ function HeaderUserbox() {
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
-          <NextLink href="/management/profile" passHref>
+          {/* <NextLink href="/management/profile" passHref>
             <ListItem button>
               <AccountBoxTwoToneIcon fontSize="small" />
               <ListItemText primary="My Profile" />
             </ListItem>
-          </NextLink>
-          <NextLink href="/applications/messenger" passHref>
-            <ListItem button>
-              <InboxTwoToneIcon fontSize="small" />
-              <ListItemText primary="Messenger" />
-            </ListItem>
-          </NextLink>
-          <NextLink href="/management/profile/settings" passHref>
+          </NextLink> */}
+          
+        <Link  href="/management/profile" style={{textDecoration:"none", color:"green"}}>
+        <MenuItem sx={{ px: 3 }} >
+          Profile
+          </MenuItem>
+          </Link>
+       
+     
+          {/* <NextLink href="/management/profile/settings" passHref>
             <ListItem button>
               <AccountTreeTwoToneIcon fontSize="small" />
               <ListItemText primary="Account Settings" />
             </ListItem>
-          </NextLink>
+          </NextLink> */}
+          
+        <Link  href="/management/profile/settings" style={{textDecoration:"none", color:"green"}}>
+        <MenuItem sx={{ px: 3 }} >
+          Account Setting
+          </MenuItem>
+          </Link>
+       
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>

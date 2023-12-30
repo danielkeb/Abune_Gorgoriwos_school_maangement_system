@@ -4,17 +4,28 @@ import '@mui/lab/themeAugmentation';
 // import i18n from 'src/i18n/i18n';
 
 const themeColors = {
-  primary: '#CB3C1D',
-  secondary: '#A1A1A1',
-  success: '#57CA22',
-  warning: '#FFA319',
-  error: '#FF1943',
-  info: '#33C2FF',
-  black: '#FFFFFF',
-  white: '#252525',
-  primaryAlt: '#090A0C',
-  trueWhite: '#ffffff'
+primary: '#44a574',
+secondary: '#000000',
+success: '#57CA22',
+warning: '#FFA319',
+error: '#FF1943',
+info: '#33C2FF',
+black: '#696969',
+white: '#FFFFFF',
+primaryAlt: '#F5FFFA',
+trueWhite: '#000000'
 };
+
+// primary: '#44a574',
+// secondary: '#a2a8ab',
+// success: '#57CA22',
+// warning: '#FFA319',
+// error: '#FF1943',
+// info: '#33C2FF',
+// black: '#696969',
+// white: '#252525',
+// primaryAlt: '#F5FFFA',
+// trueWhite: '#ffffff'
 
 const colors = {
   gradients: {
@@ -52,7 +63,7 @@ const colors = {
   },
   layout: {
     general: {
-      bodyBg: '#1C1C1C'
+      bodyBg: '#F2F2F2'
     },
     sidebar: {
       background: themeColors.primaryAlt,

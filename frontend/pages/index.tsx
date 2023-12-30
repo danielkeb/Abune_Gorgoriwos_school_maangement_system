@@ -4,7 +4,8 @@ import {
   Card,
   Container,
   Button,
-  styled
+  styled,
+  MenuItem
 } from '@mui/material';
 import type { ReactElement } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
@@ -14,6 +15,7 @@ import Head from 'next/head';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
+import SignIn from './login';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -36,7 +38,7 @@ const OverviewWrapper = styled(Box)(
 
 function Overview() {
   return (
-    <OverviewWrapper>
+    <OverviewWrapper >
       <Head>
         <title>Tokyo Free Black NextJS Typescript Admin Dashboard</title>
       </Head>
@@ -52,32 +54,21 @@ function Overview() {
             >
               <Box />
               <Box>
-                <Button
-                  component={Link}
-                  href="/dashboards/tasks"
-                  variant="contained"
-                  sx={{ ml: 2 }}
-                >
-                  Live Preview
-                </Button>
+               
+               <Link  href="/login" style={{textDecoration:"none",color:"green" }}>
+        <MenuItem sx={{ px: 3 }}  >
+                    
+                    Login
+                    </MenuItem>
+                    </Link>
               </Box>
             </Box>
           </Box>
         </Container>
       </HeaderWrapper>
       <Hero />
-      <Container maxWidth="lg" sx={{ mt: 8 }}>
-        <Typography textAlign="center" variant="subtitle1">
-          Crafted by{' '}
-          <Link
-            href="https://bloomui.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            BloomUI.com
-          </Link>
-        </Typography>
-      </Container>
+    
+     
     </OverviewWrapper>
   );
 }

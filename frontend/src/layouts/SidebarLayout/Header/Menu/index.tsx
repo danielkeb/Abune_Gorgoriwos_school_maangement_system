@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   List,
   ListItem,
   ListItemText,
@@ -8,8 +9,8 @@ import {
   styled
 } from '@mui/material';
 import { useRef, useState } from 'react';
-import Link from 'src/components/Link';
-
+// import Link from 'src/components/Link';
+import Link from 'next/link';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 
 const ListWrapper = styled(Box)(
@@ -77,6 +78,7 @@ function HeaderMenu() {
 
   return (
     <>
+
       <ListWrapper
         sx={{
           display: {
@@ -129,18 +131,45 @@ function HeaderMenu() {
         </List>
       </ListWrapper>
       <Menu anchorEl={ref.current} onClose={handleClose} open={isOpen}>
-        <MenuItem sx={{ px: 3 }} component={Link} href="/components/admins">
-          Admin
-        </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={Link} href="/components/teachers">
-          Teacher
-        </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={Link} href="/components/students">
-          Student
-        </MenuItem>
-        <MenuItem sx={{ px: 3 }} component={Link} href="/components/modals">
-          Modals
-        </MenuItem>
+
+        
+        <Link
+                 href="/components/admins"
+                  
+                >
+               
+                    
+               <MenuItem sx={{ px: 3 }}  >
+                  Admin
+                  </MenuItem>
+                </Link>
+             
+        {/* <a  href="/components/admins" style={{textDecoration:"none", color:"white"}}>Admin</a> */}
+ 
+       
+        <Link  href="/components/teachers" style={{textDecoration:"none", color:"green"}}>
+                    
+        <MenuItem sx={{ px: 3 }}  >
+                    Teacher
+                    </MenuItem>
+                    </Link>
+        
+        
+        <Link  href="/components/students" style={{textDecoration:"none",color:"green" }}>
+        <MenuItem sx={{ px: 3 }}  >
+                    
+                    Student
+                    </MenuItem>
+                    </Link>
+        
+        
+        <Link  href="/components/modals" style={{textDecoration:"none",color:"green" }}>
+                    
+        <MenuItem sx={{ px: 3 }} >
+                    Modals
+                    </MenuItem>
+                    </Link>
+     
       </Menu>
     </>
   );

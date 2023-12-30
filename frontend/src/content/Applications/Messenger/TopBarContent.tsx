@@ -18,18 +18,18 @@ import {
   useTheme
 } from '@mui/material';
 import { formatDistance, subMinutes } from 'date-fns';
-import CallTwoToneIcon from '@mui/icons-material/CallTwoTone';
-import VideoCameraFrontTwoToneIcon from '@mui/icons-material/VideoCameraFrontTwoTone';
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
-import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
-import NotificationsOffTwoToneIcon from '@mui/icons-material/NotificationsOffTwoTone';
-import EmojiEmotionsTwoToneIcon from '@mui/icons-material/EmojiEmotionsTwoTone';
-import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
-import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
-import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
-import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
+//import CallTwoToneIcon from @mui/icons-material/NotificationsOffTwoTone';
+//import VideoCameraFrontTwoToneIcon from '@mui/icons-material/VideoCameraFrontTwoTone';
+//import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+//import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
+//import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
+//import NotificationsOffTwoToneIcon from '@mui/icons-material/NotificationsOffTwoTone';
+// import EmojiEmotionsTwoToneIcon from '@mui/icons-material/EmojiEmotionsTwoTone';
+// import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
+// import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
+// import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
+// import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -127,17 +127,17 @@ function TopBarContent() {
         >
           <Tooltip placement="bottom" title="Start a voice call">
             <IconButton color="primary">
-              <CallTwoToneIcon />
+           
             </IconButton>
           </Tooltip>
           <Tooltip placement="bottom" title="Start a video call">
             <IconButton color="primary">
-              <VideoCameraFrontTwoToneIcon />
+      
             </IconButton>
           </Tooltip>
           <Tooltip placement="bottom" title="Conversation information">
             <IconButton color="primary" onClick={handleDrawerToggle}>
-              <InfoTwoToneIcon />
+           
             </IconButton>
           </Tooltip>
         </Box>
@@ -192,7 +192,7 @@ function TopBarContent() {
             expanded={expanded === 'section1'}
             onChange={handleChange('section1')}
           >
-            <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummaryWrapper >
               <Typography variant="h5">Customize Chat</Typography>
             </AccordionSummaryWrapper>
             <AccordionDetails
@@ -203,7 +203,7 @@ function TopBarContent() {
               <List component="nav">
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <SearchTwoToneIcon />
+                  
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="Search in Conversation"
@@ -212,7 +212,7 @@ function TopBarContent() {
                 </ListItem>
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <ColorLensTwoToneIcon />
+             
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="Change Theme Styling"
@@ -221,7 +221,7 @@ function TopBarContent() {
                 </ListItem>
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <EmojiEmotionsTwoToneIcon />
+                    
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="Choose Default Emoji"
@@ -235,7 +235,7 @@ function TopBarContent() {
             expanded={expanded === 'section2'}
             onChange={handleChange('section2')}
           >
-            <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummaryWrapper>
               <Typography variant="h5">Privacy & Support</Typography>
             </AccordionSummaryWrapper>
             <AccordionDetails
@@ -246,7 +246,7 @@ function TopBarContent() {
               <List component="nav">
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <NotificationsOffTwoToneIcon />
+                  
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="Turn off notifications"
@@ -255,7 +255,7 @@ function TopBarContent() {
                 </ListItem>
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <CancelTwoToneIcon />
+                
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="Ignore all messages"
@@ -264,7 +264,7 @@ function TopBarContent() {
                 </ListItem>
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <BlockTwoToneIcon />
+                 
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="Block user"
@@ -273,7 +273,7 @@ function TopBarContent() {
                 </ListItem>
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <WarningTwoToneIcon />
+                   
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="Something's Wrong"
@@ -289,7 +289,7 @@ function TopBarContent() {
             expanded={expanded === 'section3'}
             onChange={handleChange('section3')}
           >
-            <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummaryWrapper>
               <Typography variant="h5">Shared Files</Typography>
             </AccordionSummaryWrapper>
             <AccordionDetails
@@ -300,7 +300,7 @@ function TopBarContent() {
               <List component="nav">
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <DescriptionTwoToneIcon />
+                
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="HolidayPictures.zip"
@@ -311,7 +311,7 @@ function TopBarContent() {
                 </ListItem>
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <DescriptionTwoToneIcon />
+                
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="2021Screenshot.jpg"
@@ -322,7 +322,7 @@ function TopBarContent() {
                 </ListItem>
                 <ListItem button>
                   <ListItemIconWrapper>
-                    <DescriptionTwoToneIcon />
+             
                   </ListItemIconWrapper>
                   <ListItemText
                     primary="PresentationDeck.pdf"

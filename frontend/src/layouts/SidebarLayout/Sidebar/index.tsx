@@ -36,6 +36,7 @@ function Sidebar() {
 
   return (
     <>
+ 
       <SidebarWrapper
         sx={{
           display: {
@@ -79,17 +80,7 @@ function Sidebar() {
           }}
         />
         <Box p={2}>
-          <Button
-            href="https://bloomui.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="contained"
-            color="success"
-            size="small"
-            fullWidth
-          >
-            Upgrade to PRO
-          </Button>
+          
         </Box>
       </SidebarWrapper>
       <Drawer

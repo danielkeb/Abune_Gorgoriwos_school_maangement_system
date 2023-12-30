@@ -8,8 +8,10 @@ import {
   List,
   styled,
   Button,
-  ListItem
+  ListItem,
+  MenuItem
 } from '@mui/material';
+import Link from 'next/link';
 import NextLink from 'next/link';
 import { SidebarContext } from 'src/contexts/SidebarContext';
 
@@ -18,6 +20,9 @@ import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
 // import MmsTwoToneIcon from '@mui/icons-material/MmsTwoTone';
 import TableChartTwoToneIcon from '@mui/icons-material/TableChartTwoTone';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
+
+//All commented packages are deleted!!
+
 // import BallotTwoToneIcon from '@mui/icons-material/BallotTwoTone';
 // import BeachAccessTwoToneIcon from '@mui/icons-material/BeachAccessTwoTone';
 // import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
@@ -183,21 +188,24 @@ function SidebarMenu() {
   return (
     <>
       <MenuWrapper>
+   
         <List component="div">
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/" passHref>
-                  <Button
-                    className={currentRoute === '="/' ? 'active' : ''}
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<DesignServicesTwoToneIcon />}
-                  >
-                    Overview
-                  </Button>
-                </NextLink>
+                <Link
+                  href="/"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    width: '100%'
+                  }}
+                >
+                  <Button className={currentRoute === '/' ? 'active' : ''}>
+                  Overview                  </Button>
+                </Link>
+
+              
               </ListItem>
             </List>
           </SubMenuWrapper>
@@ -213,7 +221,7 @@ function SidebarMenu() {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/dashboards/tasks" passHref>
+                {/* <NextLink href="/dashboards/tasks" passHref>
                   <Button
                     className={
                       currentRoute === '/dashboards/tasks' ? 'active' : ''
@@ -225,7 +233,19 @@ function SidebarMenu() {
                   >
                     Dashboard
                   </Button>
-                </NextLink>
+                </NextLink> */}
+                 <Link
+                  href="/dashboards/tasks"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    width: '100%'
+                  }}
+                >
+                  <Button className={currentRoute === '/dashboards/tasks' ? 'active' : ''}>
+                  Dashboard                  </Button>
+                </Link>
+
               </ListItem>
               {/* <ListItem component="div">
                 <NextLink href="/applications/messenger" passHref>
@@ -256,7 +276,7 @@ function SidebarMenu() {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/management/transactions" passHref>
+                {/* <NextLink href="/management/transactions" passHref>
                   <Button
                     className={
                       currentRoute === '/management/transactions'
@@ -270,16 +290,12 @@ function SidebarMenu() {
                   >
                      Users detail
                   </Button>
-                </NextLink>
+                </NextLink> */}
               </ListItem>
               <ListItem component="div">
-                <NextLink href="/management/schools" passHref>
+                {/* <NextLink href="/management/schools" passHref>
                   <Button
-                    className={
-                      currentRoute === '/management/schools'
-                        ? 'active'
-                        : ''
-                    }
+                    
                     disableRipple
                     component="a"
                     onClick={closeSidebar}
@@ -287,24 +303,48 @@ function SidebarMenu() {
                   >
                      schools detail
                   </Button>
-                </NextLink>
-              </ListItem>
-              <ListItem component="div">
-                <NextLink href="/management/grades" passHref>
+                </NextLink> */}
+                  <Link
+                  href="/management/schools"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    width: '100%'
+                  }}
+                >
                   <Button
                     className={
-                      currentRoute === '/management/grades'
-                        ? 'active'
-                        : ''
+                      currentRoute === '/management/schools' ? 'active' : ''
                     }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<TableChartTwoToneIcon />}
                   >
-                     Add class
+                   Schools
                   </Button>
-                </NextLink>
+                </Link>
+                
+
+        
+              </ListItem>
+              <ListItem component="div">
+                <Link
+                  href="/management/grades"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    width: '100%'
+                  }}
+                >
+                  <Button
+                    className={
+                      currentRoute === '/management/grades' ? 'active' : ''
+                    }
+                  >
+                    Class
+                  </Button>
+                </Link>
+
+                {/* <MenuItem sx={{ px: 3 }} >
+        <a  href="/management/grades"  style={{textDecoration:"none", color:"white"}}>Classes</a>
+        </MenuItem> */}
               </ListItem>
             </List>
           </SubMenuWrapper>
@@ -320,7 +360,7 @@ function SidebarMenu() {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/management/profile" passHref>
+                {/* <NextLink href="/management/profile" passHref>
                   <Button
                     className={
                       currentRoute === '/management/profile' ? 'active' : ''
@@ -332,10 +372,27 @@ function SidebarMenu() {
                   >
                     User Profile
                   </Button>
-                </NextLink>
+                </NextLink> */}
+
+                  <Link
+                  href="/management/profile"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    width: '100%'
+                  }}
+                >
+                  <Button
+                    className={
+                      currentRoute === '/management/profile' ? 'active' : ''
+                    }
+                  >
+                   User Profile
+                  </Button>
+                </Link>
               </ListItem>
               <ListItem component="div">
-                <NextLink href="/management/profile/settings" passHref>
+                {/* <NextLink href="/management/profile/settings" passHref>
                   <Button
                     className={
                       currentRoute === '/management/profile/settings'
@@ -349,14 +406,29 @@ function SidebarMenu() {
                   >
                     Account Settings
                   </Button>
-                </NextLink>
+
+                </NextLink> */}
+                
+                <Link
+                  href="/management/profile/settings"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'white',
+                    width: '100%'
+                  }}
+                >
+                  <Button
+                    className={
+                      currentRoute === '/management/profile/settings' ? 'active' : ''
+                    }
+                  >
+                   Account Settings
+                  </Button>
+                </Link>
               </ListItem>
             </List>
           </SubMenuWrapper>
         </List>
-        
-      
-         
       </MenuWrapper>
     </>
   );
