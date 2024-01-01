@@ -9,7 +9,7 @@ const themeColors = {
   success: '#57CA22',
   warning: '#FFA319',
   error: '#FF1943',
-  info: '#33C2FF',
+  info: '#808080',
   black: '#CBCCD2',
   white: '#232a2e',
   primaryAlt: '#232a2e',

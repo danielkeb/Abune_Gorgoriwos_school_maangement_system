@@ -16,7 +16,8 @@ export class GradeLevelService {
       const addGrade = await this.prismaService.gradeLevel.create({
         data: {
           grade: dto.grade,
-          teacherId: dto.teacher_id
+          
+          teacherId: dto.teacher_id,
         },
       });
       return addGrade;
