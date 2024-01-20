@@ -3,67 +3,23 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from 'next/link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Card, InputAdornment, MenuItem, OutlinedInput, Select, styled } from '@mui/material';
+import { Card, styled } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import Logo from '@/components/Logo';
-import Hero from 'src/content/Overview/Hero';
-import Head from 'next/head';
 import Light from '@/layouts/SidebarLayout/Header/Buttons/Mode/light';
-import ErrorIcon from '@mui/icons-material/Error';
-// function Copyright(props: any) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
-const MainContent = styled(Box)(
-  () => `
-    height: 100%;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-`
-);
-
-const TopWrapper = styled(Box)(
-  ({ theme }) => `
-  display: flex;
-  width: 100%;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: ${theme.spacing(6)};
-`
-);
-
-const OutlinedInputWrapper = styled(OutlinedInput)(
-  ({ theme }) => `
-    background-color: ${theme.colors.alpha.white[100]};
-`
-);
+import { AppContext } from '@/contexts/UserContext';
+import { useContext } from 'react';
 
 const ButtonSearch = styled(Button)(
   ({ theme }) => `
@@ -90,18 +46,18 @@ const HeaderWrapper = styled(Card)(
 );
 export default function SignIn() {
   const StyledInput = styled(TextField)`
-  width: 100%;
-  & .MuiOutlinedInput-notchedOutline {
-    border-color: red;
-  }
-  & .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
-    border-color: orange;
-  }
-`;
+    width: 100%;
+    & .MuiOutlinedInput-notchedOutline {
+      border-color: red;
+    }
+    & .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+      border-color: orange;
+    }
+  `;
   // const { token, setToken } = useAppContext();
 
   const router = useRouter();
- 
+   const {token, setToken,} = useContext(AppContext)
 
   const formik = useFormik({
     initialValues: {
@@ -110,18 +66,21 @@ export default function SignIn() {
     },
     onSubmit: async (values) => {
       try {
-        console.log(formik.values)
+        // console.log(formik.values);
         const response = await axios.post(
           'http://localhost:3333/auth/signin',
           formik.values
         );
 
+        const tokk = response.data.token_access;
         const user = response.data.user;
         // setToken(user)
+      
+         setToken(user)
         localStorage.setItem('authToken', user);
         // Handle successful response (e.g., store token, redirect to another page)
         console.log('Form submitted successfully!', response);
-
+         
         router.push('/dashboards/tasks');
 
         // router.push('/head')
@@ -140,15 +99,18 @@ export default function SignIn() {
     })
   });
   return (
-
-    <OverviewWrapper >
-   
+    <OverviewWrapper>
       <HeaderWrapper>
         <Container maxWidth="lg">
           <Box display="flex" alignItems="center">
-         < Link href="/" style={{textDecoration:"none",color:"green" }}>
-           <img src='abb.png' width={100} height={100}/>
-           </Link>
+            <Link href="/" style={{ textDecoration: 'none', color: 'green' }}>
+              <img
+                src="/abb.png"
+                width={100}
+                height={100}
+                alt="AbuneGorgorious Schools"
+              />
+            </Link>
             <Box
               display="flex"
               alignItems="center"
@@ -156,95 +118,85 @@ export default function SignIn() {
               flex={1}
             >
               <Box />
-              <Box display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              gap={3}
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                gap={3}
               >
-               
-                  
-                  
-                    <Link href="/" style={{textDecoration:"none",color:"green" }}>
-                      <span>
-
-                       Home
-                      </span>
-                    
-                      </Link>
-                      <Light/>
-                    
-                    
+                <Link
+                  href="/"
+                  style={{ textDecoration: 'none', color: 'green' }}
+                >
+                  <span>Home</span>
+                </Link>
+                <Light />
               </Box>
             </Box>
           </Box>
         </Container>
       </HeaderWrapper>
-   
-      
-       
-           <Container component="main" maxWidth="xs">
-            <CssBaseline />
-             <Box
-              sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-              }}
-            >
-              <Avatar sx={{ m: 1, bgcolor: 'green' }}>
-                <LockOutlinedIcon  />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Sign in
-                
-              </Typography>
-              <Box
-                component="form"
-                onSubmit={formik.handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  color='info'
-                  autoFocus
-                  focused 
-                  
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                 
-                />
-                {formik.errors.email && <span  style={{color:"red"}} className='text-red-600'>{formik.errors.email}</span>}
-                
-                <TextField
-          
-                  margin="normal"
-                  
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  color='info'
-                 focused
-                  
-                  autoComplete="current-password"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.errors.password && <span style={{color:"red"}}>{formik.errors.password}</span>}
-      
-                {/* <OutlinedInputWrapper 
+
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'green' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={formik.handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              color="info"
+              variant="outlined"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.errors.email && (
+              <span style={{ color: 'red' }} className="text-red-600">
+                {formik.errors.email}
+              </span>
+            )}
+            {/* <TextField id="outlined-basic" label="Outlined" variant="outlined" /> */}
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              color="info"
+              autoComplete="current-password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.errors.password && (
+              <span style={{ color: 'red' }}>{formik.errors.password}</span>
+            )}
+
+            {/* <OutlinedInputWrapper 
             
             endAdornment={
               <InputAdornment position="end">
@@ -255,47 +207,37 @@ export default function SignIn() {
             }
             /> */}
 
-                <ButtonSearch
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Sign In
-                </ButtonSearch>
-                
-                  <Grid item xs>
-          
-                    <Link href="/forget" style={{textDecoration:"none",color:"blue" }} >
-                      
-                      Forgot password?
-                     
-                     
-                    </Link>
-                  </Grid>
-                  <Grid item>
-                    
-                  </Grid>
-               
-              </Box>
-            </Box>
-            {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
-          </Container>
-          <ToastContainer
-position="bottom-right"
-autoClose={5000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="dark"
-/>
-     
-     
+            <ButtonSearch
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </ButtonSearch>
+
+            <Grid item xs>
+              <Link href="/login/forget">
+                <span className="change-link">Forgot password?</span>
+              </Link>
+            </Grid>
+            <Grid item></Grid>
+          </Box>
+        </Box>
+        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
+      </Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </OverviewWrapper>
-   
   );
 }

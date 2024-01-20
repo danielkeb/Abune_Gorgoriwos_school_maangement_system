@@ -125,10 +125,10 @@ function DashboardTasks() {
       <Head>
         <title>Tasks Dashboard</title>
       </Head>
-      <PageTitleWrapper   >
+      <PageTitleWrapper>
         <PageHeader />
       </PageTitleWrapper>
-      <Container maxWidth="lg" >
+      <Container maxWidth="lg">
         <TabsContainerWrapper>
           <Tabs
             onChange={handleTabsChange}
@@ -154,9 +154,7 @@ function DashboardTasks() {
             {currentTab === 'analytics' && (
               <>
                 <Grid item xs={12}>
-                  <Box p={4}>
-                    {/* <TeamOverview /> */}
-                  </Box>
+                  <Box p={4}>{/* <TeamOverview /> */}</Box>
                 </Grid>
                 <Grid item xs={12}>
                   <Divider />
@@ -178,9 +176,7 @@ function DashboardTasks() {
                   <Divider />
                 </Grid>
                 <Grid item xs={12}>
-                  <Box p={4}>
-                    {/* <Projects /> */}
-                  </Box>
+                  <Box p={4}>{/* <Projects /> */}</Box>
                   <Divider />
                 </Grid>
                 <Grid item xs={12}>

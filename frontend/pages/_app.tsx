@@ -13,7 +13,8 @@ import createEmotionCache from 'src/createEmotionCache';
 import { SidebarProvider } from 'src/contexts/SidebarContext';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-
+import { AppWrapper } from '@/contexts/UserContext';
+import '../globals.css'
 const clientSideEmotionCache = createEmotionCache();
 
 type NextPageWithLayout = NextPage & {
@@ -42,6 +43,7 @@ function TokyoApp(props: TokyoAppProps) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
+      <AppWrapper>
       <SidebarProvider>
         <ThemeProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -50,6 +52,7 @@ function TokyoApp(props: TokyoAppProps) {
           </LocalizationProvider>
         </ThemeProvider>
       </SidebarProvider>
+      </AppWrapper>
     </CacheProvider>
   );
 }

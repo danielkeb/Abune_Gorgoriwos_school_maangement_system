@@ -17,6 +17,7 @@ import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
 import SignIn from './login';
 
+
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
   width: 100%;
@@ -60,7 +61,7 @@ function Overview() {
                     
                     Login
                     </MenuItem>
-                    <div  className='text-red-700 font-bold underline'>Just for ...</div>
+                    
                     </Link>
               </Box>
             </Box>

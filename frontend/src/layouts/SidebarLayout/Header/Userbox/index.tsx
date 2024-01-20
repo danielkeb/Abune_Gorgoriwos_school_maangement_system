@@ -24,6 +24,8 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 // import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 // import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import { AppContext } from '@/contexts/UserContext';
+import { useContext } from 'react';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -61,11 +63,14 @@ const UserBoxDescription = styled(Typography)(
 );
 
 function HeaderUserbox() {
+  const{token}= useContext(AppContext)
   const user = {
-    name: 'Daniel kebede',
+    name: token,
     avatar: '',
     jobtitle: 'super Admin'
   };
+
+
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -124,27 +129,27 @@ function HeaderUserbox() {
               <ListItemText primary="My Profile" />
             </ListItem>
           </NextLink> */}
-          
-        <Link  href="/management/profile" style={{textDecoration:"none", color:"green"}}>
-        <MenuItem sx={{ px: 3 }} >
-          Profile
-          </MenuItem>
+
+          <Link
+            href="/management/profile"
+            style={{ textDecoration: 'none', color: 'green' }}
+          >
+            <MenuItem sx={{ px: 3 }}>Profile</MenuItem>
           </Link>
-       
-     
+
           {/* <NextLink href="/management/profile/settings" passHref>
             <ListItem button>
               <AccountTreeTwoToneIcon fontSize="small" />
               <ListItemText primary="Account Settings" />
             </ListItem>
           </NextLink> */}
-          
-        <Link  href="/management/profile/settings" style={{textDecoration:"none", color:"green"}}>
-        <MenuItem sx={{ px: 3 }} >
-          Account Setting
-          </MenuItem>
+
+          <Link
+            href="/management/profile/settings"
+            style={{ textDecoration: 'none', color: 'green' }}
+          >
+            <MenuItem sx={{ px: 3 }}>Account Setting</MenuItem>
           </Link>
-       
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>

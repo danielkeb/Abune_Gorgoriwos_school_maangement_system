@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.coco{
+    color: red;
+} 
+.change-link{
+ text-decoration: underline;
+ color:dodgerblue;
+}
+.change-link:hover{
+ cursor: pointer;
+}
+.active{
+    background-color: green;
+}

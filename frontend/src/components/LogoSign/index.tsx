@@ -99,11 +99,11 @@ function Logo() {
 
   return (
     <TooltipWrapper
-      title="Tokyo Free Black Next.js Typescript Admin Dashboard"
+      title="Back to home"
       arrow
     >
       <LogoWrapper href="/">
-    <img src='/abb.png'  style={{width:"100%", }}  />
+    <img src='/logo2.png'  style={{width:"300%", height:"100%" }}  />
       </LogoWrapper>
     </TooltipWrapper>
   );

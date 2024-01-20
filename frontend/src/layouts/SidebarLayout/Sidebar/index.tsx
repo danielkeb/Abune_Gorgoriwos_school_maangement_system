@@ -65,23 +65,23 @@ function Sidebar() {
               <Logo />
             </Box>
           </Box>
+          {/* <Divider component="li" light /> <br/> */}
           <Divider
             sx={{
-              mt: theme.spacing(3),
-              mx: theme.spacing(2),
+              
               background: theme.colors.alpha.trueWhite[10]
             }}
           />
           <SidebarMenu />
         </Scrollbar>
-        <Divider
+        {/* <Divider
           sx={{
             background: theme.colors.alpha.trueWhite[10]
           }}
         />
         <Box p={2}>
-          
-        </Box>
+          Logout
+        </Box> */}
       </SidebarWrapper>
       <Drawer
         sx={{

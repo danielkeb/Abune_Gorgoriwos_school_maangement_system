@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
-
+import RecipeReviewCard from './custom'
 import {
   ListSubheader,
   alpha,
@@ -9,18 +9,24 @@ import {
   styled,
   Button,
   ListItem,
-  MenuItem
+  MenuItem,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
+  Divider,
+  useTheme
 } from '@mui/material';
 import Link from 'next/link';
 import NextLink from 'next/link';
 import { SidebarContext } from 'src/contexts/SidebarContext';
-
+import InboxIcon from '@mui/icons-material/MoveToInbox';
 import DesignServicesTwoToneIcon from '@mui/icons-material/DesignServicesTwoTone';
 import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
 // import MmsTwoToneIcon from '@mui/icons-material/MmsTwoTone';
 import TableChartTwoToneIcon from '@mui/icons-material/TableChartTwoTone';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
-
+import HomeIcon from '@mui/icons-material/Home';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 //All commented packages are deleted!!
 
 // import BallotTwoToneIcon from '@mui/icons-material/BallotTwoTone';
@@ -37,6 +43,9 @@ import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 // import WorkspacePremiumTwoToneIcon from '@mui/icons-material/WorkspacePremiumTwoTone';
 // import CameraFrontTwoToneIcon from '@mui/icons-material/CameraFrontTwoTone';
 import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTone';
+import GradeIcon from '@mui/icons-material/Grade';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -175,12 +184,19 @@ const SubMenuWrapper = styled(Box)(
             }
           }
         }
+        
       }
     }
 `
 );
 
 function SidebarMenu() {
+
+  const active={
+    // backgroundColor:"#44a574",
+    border:"1px solid gray"
+  }
+  const theme = useTheme();
   const { closeSidebar } = useContext(SidebarContext);
   const router = useRouter();
   const currentRoute = router.pathname;
@@ -188,250 +204,251 @@ function SidebarMenu() {
   return (
     <>
       <MenuWrapper>
-   
-        <List component="div">
-          <SubMenuWrapper>
-            <List component="div">
-              <ListItem component="div">
-                <Link
-                  href="/"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'white',
-                    width: '100%'
-                  }}
-                >
-                  <Button className={currentRoute === '/' ? 'active' : ''}>
-                  Overview                  </Button>
-                </Link>
-
+     
+      <RecipeReviewCard />
+       <Divider
+            sx={{
               
-              </ListItem>
-            </List>
-          </SubMenuWrapper>
-        </List>
-        <List
-          component="div"
-          subheader={
-            <ListSubheader component="div" disableSticky>
-              Dashboards
-            </ListSubheader>
-          }
-        >
-          <SubMenuWrapper>
-            <List component="div">
-              <ListItem component="div">
-                {/* <NextLink href="/dashboards/tasks" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/dashboards/tasks' ? 'active' : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<BrightnessLowTwoToneIcon />}
-                  >
-                    Dashboard
-                  </Button>
-                </NextLink> */}
-                 <Link
-                  href="/dashboards/tasks"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'white',
-                    width: '100%'
-                  }}
-                >
-                  <Button className={currentRoute === '/dashboards/tasks' ? 'active' : ''}>
-                  Dashboard                  </Button>
-                </Link>
+              background: theme.colors.alpha.trueWhite[10]
+            }}
+          />
+      <ListItem  disablePadding>
+        <Link href="/dashboards/tasks">
+        <ListItemButton style={currentRoute=="/dashboards/tasks"? active:{}} >
+              <ListItemIcon>
+              <DashboardIcon /> 
+              </ListItemIcon>
+              <ListItemText  primary="Dashboard" />
+            </ListItemButton>
+        </Link>
+           
+          </ListItem>
+     
+          <ListItem  disablePadding>
+            <Link href="">
+            <ListItemButton>
+              <ListItemIcon>
+              <GradeIcon /> 
+              </ListItemIcon>
+              <ListItemText  primary="Grade" />
+            </ListItemButton>
+            </Link>
+         
+          </ListItem>
+          <ListItem  disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+              <InsertDriveFileIcon /> 
+              </ListItemIcon>
+              <ListItemText  primary="MarkList" />
+            </ListItemButton>
+          </ListItem>
+      
+      <Button></Button>
 
-              </ListItem>
-              {/* <ListItem component="div">
-                <NextLink href="/applications/messenger" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/applications/messenger' ? 'active' : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<MmsTwoToneIcon />}
-                  >
-                    Messenger
-                  </Button>
-                </NextLink>
-              </ListItem> */}
-            </List>
-          </SubMenuWrapper>
-        </List>
-        <List
-          component="div"
-          subheader={
-            <ListSubheader component="div" disableSticky>
-              Management
-            </ListSubheader>
-          }
-        >
-          <SubMenuWrapper>
-            <List component="div">
-              <ListItem component="div">
-                {/* <NextLink href="/management/transactions" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/management/transactions'
-                        ? 'active'
-                        : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<TableChartTwoToneIcon />}
-                  >
-                     Users detail
-                  </Button>
-                </NextLink> */}
-              </ListItem>
-              <ListItem component="div">
-                {/* <NextLink href="/management/schools" passHref>
-                  <Button
-                    
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<TableChartTwoToneIcon />}
-                  >
-                     schools detail
-                  </Button>
-                </NextLink> */}
-                  <Link
-                  href="/management/schools"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'white',
-                    width: '100%'
-                  }}
-                >
-                  <Button
-                    className={
-                      currentRoute === '/management/schools' ? 'active' : ''
-                    }
-                  >
-                   Schools
-                  </Button>
-                </Link>
-                
-
-        
-              </ListItem>
-              <ListItem component="div">
-                <Link
-                  href="/management/grades"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'white',
-                    width: '100%'
-                  }}
-                >
-                  <Button
-                    className={
-                      currentRoute === '/management/grades' ? 'active' : ''
-                    }
-                  >
-                    Class
-                  </Button>
-                </Link>
-
-                {/* <MenuItem sx={{ px: 3 }} >
-        <a  href="/management/grades"  style={{textDecoration:"none", color:"white"}}>Classes</a>
-        </MenuItem> */}
-              </ListItem>
-            </List>
-          </SubMenuWrapper>
-        </List>
-        <List
-          component="div"
-          subheader={
-            <ListSubheader component="div" disableSticky>
-              Accounts
-            </ListSubheader>
-          }
-        >
-          <SubMenuWrapper>
-            <List component="div">
-              <ListItem component="div">
-                {/* <NextLink href="/management/profile" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/management/profile' ? 'active' : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<AccountCircleTwoToneIcon />}
-                  >
-                    User Profile
-                  </Button>
-                </NextLink> */}
-
-                  <Link
-                  href="/management/profile"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'white',
-                    width: '100%'
-                  }}
-                >
-                  <Button
-                    className={
-                      currentRoute === '/management/profile' ? 'active' : ''
-                    }
-                  >
-                   User Profile
-                  </Button>
-                </Link>
-              </ListItem>
-              <ListItem component="div">
-                {/* <NextLink href="/management/profile/settings" passHref>
-                  <Button
-                    className={
-                      currentRoute === '/management/profile/settings'
-                        ? 'active'
-                        : ''
-                    }
-                    disableRipple
-                    component="a"
-                    onClick={closeSidebar}
-                    startIcon={<DisplaySettingsTwoToneIcon />}
-                  >
-                    Account Settings
-                  </Button>
-
-                </NextLink> */}
-                
-                <Link
-                  href="/management/profile/settings"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'white',
-                    width: '100%'
-                  }}
-                >
-                  <Button
-                    className={
-                      currentRoute === '/management/profile/settings' ? 'active' : ''
-                    }
-                  >
-                   Account Settings
-                  </Button>
-                </Link>
-              </ListItem>
-            </List>
-          </SubMenuWrapper>
-        </List>
       </MenuWrapper>
     </>
   );
 }
 
 export default SidebarMenu;
+
+
+// //  <List component="div">
+         
+// <ListItem component="div">
+// <Link
+//   href="/"
+//   style={{
+//     textDecoration: 'none',
+//     color: 'white',
+//     width: '100%'
+//   }}
+// >
+//   <Button className={currentRoute === '/' ? 'active' : ''}>
+//   Overview                  </Button>
+// </Link>
+
+
+// </ListItem>
+
+// </List>
+// <List
+// component="div"
+// >
+
+
+
+//  <Link
+//   href="/dashboards/tasks"
+//   style={{
+//     textDecoration: 'none',
+//     color: 'white',
+//     width: '100%'
+//   }}
+// >
+//   <Button className={currentRoute === '/dashboards/tasks' ? 'active' : ''}>
+//   Dashboard                  </Button>
+// </Link>
+
+
+// </List>
+// <List
+
+// >
+// <SubMenuWrapper>
+// <List component="div">
+// <ListItem component="div">
+// {/* <NextLink href="/management/transactions" passHref>
+//   <Button
+//     className={
+//       currentRoute === '/management/transactions'
+//         ? 'active'
+//         : ''
+//     }
+//     disableRipple
+//     component="a"
+//     onClick={closeSidebar}
+//     startIcon={<TableChartTwoToneIcon />}
+//   >
+//      Users detail
+//   </Button>
+// </NextLink> */}
+// </ListItem>
+// <ListItem component="div">
+// {/* <NextLink href="/management/schools" passHref>
+//   <Button
+    
+//     disableRipple
+//     component="a"
+//     onClick={closeSidebar}
+//     startIcon={<TableChartTwoToneIcon />}
+//   >
+//      schools detail
+//   </Button>
+// </NextLink> */}
+//   <Link
+//   href="/management/schools"
+//   style={{
+//     textDecoration: 'none',
+//     color: 'white',
+//     width: '100%'
+//   }}
+// >
+//   <Button
+//     className={
+//       currentRoute === '/management/schools' ? 'active' : ''
+//     }
+//   >
+//    Schools
+//   </Button>
+// </Link>
+
+
+
+// </ListItem>
+// <ListItem component="div">
+// <Link
+//   href="/management/grades"
+//   style={{
+//     textDecoration: 'none',
+//     color: 'white',
+//     width: '100%'
+//   }}
+// >
+//   <Button
+//     className={
+//       currentRoute === '/management/grades' ? 'active' : ''
+//     }
+//   >
+//     Class
+//   </Button>
+// </Link>
+
+// {/* <MenuItem sx={{ px: 3 }} >
+// <a  href="/management/grades"  style={{textDecoration:"none", color:"white"}}>Classes</a>
+// </MenuItem> */}
+// </ListItem>
+// </List>
+// </SubMenuWrapper>
+// </List>
+// <List
+// component="div"
+// subheader={
+// <ListSubheader component="div" disableSticky>
+// Accounts
+// </ListSubheader>
+// }
+// >
+// <SubMenuWrapper>
+// <List component="div">
+// <ListItem component="div">
+// {/* <NextLink href="/management/profile" passHref>
+//   <Button
+//     className={
+//       currentRoute === '/management/profile' ? 'active' : ''
+//     }
+//     disableRipple
+//     component="a"
+//     onClick={closeSidebar}
+//     startIcon={<AccountCircleTwoToneIcon />}
+//   >
+//     User Profile
+//   </Button>
+// </NextLink> */}
+
+//   <Link
+//   href="/management/profile"
+//   style={{
+//     textDecoration: 'none',
+//     color: 'white',
+//     width: '100%'
+//   }}
+// >
+//   <Button
+//     className={
+//       currentRoute === '/management/profile' ? 'active' : ''
+//     }
+//   >
+//    User Profile
+//   </Button>
+// </Link>
+// </ListItem>
+// <ListItem component="div">
+// {/* <NextLink href="/management/profile/settings" passHref>
+//   <Button
+//     className={
+//       currentRoute === '/management/profile/settings'
+//         ? 'active'
+//         : ''
+//     }
+//     disableRipple
+//     component="a"
+//     onClick={closeSidebar}
+//     startIcon={<DisplaySettingsTwoToneIcon />}
+//   >
+//     Account Settings
+//   </Button>
+
+// </NextLink> */}
+
+// <Link
+//   href="/management/profile/settings"
+//   style={{
+//     textDecoration: 'none',
+//     color: 'white',
+//     width: '100%'
+//   }}
+// >
+//   <Button
+//     className={
+//       currentRoute === '/management/profile/settings' ? 'active' : ''
+//     }
+//   >
+//    Account Settings
+//   </Button>
+// </Link>
+// </ListItem>
+// </List>
+// </SubMenuWrapper>
+// </List>
