@@ -121,20 +121,24 @@ export class AuthService {
     if (!pwMatches) {
       throw new ForbiddenException('Username or password Incorrect!');
     }
-    const token = await this.signToken(user.email, user.id, user.role);
+    // const token = await this.signToken(user.email, user.id, user.role);
     
-    return this.signToken(user.email, user.id, user.role);
+    return this.signToken(user.email, user.id, user.role,user.frist_name, user.middle_name);
   }
 
   async signToken(
     email: string,
     id: number,
     role: string,
-  ): Promise<{ token_access: string , user:string}> {
+    frist_name:string,
+    middle_name:string
+  ): Promise<{ token_access: string , user:{}}> {
     const payLoad = {
       sub: id,
       email,
       role,
+      frist_name,
+      middle_name
     };
 
     const user={
@@ -154,7 +158,12 @@ export class AuthService {
 
     return {
       token_access: token,
-      user:email
+      user:{
+        email,
+        role,
+        frist_name,
+        middle_name
+      }
 
     };
   }

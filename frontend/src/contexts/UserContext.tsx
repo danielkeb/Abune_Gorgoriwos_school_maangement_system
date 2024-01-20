@@ -15,6 +15,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
 
     if (typeof window !== 'undefined') {
+     
       return localStorage.getItem('authToken') || "";
     }
     return null;
@@ -25,9 +26,10 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   const [decodedToken, setDecodedToken] = useState<{ [key: string]: any } | null>(() => {
     try {
       if (token) {
-        return jwt.decode(token);
+         return jwt.decode(token);
+      
       }
-      return null;
+      return null
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;
@@ -56,7 +58,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AppContext.Provider value={{token, setToken, logout}}>
+    <AppContext.Provider value={{token, setToken, logout, decodedToken}}>
       {children}
     </AppContext.Provider>
   );

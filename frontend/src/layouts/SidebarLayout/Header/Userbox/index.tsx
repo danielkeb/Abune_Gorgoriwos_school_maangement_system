@@ -63,11 +63,12 @@ const UserBoxDescription = styled(Typography)(
 );
 
 function HeaderUserbox() {
-  const{token}= useContext(AppContext)
+  const{decodedToken,token}= useContext(AppContext)
+  console.log("the decoded token is ",decodedToken,token)
   const user = {
-    name: token,
+    name:  decodedToken?.frist_name,
     avatar: '',
-    jobtitle: 'super Admin'
+    jobtitle: decodedToken?.role
   };
 
 

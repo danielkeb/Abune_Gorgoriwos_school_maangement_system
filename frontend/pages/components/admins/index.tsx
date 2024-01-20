@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import PageTitle from '@/components/PageTitle';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PageTitleWrapper from '@/components/PageTitleWrapper';
 
@@ -21,6 +21,14 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 function Admins() {
+
+  useEffect(async ()=>{
+    const school = await axios.get('http://localhost:3333/schools/get');
+    setSchoolss(school.data)
+    
+  },[])
+
+  const [schoolss, setSchoolss]= useState([])
   const [formData, setFormData] = useState({
     email: '',
     frist_name: '',
@@ -31,12 +39,8 @@ function Admins() {
     phone: '',
     password: '',
     education_level: '',
-    school: [
-      { school_name: 'dbu' },
-      { school_name: 'tebase' },
-      { school_name: 'ketema' },
-    ] ,
    schoolName: '',
+   role:'admin'
  
     
   });
@@ -69,7 +73,7 @@ function Admins() {
         return;
       }
 
-      const response = await axios.post('http://localhost:3333/auth/signUp/1', formData);
+      const response = await axios.post(`http://localhost:3333/auth/signUp/${parseInt(formData.schoolName)}`, formData);
 
       console.log('Registration successful:', response.data);
       // You might want to redirect the user to another page or show a success message
@@ -155,9 +159,9 @@ function Admins() {
         variant="outlined"
      
       >
-        {formData.school.map((school) => (
-          <MenuItem key={school.school_name} value={school.school_name}>
-            {school.school_name}
+        {schoolss.map((school) => (
+          <MenuItem key={school.school_name} value={school?.id}>
+            {school?.school_name}
           </MenuItem>
         ))}
       </TextField>

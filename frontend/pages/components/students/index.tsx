@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import PageTitle from '@/components/PageTitle';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PageTitleWrapper from '@/components/PageTitleWrapper';
 import {
@@ -19,6 +19,12 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 function Students() {
+  useEffect(async ()=>{
+    const school = await axios.get('http://localhost:3333/schools/get');
+    // setSchoolss(school)
+    console.log(school)
+  },[])
+
   const [formData, setFormData] = useState({
     email: '',
     frist_name: '',
@@ -34,7 +40,7 @@ function Students() {
     careOf_contact2: '',
     gradeId: '',
   });
-
+  const [scoolss, setSchoolss]= useState([])
   const [error, setError] = useState('');
 
   const handleFieldChange = (field, value) => {

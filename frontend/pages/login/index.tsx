@@ -17,7 +17,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import Light from '@/layouts/SidebarLayout/Header/Buttons/Mode/light';
-
+import jwt from "jsonwebtoken";
 import { AppContext } from '@/contexts/UserContext';
 import { useContext } from 'react';
 
@@ -57,7 +57,7 @@ export default function SignIn() {
   // const { token, setToken } = useAppContext();
 
   const router = useRouter();
-   const {token, setToken,} = useContext(AppContext)
+   const {token, setToken, decodedToken} = useContext(AppContext)
 
   const formik = useFormik({
     initialValues: {
@@ -74,10 +74,13 @@ export default function SignIn() {
 
         const tokk = response.data.token_access;
         const user = response.data.user;
-        // setToken(user)
+        const decodedToken = jwt.decode(tokk);
+        const userString = JSON.stringify(user);
+        // const tokkString = JSON.stringify(tokk);
       
-         setToken(user)
-        localStorage.setItem('authToken', user);
+         console.log("decoded", decodedToken)
+        localStorage.setItem('authToken',tokk );
+     
         // Handle successful response (e.g., store token, redirect to another page)
         console.log('Form submitted successfully!', response);
          
