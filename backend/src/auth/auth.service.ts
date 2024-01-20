@@ -2,7 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotAcceptableException,
-  HttpException, HttpStatus 
+  HttpException, HttpStatus, UnauthorizedException 
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DtoSignin, DtoStudent } from './dto';
@@ -11,6 +11,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt/dist';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { Response } from 'express';
+import * as nodemailer from "nodemailer"
+import { EmailService } from 'src/email/email.service';
+import { error } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +21,7 @@ export class AuthService {
     private prismaService: PrismaService,
     private config: ConfigService,
     private jwt: JwtService,
+    private emailService:EmailService
   ) {}
   // async signUp(school_id: number, dto: CreateUserDto) {
   //   const hash = await argon.hash(dto.password);
@@ -153,6 +157,76 @@ export class AuthService {
       user:email
 
     };
+  }
+
+  async forgetPassword (dto:any){
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (!user) {
+      throw new ForbiddenException('Incorrect email address!');
+    
+    }
+   const coco= user.id;
+    const hide = this.config.get('JWT_SECRET');
+
+    //  ,{
+    //   expiresIn:"15m",
+    //   secret:hide
+    //  }
+
+    const token = await this.jwt.signAsync({coco}, {
+      expiresIn: '1d',
+      secret: hide,
+    });
+    
+     this.emailService.sendSecurityAlert(user.email,token,user.id)
+     return {
+      msg:"Password reset link sent to your Email"
+     }
+    // const transporter = nodemailer.createTransport({
+    //   service: 'gmail',
+    //   host: 'smtp.gmail.com',
+    //   port: 465,
+    //   secure: true,
+    //   auth: {
+    //     user: 'zewdebereket7@gmail.com',
+    //     //pass:'Ican3561#'
+    //     pass: 'p w p a t e w w i a t b m j k ap w p a t e w w i a t b m j k a'
+    //   }
+    // });
+    
+ 
+
+  }
+
+  async resetPassword(dto:any, id:number, token:any){
+
+    const hide = this.config.get('JWT_SECRET');
+    try{
+      const payload = await this.jwt.verifyAsync(
+        token,
+        {
+          secret: hide
+        }
+      );
+      const hash = await argon.hash(dto.password);
+      const updatedUser = await this.prismaService.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          password: hash,
+        },
+      });
+   return{msg:"Password reseted !"}
+    
+    }catch{
+      throw new UnauthorizedException();
+    }
+  
   }
 
  

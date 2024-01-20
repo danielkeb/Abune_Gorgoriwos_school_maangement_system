@@ -30,11 +30,17 @@ export class AuthController {
 
 
   }
+  @Post('forget')
+  async forgetPassword(@Body() dto:any){
+    return this.authService.forgetPassword(dto)
+  }
+  @Post('reset/pass/:id/:token')
+  async resetPassword(@Body() dto:any, @Param('id',ParseIntPipe) id:number, @Param('token') token:any){
+   return this.authService.resetPassword(dto,id,token)
+  }
 
   @Get('ask')
   findAll(@Res({ passthrough: true }) response: Response) {
-
-    
       return {"msg":"you are good"}
   }
 }

@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { GradeLevelModule } from './grade-level/grade-level.module';
 import { ResultModule } from './result/result.module';
-import { SectionModule } from './section/section.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { SectionModule } from './section/section.module';
     SubjectsModule,
     GradeLevelModule,
     ResultModule,
-    SectionModule,
+    EmailModule
   ],
 })
 export class AppModule {}
