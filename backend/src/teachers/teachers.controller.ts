@@ -5,17 +5,27 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  Get,
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { UpdateAdminTeacherDto, UpdateTeacherDto } from './dto';
 import { TeachersService } from './teachers.service';
+import { ApiTags } from '@nestjs/swagger';
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
+@ApiTags('teachers')
 @Controller('teachers')
 export class TeachersController {
   constructor(private teacherService: TeachersService) {}
-
+  @Get('get')
+  getTeachers(){
+    return this.teacherService.getTeachers()
+  }
+  @Get('get/:id')
+  getTeacherById(@Param('id', ParseIntPipe) id:number){
+    return this.teacherService.getTeacherById(id)
+  }
   @Patch('update/:id')
   updateTeacher(@GetUser('id') userId: number, @Body() dto: UpdateTeacherDto) {
     return this.teacherService.updateTeacher(userId, dto);
@@ -23,10 +33,10 @@ export class TeachersController {
 
   @Patch('adminUpdate/:id')
   updateAdminTeacher(
-    @GetUser('id') adminId: number,
+
     @Body() dto: UpdateAdminTeacherDto,
     @Param('id', ParseIntPipe) userId: number,
   ) {
-    return this.teacherService.updateAdminTeacher(adminId, dto, userId);
+    return this.teacherService.updateAdminTeacher( dto, userId);
   }
 }

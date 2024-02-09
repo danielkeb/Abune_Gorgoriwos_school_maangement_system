@@ -10,6 +10,9 @@ import {
 import { StudentsService } from './students.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { DtoAdmin, DtoStudent } from './dto';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('students')
 @UseGuards(JwtGuard)
 @Controller('students')
 export class StudentsController {

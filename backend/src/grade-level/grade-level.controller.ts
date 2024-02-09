@@ -9,7 +9,9 @@ import {
 } from '@nestjs/common';
 import { GradeLevelService } from './grade-level.service';
 import { GradeLevel } from './dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('grade')
 @Controller('grade')
 export class GradeLevelController {
   constructor(private gradeLevelService: GradeLevelService) {}

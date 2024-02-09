@@ -3,8 +3,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cors from 'cors';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const config = new DocumentBuilder()
+    .setTitle('AGSMS API DOC')
+    .setDescription('Full API DOCUMENTAION FOR AGSMS')
+    .setVersion('1.0')
+    .addTag('SMS')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
   app.useGlobalPipes(new ValidationPipe({whitelist:true}))
   app.use(cors());
  

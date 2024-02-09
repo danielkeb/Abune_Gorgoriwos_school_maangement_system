@@ -2,7 +2,8 @@ import { Body, Controller, Param, ParseIntPipe, Patch, Post } from '@nestjs/comm
 
 import { AddResultkDto, UpdateResultDto,  } from './dto';
 import { ResultService } from './result.service';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('result')
 @Controller('result')
 export class ResultController {
  constructor(private resultService: ResultService){}

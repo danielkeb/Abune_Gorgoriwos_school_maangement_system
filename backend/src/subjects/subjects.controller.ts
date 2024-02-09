@@ -10,7 +10,9 @@ import { SubjectsService } from './subjects.service';
 import { AddSubjectsDto } from './dto';
 import { GetUser } from 'src/auth/decorator';
 import { UpdateSubjectDto } from './dto/update.subject.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('subjects')
 @Controller('subjects')
 export class SubjectsController {
   constructor(private subjectsService: SubjectsService) {}

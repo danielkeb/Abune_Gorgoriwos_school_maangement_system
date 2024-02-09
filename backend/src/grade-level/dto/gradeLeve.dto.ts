@@ -1,6 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class GradeLevel {
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   grade: string;
@@ -8,7 +10,7 @@ export class GradeLevel {
   // @IsNotEmpty()
   // @IsInt()
   // section_id: number;
-
+  @ApiProperty()
   @IsNotEmpty()
   @IsInt()
   teacher_id: number;

@@ -13,16 +13,23 @@ import {
 import { SchoolsService } from './schools.service';
 import { DtoSchool } from './dto';
 import { JwtGuard } from '../auth/guard/jwt.guard';
+import { ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('schools')
 @Controller('schools')
 export class SchoolsController {
   constructor(private schoolService: SchoolsService) {}
 
+  @ApiCreatedResponse({ description: 'The record has been successfully created.'})
+  @ApiForbiddenResponse({ description: 'Forbidden.'})
   @Post('register')
   async schoolRegistered(@Body() dto: DtoSchool) {
    return this.schoolService.schoolRegistered(dto);
   }
 
+  @ApiHeader({ name: 'Authorization', required: true }) // Authentication header
+  @ApiResponse({ status: 201, description: 'The record has been successfully updated.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Patch('update/:id')
   schoolUpdate(@Param('id', ParseIntPipe) id: number, @Body() dto: DtoSchool) {
     return this.schoolService.schoolUpdate(id, dto);

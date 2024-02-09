@@ -2,8 +2,10 @@ import { Controller, Post, Body, Param, ParseIntPipe,Get,Header, Res, Req } from
 import { AuthService } from './auth.service';
 import { DtoSignin, DtoStudent } from './dto';
 import { Response, response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 // import { DtoStudent } from 'src/students/dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
