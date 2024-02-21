@@ -32,9 +32,9 @@ export class DtoStudent {
   @IsString()
   address: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  username: string;
+  username?: string;
 
   @IsNotEmpty()
   @IsString()
@@ -43,6 +43,15 @@ export class DtoStudent {
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  date_of_birth:string
+
+  @IsNotEmpty()
+  @IsString()
+  gender:string
+  
 
   @IsOptional()
   @IsString()
@@ -59,6 +68,10 @@ export class DtoStudent {
   @IsOptional()
   @IsInt()
   gradeId: number;
+
+  @IsOptional()
+  @IsInt()
+  sectionId:number
 
   @IsOptional()
   @IsString()

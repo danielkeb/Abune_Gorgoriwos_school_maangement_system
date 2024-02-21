@@ -1,5 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
 
 generator client {
   provider = "prisma-client-js"
@@ -17,27 +20,30 @@ model School {
   school_address String
   school_phone   String
 
-  createdAT DateTime @default(now())
-  updatedAT DateTime @updatedAt
-
-  User User[]
+  createdAT    DateTime   @default(now())
+  updatedAT    DateTime   @updatedAt
+  schoolYearId Int
+  schoolYear   SchoolYear @relation(fields: [schoolYearId], references: [id])
+  User         User[]
 
   @@index([id])
   @@map("schools")
 }
 
 model User {
-  id          Int     @id @default(autoincrement())
-  frist_name  String
-  middle_name String
-  last_name   String
-  username    String?
-  email       String  @unique
-  role        String
-  address     String?
-  phone       String
-  password    String
-  loggedInAt DateTime?
+  id            Int       @id @default(autoincrement())
+  frist_name    String
+  middle_name   String
+  last_name     String
+  username      String?
+  email         String    @unique
+  role          String
+  address       String?
+  phone         String
+  password      String
+  gender        String
+  date_of_birth String
+  loggedInAt    DateTime?
 
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
@@ -52,17 +58,14 @@ model User {
 }
 
 model Teacher {
-
   // id              Int    @id @default(autoincrement())
   education_level String
 
-user_Id Int  @id
-  user    User @relation(fields: [user_Id], references: [id])
-   result Result[]
- subject Subject[]
- gradelevel GradeLevel[]
-
-
+  user_Id    Int          @id
+  user       User         @relation(fields: [user_Id], references: [id])
+  result     Result[]
+  subject    Subject[]
+  gradelevel GradeLevel[]
 
   @@map("teachers")
 }
@@ -76,56 +79,59 @@ model Student {
   user_Id Int  @id
   user    User @relation(fields: [user_Id], references: [id])
 
-  gradeId   Int
-  gradelevel     GradeLevel  @relation(fields: [gradeId], references: [id])
-  
+  gradeId    Int
+  gradelevel GradeLevel @relation(fields: [gradeId], references: [id])
+
+  sectionId Int
+  section   Section @relation(fields: [sectionId], references: [id])
+
   subject Subject[]
-  result Result[]
+  result  Result[]
 
   @@map("students")
 }
 
 model GradeLevel {
-  id      Int      @id @default(autoincrement())
+  id      Int       @id @default(autoincrement())
   grade   String
   student Student[]
   subject Subject[]
- result Result[]
- //Make the teacherId optional !
-  teacher    Teacher    @relation(fields: [teacherId], references: [ user_Id])   
-   teacherId  Int 
+  result  Result[]
+  //Make the teacherId optional !
+  teacher Teacher[]
 
-  
-    section Section[]
+  section Section[]
 
   // other fields specific to GradeLevel
 }
-model Section{
-   id      Int      @id @default(autoincrement())
-   name String
-    gradeId   Int
-  gradelevel     GradeLevel  @relation(fields: [gradeId], references: [id])
-  
+
+model Section {
+  id         Int        @id @default(autoincrement())
+  name       String
+  gradeId    Int
+  gradelevel GradeLevel @relation(fields: [gradeId], references: [id])
+
+  student Student[]
 }
 
 model Subject {
-  id   Int    @id @default(autoincrement())
-  name String
+  id        Int       @id @default(autoincrement())
+  name      String
   // other fields specific to Subject
-    student Student[]
-     result Result[]
-  teacher    Teacher    @relation(fields: [teacherId], references: [ user_Id])   
-    teacherId  Int
+  student   Student[]
+  result    Result[]
+  teacher   Teacher   @relation(fields: [teacherId], references: [user_Id])
+  teacherId Int
 
   gradelevel GradeLevel[]
 }
 
 model Result {
-  id     Int @id @default(autoincrement())
+  id              Int @id @default(autoincrement())
   assignmentScore Int
-  midtermScore Int
-  finalExamScore Int
-  totalScore Int
+  midtermScore    Int
+  finalExamScore  Int
+  totalScore      Int
 
   studentId Int
   student   Student @relation(fields: [studentId], references: [user_Id])
@@ -139,7 +145,25 @@ model Result {
   teacherId Int
   teacher   Teacher @relation(fields: [teacherId], references: [user_Id])
 
-@@unique([subjectId, studentId]) 
+  @@unique([subjectId, studentId])
   @@map("results")
+}
 
+model SchoolYear {
+  id         Int    @id @default(autoincrement())
+  name       String
+  start_date String
+  end_date   String
+
+  term   Term[]
+  school School[]
+}
+
+model Term {
+  id           Int        @id @default(autoincrement())
+  name         String
+  start_date   String
+  end_date     String
+  schoolYearId Int
+  schoolYear   SchoolYear @relation(fields: [schoolYearId], references: [id])
 }

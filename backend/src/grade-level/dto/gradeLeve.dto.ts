@@ -10,8 +10,8 @@ export class GradeLevel {
   // @IsNotEmpty()
   // @IsInt()
   // section_id: number;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt()
-  teacher_id: number;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsInt()
+  // teacher_id: number;
 }

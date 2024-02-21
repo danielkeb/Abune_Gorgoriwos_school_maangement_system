@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import RegistrationHead from "./reghead/RegistrationHead";
-import Main from "../main/Main";
+import RegistrationHead from "../reghead/RegistrationHead";
+import Main from "../../main/Main";
 import { useFormik } from "formik";
 import axios from "axios";
 import * as yup from "yup";
@@ -13,7 +13,7 @@ const page = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const school = await axios.get("http://localhost:3333/grade/get");
+        const school = await axios.get("http://localhost:3333/schools/get");
         setSchoolss(school.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -23,38 +23,34 @@ const page = () => {
     fetchData();
   }, []);
 
-
   const [schoolss, setSchoolss] = useState([]);
-  const [sec, setSec]= useState([])
   const [check, setCheck] = useState(false);
-
   const formik = useFormik({
     initialValues: {
       email: "",
       frist_name: "",
       middle_name: "",
       last_name: "",
-      role: "student",
+      role: "admin",
       address: "",
       username: "",
       phone: "",
       password: "1234",
       gender: "",
       date_of_birth: "",
-      careOf_contact1: "",
-      careOf_contact2:"",
-      gradeId:0,
-      sectionId:0
+      school_name: "",
     },
     onSubmit: async (values) => {
       try {
         setCheck(true);
         const response = await axios.post(
-          `http://localhost:3333/auth/signUp/2`,
+          `http://localhost:3333/auth/signUp/${parseInt(
+            formik.values.school_name
+          )}`,
           formik.values
         );
 
-        toast.success("New Student Registerd ");
+        toast.success("Admin Registerd ");
         // router.push('/head')
       } catch (error:any) {
         toast.error(error?.response?.data.message);
@@ -74,16 +70,8 @@ const page = () => {
       phone: yup.string().required("Phone number is Required !"),
       gender: yup.string().required("Gender is Required !"),
       date_of_birth: yup.string().required("Date of birth  is Required !"),
-      gradeId:yup.number().required('Grade level is Required'),
-      section:yup.number().notRequired(),
-      careOf_contact1:yup.string().required('care of contact required'),
-      careOf_contact2:yup.string().notRequired()
-      
     }),
   });
-
-  const secc=schoolss.find((school:any) => school.id == formik.values.gradeId)
-  console.log("this is the magicc", secc?.section)
   return (
     <div>
       <Main>
@@ -91,7 +79,7 @@ const page = () => {
           <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
             <form onSubmit={formik.handleSubmit}>
               <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-                Student Information
+                Director Information
               </h6>
               <div className="flex flex-wrap">
                 <div className="w-full lg:w-6/12 px-4">
@@ -110,15 +98,8 @@ const page = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                          {formik.errors.username && (
-                <small className="text-red-500 ">
-                  {formik.errors.username}
-                </small>
-              )}
                   </div>
-            
                 </div>
-        
                 <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
                     <label
@@ -135,15 +116,8 @@ const page = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                          {formik.errors.middle_name && (
-                <small className="text-red-500 ">
-                  {formik.errors.middle_name}
-                </small>
-              )}
                   </div>
-            
                 </div>
-         
                 <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
                     <label
@@ -160,15 +134,8 @@ const page = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                          {formik.errors.frist_name && (
-                <small className="text-red-500 ">
-                  {formik.errors.frist_name}
-                </small>
-              )}
                   </div>
-            
                 </div>
-           
                 <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
                     <label
@@ -185,15 +152,8 @@ const page = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                                  {formik.errors.last_name && (
-                <small className="text-red-500 ">
-                  {formik.errors.last_name}
-                </small>
-              )}
                   </div>
-    
                 </div>
-         
                 <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
                     <label
@@ -211,18 +171,11 @@ const page = () => {
                       <option value="" disabled>
                         Select an option
                       </option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
+                      <option value="option1">Male</option>
+                      <option value="option2">Female</option>
                     </select>
-                    {formik.errors.gender && (
-                <small className="text-red-500 ">
-                  {formik.errors.gender}
-                </small>
-              )}
                   </div>
-         
                 </div>
-        
                 <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
                     <label
@@ -239,90 +192,12 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400"
                     />
-                           {formik.errors.date_of_birth && (
-                <small className="text-red-500 ">
-                  {formik.errors.date_of_birth}
-                </small>
-              )}
                   </div>
                 </div>
-         
-
-                <div className="w-full lg:w-6/12 px-4">
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password">
-                      Education Level
-                    </label>
-                    <select
-                      id="yourSelect"
-                      name="gradeId"
-                      value={formik.values.gradeId}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option  >
-                        Select Grade Level
-                      </option>
-                     
-                      {schoolss.map(
-                        (school:any) => (
-                          <option key={school.id} value={school?.id}>
-                            {school?.grade}
-                          </option>
-                        )
-                      )}
-                
-                    </select>
-                    {formik.errors.gradeId && (
-                <small className="text-red-500 ">
-                  {formik.errors.gradeId}
-                </small>
-              )}
-                  </div>
-                </div>
-
-        
-                <div className="w-full lg:w-6/12 px-4">
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password">
-                      Select section
-                    </label>
-                    <select
-                      id="yourSelect"
-                      name="sectionId"
-                      value={formik.values.sectionId}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option  >
-                       Available Sections {secc?.section.length}
-                      </option>
-                     
-                      {secc?.section.map(
-                        (school:any) => (
-                          <option key={school.id} value={school?.id}>
-                            {school?.name}
-                          </option>
-                        )
-                      )}
-                
-                    </select>
-                    {formik.errors.section && (
-                <small className="text-red-500 ">
-                  {formik.errors.section}
-                </small>
-              )}
-                  </div>
-                </div>
-      
               </div>
               <hr className="mt-6 border-b-1 border-blueGray-300" />
               <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-                Student Contact Information
+                Director Contact Information
               </h6>
               <div className="flex flex-wrap">
                 <div className="w-full lg:w-6/12 px-4">
@@ -342,14 +217,8 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       required
                     />
-                          {formik.errors.email && (
-                <small className="text-red-500 ">
-                  {formik.errors.email}
-                </small>
-              )}
                   </div>
                 </div>
-          
                 <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
                     <label
@@ -358,7 +227,7 @@ const page = () => {
                       Address
                     </label>
                     <input
-                      type="text"
+                      type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="04 kebele"
                       name="address"
@@ -367,14 +236,8 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       required
                     />
-                               {formik.errors.address && (
-                <small className="text-red-500 ">
-                  {formik.errors.address}
-                </small>
-              )}
                   </div>
                 </div>
-     
                 <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
                     <label
@@ -392,67 +255,40 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       required
                     />
-                            {formik.errors.phone && (
-                <small className="text-red-500 ">
-                  {formik.errors.phone}
-                </small>
-              )}
                   </div>
                 </div>
-        
+
                 <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="grid-password">
-                      Care of contact (1)
+                      Select school
                     </label>
-                    <input
-                      type="text"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="09562335"
-                      name="careOf_contact1"
-                      value={formik.values.careOf_contact1}
+                    <select
+                      id="yourSelect"
+                      name="gender"
+                      value={formik.values.school_name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      required
-                    />
-                          {formik.errors.careOf_contact1 && (
-                <small className="text-red-500 ">
-                  {formik.errors.careOf_contact1}
-                </small>
-              )}
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
+                      <option value="" disabled>
+                        Select a school
+                      </option>
+                      {schoolss.map(
+                        (school: {
+                          school_name: string;
+                          id: number;
+                          school_address: string;
+                        }) => (
+                          <option key={school.school_name} value={school?.id}>
+                            {school?.school_name}
+                          </option>
+                        )
+                      )}
+                    </select>
                   </div>
                 </div>
-          
-                <div className="w-full lg:w-6/12 px-4">
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password">
-                      Care of contact (2)
-                    </label>
-                    <input
-                      type="text"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="09562335"
-                      name="careOf_contact2"
-                      value={formik.values.careOf_contact2}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      required
-                    />
-                                 {formik.errors.careOf_contact2 && (
-                <small className="text-red-500 ">
-                  {formik.errors.careOf_contact2}
-                </small>
-              )}
-                  </div>
-                </div>
-
-   
-
-                
               </div>
 
               <hr className="mt-6 border-b-1 border-blueGray-300" />
@@ -490,21 +326,14 @@ const page = () => {
               </div>
               <br />
               <button className="bg-green-950  border-0 text-white w-full p-3  rounded-md">
-                Submit
+              { check? <>
+              
+              <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+          <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+         </svg>  Submitting  ...</>:"Submit"}
               </button>
             </form>
-            <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
           </div>
         </RegistrationHead>
       </Main>

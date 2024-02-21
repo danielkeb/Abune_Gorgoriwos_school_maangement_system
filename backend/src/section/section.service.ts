@@ -8,10 +8,8 @@ export class SectionService {
  async addSection(dto:SectionAddDto){
 
     const findSection= await this.prismaService.section.findMany({where:{...dto}})
-    if(findSection){
-        return{
-            msg:"Section Already  exist!"
-        }
+    if(findSection.length>0){
+        return findSection
     }
     const addSection= await this.prismaService.section.create({
         data:{

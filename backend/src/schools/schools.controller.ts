@@ -14,6 +14,7 @@ import { SchoolsService } from './schools.service';
 import { DtoSchool } from './dto';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('schools')
 @Controller('schools')
@@ -22,6 +23,7 @@ export class SchoolsController {
 
   @ApiCreatedResponse({ description: 'The record has been successfully created.'})
   @ApiForbiddenResponse({ description: 'Forbidden.'})
+  @UseGuards(JwtGuard)
   @Post('register')
   async schoolRegistered(@Body() dto: DtoSchool) {
    return this.schoolService.schoolRegistered(dto);
@@ -34,6 +36,8 @@ export class SchoolsController {
   schoolUpdate(@Param('id', ParseIntPipe) id: number, @Body() dto: DtoSchool) {
     return this.schoolService.schoolUpdate(id, dto);
   }
+
+  @UseGuards(JwtGuard)
   @Get('get')
   schoolsGet(){
     return this.schoolService.schoolsGet();

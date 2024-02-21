@@ -7,26 +7,26 @@ export class GradeLevelService {
   constructor(private prismaService: PrismaService) {}
   async addGradeLevel(id: number, dto: GradeLevel) {
     //check if the Teacher existd!
-    const findTeacher = await this.prismaService.teacher.findUnique({
-      where: { user_Id: dto.teacher_id },
-    });
+    // const findTeacher = await this.prismaService.teacher.findUnique({
+    //   where: { user_Id: dto.teacher_id },
+    // });
 
-    if (findTeacher) {
+
       //If  Teacher existed we create the gradeLevel
       const addGrade = await this.prismaService.gradeLevel.create({
         data: {
-          grade: dto.grade,
+         grade:dto.grade
           
-          teacherId: dto.teacher_id,
+         
         },
       });
       return addGrade;
-    } else {
+
       //We return error message!
-      return {
-        msg: 'Please Insert a vald Teacher Id',
-      };
-    }
+      // return {
+      //   msg: 'Please Insert a vald Teacher Id',
+      // };
+
   }
   async updateGradeLevel(gradeId: number, dto: GradeLevel) {
     // update the gradeLevel
@@ -36,7 +36,7 @@ export class GradeLevelService {
       },
       data: {
         grade: dto.grade,
-        teacherId: dto.teacher_id,
+        
       },
     });
     return updateGrade;

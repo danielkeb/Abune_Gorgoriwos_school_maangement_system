@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 export class DtoSchool {
   @ApiProperty()
   @IsNotEmpty()
@@ -15,4 +15,9 @@ export class DtoSchool {
   @IsNotEmpty()
   @IsString()
   school_phone: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsInt()
+  schoolYearId:number
 }

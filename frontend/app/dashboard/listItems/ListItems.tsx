@@ -10,21 +10,37 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation'
 
-export const mainListItems = (
+const MainListItems = ()=>{
+const path= usePathname()
+  console.log("the path name is :", path)
+  return(
   <React.Fragment>
-    <ListItemButton>
+    <Link href="/dashboard/">
+    <div className={`${path=="/dashboard"?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
       <ListItemIcon>
-        <DashboardIcon />
+        <DashboardIcon className={`${path=="/dashboard"? " text-white":""}`} />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
-    </ListItemButton>
-    <ListItemButton>
+    </div>
+
+    </Link>
+  
+
+    <Link href="/dashboard/register">
+    <div className={`${path.startsWith("/dashboard/register")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
+      
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <ShoppingCartIcon className={`${path.startsWith("/dashboard/register")? " text-white":""}`}  />
       </ListItemIcon>
       <ListItemText primary="Registration" />
-    </ListItemButton>
+  
+    </div>
+    
+    </Link>
+   
     <ListItemButton>
       <ListItemIcon>
         <PeopleIcon />
@@ -44,7 +60,11 @@ export const mainListItems = (
       <ListItemText primary="Integrations" />
     </ListItemButton>
   </React.Fragment>
-);
+
+  )
+}
+
+export default MainListItems;
 
 // export const secondaryListItems = (
 //   <React.Fragment>
