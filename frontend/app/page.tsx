@@ -16,6 +16,15 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import Link from "next/link";
+import {
+  ShieldCheckmarkOutline,
+  EarthOutline,
+  BedOutline,
+  CheckmarkCircleOutline,
+  AccessibilityOutline,
+  FingerPrintOutline,
+  SchoolOutline
+} from "react-ionicons";
 
 interface Props {
   /**
@@ -35,6 +44,32 @@ export default function DrawerAppBar(props: Props) {
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  const featuresList = [
+    {
+      icon: <AccessibilityOutline color="green" style={{ width: 60, height: 60 }} />,
+      title: "Students",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+    },
+    {
+      icon: (
+        <FingerPrintOutline
+          color="green"
+          style={{ width: 60, height: 60 }}
+        />
+      ),
+      title: "Employees",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+    },
+    {
+      icon: <SchoolOutline color="green" style={{ width: 60, height: 60 }} />,
+      title: "Branchs",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+    },
+  ];
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -120,37 +155,38 @@ export default function DrawerAppBar(props: Props) {
         </Drawer>
       </nav>
       <div className="w-full">
-
-      <Box
-        component="main"
-        sx={{ mt: 5 }}
-        style={{
-          width: "100%",
-          height: "80vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <p className="text-base">Welcome to</p> 
-        <h1 className="lg:text-4xl font-bold">AbuneGorgorious School Managment System </h1>
-        <br />
-        <p className="lg:text-base  sm:text-sm text-center">
-         A school where students are built both spiritually and academically
-        </p>
-        <ArrowCircleDownIcon
-          sx={{
-            fontSize: 40,
-            color: "gray",
-            position: "absolute",
-            bottom: 200,
-          }}
-        />
-
-
-        
-      </Box>
-      <div className="container max-w-full sm:h-96 ">
+        <div className="hero z-[1] w-full h-[100vh] grid place-items-center bg-[#141b2b] relative">
+          <div className="flex md:flex-row flex-col items-center w-full md:px-[200px] px-8 justify-between md:gap-0 gap-28">
+            <div className="flex flex-col gap-3 left-animation w-full">
+              <span className="text-green-400 text-[28px] font-medium">
+                Welcome To Our Website!
+              </span>
+              <span className="text-white font-medium md:text-[60px] text-[45px]">
+                Abune Gorgorious <br /> Schools.
+              </span>
+              <span className="text-white font-medium text-[60px]"></span>
+              <span className="text-white leading-7 max-w-[500px] text-justify">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Quisquam nulla ipsa unde inventore minus commodi saepe? Eos
+                cumque aliquam consequatur id optio dolorum modi quod?
+              </span>
+              <div className="flex items-center gap-7 mt-5">
+                <button className="bg-green-400 px-6 py-3 text-gray-900 font-semibold rounded-full">
+                  Get Started
+                </button>
+                <button className="border-[2px] border-green-400 px-6 py-3 text-white font-semibold rounded-full">
+                  Contact Us
+                </button>
+              </div>
+            </div>
+            <img
+              src="/pi1.png"
+              className="md:w-[50%] w-full  right-animation animate-bounce"
+              alt=""
+            />
+          </div>
+        </div>
+        {/* <div className="container max-w-full sm:h-96 ">
       <div className="stats grid grid-cols-3 gap-6 sm:grid-cols-1 max-sm:grid-cols-1 md:grid-cols-3 h-[50%] text-center" style={{backgroundColor:'green'}}>
         <div className="frame flex flex-col justify-center items-center gap-2">
           <div className="text-4xl sm:text-2xl font-bold text-white">
@@ -171,13 +207,126 @@ export default function DrawerAppBar(props: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </div> */}
+
+        <div className="flex w-full py-20 md:px-[200px] px-8 flex-col gap-16 justify-center items-center">
+          <div className="flex flex-col w-full items-center">
+            <span className="font-semibold text-green-500">Our Features</span>
+            <span className="font-semibold text-slate-700 text-3xl mt-1">
+              Our Priceless Features
+            </span>
+            <p className="max-w-[400px] text-center mt-4">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure
+              animi et quidem quis quas nisi.
+            </p>
+          </div>
+          <div className="flex md:flex-row flex-col w-full items-center justify-between md:gap-0 gap-5">
+            {featuresList.map((feature) => {
+              return (
+                <div
+                  className="bg-white py-5 px-12 flex flex-col items-center justify-center gap-5 rounded-[10px] transition-all duration-300 cursor-pointer hover:scale-[1.05]"
+                  style={{ boxShadow: "0 0 40px 5px rgb(0 0 0 / 5%)" }}
+                  key={feature.title}>
+                  {feature.icon}
+                  <span className="font-semibold text-gray-700 text-[21px]">
+                    {feature.title}
+                  </span>
+                  <span className="max-w-[360px] text-center leading-7">
+                    {feature.description}
+                  </span>{" "}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="w-full md:px-[200px] px-8 flex md:flex-row flex-col items-center justify-between py-10 md:gap-0 gap-16">
+          <div
+            className="md:w-[700px] md:h-[700px] w-[350px] h-[350px] bg-no-repeat bg-cover relative plane-mask"
+            style={{
+              backgroundImage: `url(https://roodepoortrecord.co.za/wp-content/uploads/sites/20/2014/01/IMG_1890-Medium.jpg)`,
+            }}
+          />
+          <div className="flex flex-col md:w-[48%] w-full md:px-0 px-8">
+            <span className="text-[15px] text-green-600 font-semibold">
+              ABOUT US
+            </span>
+            <span className="text-[30px] font-medium text-gray-700 mt-1">
+              We Are Here To Bring You All The <br /> Comfort And Pleasure
+            </span>
+            <p className="max-w-[650px] text-gray-600 leading-7 mt-5">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Consequatur dignissimos ratione, excepturi explicabo non quasi
+              velit pariatur ipsa mollitia voluptate nemo similique recusandae,
+              doloribus porro expedita eius. Magnam, laudantium velit.
+            </p>
+            <div className="flex flex-col gap-3 mt-5">
+              <div className="flex items-center gap-3">
+                <CheckmarkCircleOutline color="green" />
+                <span>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckmarkCircleOutline color="green" />
+                <span>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckmarkCircleOutline color="green" />
+                <span>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                </span>
+              </div>
+            </div>
+            <button className="bg-green-700 px-6 py-3 text-white font-semibold rounded-full w-[200px] mt-12 shadow-md">
+              Discover More
+            </button>
+          </div>
+        </div><br/>
+        <div className="map-responsive">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3933.0512916444013!2d39.53042267585995!3d9.67665879041285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1649bd79fe92a5f5%3A0xcedc88541b6c788d!2sAbune%20Gorgoriwos%20Scoll!5e0!3m2!1sen!2set!4v1707652781042!5m2!1sen!2set"
+            width="600"
+            height="450"
+            
+            allowFullScreen
+            loading="lazy"
+            title="Responsive google map"
+            referrerPolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <br />
+        <br />
+
+        <div className="w-full flex md:flex-row flex-col md:gap-0 gap-8 items-center justify-between py-8 px-10 border-t border-slate-300 border-dashed">
+          <span className="font-medium text-slate-700">
+            Copyright © 2024 AbuneGorgorious Schools . All rights reserved.
+          </span>
+          <div className="flex items-center gap-8">
+            <a
+              href="#"
+              className="font-medium whitespace-nowrap md:text-[15px] text-[10.5px] text-gray-600 hover:text-blue-600">
+              Terms and conditions
+            </a>
+            <a
+              href="#"
+              className="font-medium whitespace-nowrap md:text-[15px] text-[10.5px] text-gray-600 hover:text-blue-600">
+              Long Term Contracts
+            </a>
+            <a
+              href="#"
+              className="font-medium whitespace-nowrap md:text-[15px] text-[10.5px] text-gray-600 hover:text-blue-600">
+              Copyright Policy
+            </a>
+            <a
+              href="#"
+              className="font-medium whitespace-nowrap md:text-[15px] text-[10.5px] text-gray-600 hover:text-blue-600">
+              Customer Support
+            </a>
+          </div>
+        </div>
       </div>
-     
-
-
-
-      
     </Box>
   );
 }

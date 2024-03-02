@@ -18,7 +18,8 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import {mainListItems}from '../listItems/ListItems'
+
+import MainListItems from '../listItems/ListItems';
 import Chart from '../Chart/Chart';
 import Deposits from '../deposits/Deposits';
 import Orders from '../orders/Orders';
@@ -146,7 +147,7 @@ const Main: React.FC<MainProps> = ({children})=> {
     setAnchorEl(event.currentTarget);
   };
     
-  const{decodedToken,token}= React.useContext(AppContext);
+  const{decodedToken,token, logout}= React.useContext(AppContext);
 
   console.log("The decoded token is 0",decodedToken)
   const user = {
@@ -270,7 +271,7 @@ const Main: React.FC<MainProps> = ({children})=> {
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button fullWidth sx={{color:'green'}} >
+          <Button fullWidth sx={{color:'green'}}  onClick={()=>logout()}>
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>
@@ -294,7 +295,7 @@ const Main: React.FC<MainProps> = ({children})=> {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <MainListItems/>
             <Divider sx={{ my: 1 }} />
             {/* {secondaryListItems} */}
           </List>

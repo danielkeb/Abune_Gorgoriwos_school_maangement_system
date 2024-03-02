@@ -24,6 +24,7 @@ import { SharedModule } from './shared/shared.module';
     ResultModule,
     EmailModule,
     SectionModule,
+    SectionModule,
   ],
 })
 export class AppModule {}

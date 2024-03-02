@@ -71,6 +71,8 @@ export class AuthService {
         address: dto.address,
         username: dto.username,
         phone: dto.phone,
+        gender:dto.gender,
+        date_of_birth:dto.date_of_birth,
         password: hash,
       },
     });
@@ -83,6 +85,7 @@ export class AuthService {
           careof_contact1: dto.careOf_contact1,
           careof_contact2: dto.careOf_contact2,
           gradeId: dto.gradeId,
+          sectionId:dto.sectionId
         },
       });
       const quickSelect = await this.prismaService.student.findUnique({

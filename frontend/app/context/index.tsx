@@ -1,33 +1,33 @@
-'use client'
+"use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
 import jwt from "jsonwebtoken";
 
 import Cookies from "universal-cookie";
-
+import { useRouter } from "next/navigation";
 
 export const AppContext = createContext({});
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
-
-  const cookies= new Cookies()
+  const router= useRouter()
+  const cookies = new Cookies();
   const [token, setToken] = useState<string | null>(() => {
-
-
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('authToken') || null;
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("authToken") || null;
     }
     return null;
   });
 
-  const [decodedToken, setDecodedToken] = useState<{ [key: string]: any } | null>(() => {
+  const [decodedToken, setDecodedToken] = useState<{
+    [key: string]: any;
+  } | null>(() => {
     try {
       if (token) {
         return jwt.decode(token);
       }
       return null;
     } catch (error) {
-      console.error('Error decoding token:', error);
+      console.error("Error decoding token:", error);
       return null;
     }
   });
@@ -48,13 +48,14 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setToken(null);
     setDecodedToken(null);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('authToken');
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("authToken");
     }
+    router.push("/login")
   };
 
   return (
-    <AppContext.Provider value={{ token,logout , setToken}}>
+    <AppContext.Provider value={{ token, logout, setToken }}>
       {children}
     </AppContext.Provider>
   );

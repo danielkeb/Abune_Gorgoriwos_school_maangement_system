@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -7,6 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Link from "next/link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -16,13 +16,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 import { useFormik } from "formik";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { AppContext } from "@/components/context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import jwt from "jsonwebtoken";
 import * as yup from "yup";
-import Link from "next/link";
 
 function Copyright(props: any) {
   return (
@@ -46,51 +45,32 @@ const defaultTheme = createTheme();
 
 export default function Login() {
   const router = useRouter();
-  const { token, setToken, decodedToken, setDecodedToken } =
-    React.useContext(AppContext);
+  const param = useParams();
+  // Access parameters using the `useParams` hook
+  const { id, token } = param;
   const formik = useFormik({
     initialValues: {
-      email: "",
       password: "",
     },
     onSubmit: async (values) => {
       try {
-        // console.log(formik.values);
+        console.log(id, token);
         const response = await axios.post(
-          "http://localhost:3333/auth/signin",
+          `http://localhost:3333/auth/reset/pass/${id}/${token}`,
           formik.values
         );
 
-        const tokk = response?.data.token_access;
-        const user = response.data.user;
-        const decodedToken = jwt.decode(tokk);
-        const userString = JSON.stringify(user);
-        // const tokkString = JSON.stringify(tokk);
-
-       
-
-        localStorage.setItem("authToken", tokk);
-
-        setToken(tokk);
-        setDecodedToken(jwt.decode(tokk));
-        // Handle successful response (e.g., store token, redirect to another page)
-       
-
-        router.push("/dashboard");
-
-        // router.push('/head')
+        const info = response.data.msg;
+        console.log(info);
+        router.push("/login");
       } catch (error) {
-        // Handle error (e.g., display error message)
-        console.error("Error submitting form:", error?.response.data.message);
-        toast.error(error?.response?.data.message);
+        // // Handle error (e.g., display error message)
+        console.error("Error submitting form:", error.response.data.message);
+        toast.error(error.response.data.message);
       }
     },
     validationSchema: yup.object({
-      email: yup
-        .string()
-        .email("Must be a valid email")
-        .required("Email is required !"),
-      password: yup.string().trim().required("password is required !"),
+      password: yup.string().trim().required("password is required"),
     }),
   });
   return (
@@ -127,29 +107,13 @@ export default function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Reset Password
             </Typography>
             <Box
               component="form"
               noValidate
               onSubmit={formik.handleSubmit}
               sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.errors.email && (
-                <small className="text-red-500">{formik.errors.email}</small>
-              )}
               <TextField
                 margin="normal"
                 required
@@ -167,26 +131,17 @@ export default function Login() {
                 <small className="text-red-500 ">
                   {formik.errors.password}
                 </small>
-              )}{" "}
-              <br />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-                className="mt-[10px]"
-              />
+              )}
+
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 style={{ backgroundColor: "green" }}>
-                Sign In
+                Reset Password
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="/login/forget">Forgot password?</Link>
-                </Grid>
-              </Grid>
+
               <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>

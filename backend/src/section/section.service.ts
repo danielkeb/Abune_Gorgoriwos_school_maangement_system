@@ -53,9 +53,14 @@ export class SectionService {
       return {
         msg: 'An error occurred while adding the section.',
       };
+      const findSection = await this.prismaService.section.findMany({
+        where: { ...dto },
+      });
+      if (findSection.length > 0) {
+        return findSection;
+      }
     }
   }
-
   async getSection() {
     const getSection = await this.prismaService.section.findMany({
       select: {
