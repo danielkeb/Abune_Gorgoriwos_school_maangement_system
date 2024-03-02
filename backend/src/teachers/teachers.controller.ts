@@ -19,12 +19,12 @@ import { ApiTags } from '@nestjs/swagger';
 export class TeachersController {
   constructor(private teacherService: TeachersService) {}
   @Get('get')
-  getTeachers(){
-    return this.teacherService.getTeachers()
+  getTeachers() {
+    return this.teacherService.getTeachers();
   }
   @Get('get/:id')
-  getTeacherById(@Param('id', ParseIntPipe) id:number){
-    return this.teacherService.getTeacherById(id)
+  getTeacherById(@Param('id', ParseIntPipe) id: number) {
+    return this.teacherService.getTeacherById(id);
   }
   @Patch('update/:id')
   updateTeacher(@GetUser('id') userId: number, @Body() dto: UpdateTeacherDto) {
@@ -33,11 +33,10 @@ export class TeachersController {
 
   @Patch('adminUpdate/:id')
   updateAdminTeacher(
-
     @Body() dto: UpdateAdminTeacherDto,
     @Param('id', ParseIntPipe) userId: number,
   ) {
-    return this.teacherService.updateAdminTeacher( dto, userId);
+    return this.teacherService.updateAdminTeacher(dto, userId);
   }
 
   @Get('grade/:id')

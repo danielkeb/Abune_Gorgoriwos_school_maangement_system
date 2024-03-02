@@ -96,13 +96,15 @@ model Student {
 model GradeLevel {
   id      Int       @id @default(autoincrement())
   grade   String
-  student Student[]
-  subject Subject[]
-  result  Result[]
+ 
+ //Make the teacherId optional !
+    section Section[]
+    subject Subject[]
+    student Student[]
+    result Result[]
+ 
   //Make the teacherId optional !
   teacher Teacher[]
-
-  section Section[]
 
   // other fields specific to GradeLevel
 }
@@ -131,13 +133,22 @@ model Subject {
 }
 
 model Result {
-  id              Int @id @default(autoincrement())
-  assignmentScore Int
-  midtermScore    Int
-  finalExamScore  Int
-  totalScore      Int
+  id     Int @id @default(autoincrement())
+  test1 Float?
+  assignmentScore1 Float?
+  midtermScore1 Float?
+  finalExamScore1 Float?
+  totalScore1 Float?
 
-  studentId Int
+  test2 Float?
+  assignmentScore2 Float?
+  midtermScore2 Float?
+  finalExamScore2 Float?
+  totalScore2 Float?
+  
+  teacher   Teacher   @relation(fields: [teacherId], references: [user_Id])
+  teacherId Int
+    studentId Int
   student   Student @relation(fields: [studentId], references: [user_Id])
 
   subjectId Int
@@ -146,12 +157,11 @@ model Result {
   gradeLevelId Int
   gradeLevel   GradeLevel @relation(fields: [gradeLevelId], references: [id])
 
-  teacherId Int
-  teacher   Teacher @relation(fields: [teacherId], references: [user_Id])
-
   @@unique([subjectId, studentId])
-  @@map("results")
+    @@map("results")
 }
+
+
 
 model SchoolYear {
   id         Int    @id @default(autoincrement())

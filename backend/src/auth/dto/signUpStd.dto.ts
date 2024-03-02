@@ -46,12 +46,11 @@ export class DtoStudent {
 
   @IsNotEmpty()
   @IsString()
-  date_of_birth:string
+  date_of_birth: string;
 
   @IsNotEmpty()
   @IsString()
-  gender:string
-  
+  gender: string;
 
   @IsOptional()
   @IsString()
@@ -67,7 +66,7 @@ export class DtoStudent {
 
   @IsOptional()
   @IsInt()
-  sectionId:number
+  sectionId: number;
 
   @IsOptional()
   @IsString()

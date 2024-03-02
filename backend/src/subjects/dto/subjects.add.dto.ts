@@ -6,10 +6,11 @@ export class AddSubjectsDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
   @ApiProperty()
   @IsInt()
-  @IsOptional()
-  gradeId?: number;
+  @IsNotEmpty()
+  gradeId: number;
 
   @ApiProperty()
   @IsInt()

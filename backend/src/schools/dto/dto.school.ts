@@ -5,7 +5,7 @@ export class DtoSchool {
   @IsNotEmpty()
   @IsString()
   school_name: string;
-  
+
   @ApiProperty()
   @IsNotEmpty()
   @IsString()

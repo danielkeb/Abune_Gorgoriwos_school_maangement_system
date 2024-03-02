@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -23,6 +24,11 @@ export class SubjectsController {
     
   ) {
     return this.subjectsService.addSubjects(dto);
+  }
+
+  @Get('get')
+  getSubject() {
+    return this.subjectsService.getSubject();
   }
 
   @Patch('update/:id')

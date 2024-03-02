@@ -9,9 +9,11 @@ import { GradeLevelModule } from './grade-level/grade-level.module';
 import { ResultModule } from './result/result.module';
 import { EmailModule } from './email/email.module';
 import { SectionModule } from './section/section.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
+    SharedModule,
     SchoolsModule,
     UsersModule,
     TeachersModule,
@@ -21,7 +23,8 @@ import { SectionModule } from './section/section.module';
     GradeLevelModule,
     ResultModule,
     EmailModule,
-    SectionModule
+    SectionModule,
+    SectionModule,
   ],
 })
 export class AppModule {}

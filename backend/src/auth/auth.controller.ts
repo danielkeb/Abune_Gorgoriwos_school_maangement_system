@@ -1,6 +1,17 @@
-import { Controller, Post, Body, Param, ParseIntPipe,Get,Header, Res, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  ParseIntPipe,
+  Get,
+  Header,
+  Res,
+  Req,
+  Query,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { DtoSignin, DtoStudent } from './dto';
+import { CreateUserDto, DtoSignin, DtoStudent } from './dto';
 import { Response, response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 // import { DtoStudent } from 'src/students/dto';
@@ -25,24 +36,32 @@ export class AuthController {
   }
 
   @Post('signin')
-  async signIn(@Body() dto: DtoSignin, @Res({ passthrough: true }) response ) : Promise<any> {
-   return  this.authService.signIn(dto);
+  async signIn(
+    @Body() dto: DtoSignin,
+    @Res({ passthrough: true }) response,
+  ): Promise<any> {
+    return this.authService.signIn(dto);
     // response.cookie('token', token, { httpOnly: true, secure: true ,sameSite: 'lax' ,expires: new Date(Date.now()+10000)});
-    
-
-
   }
   @Post('forget')
-  async forgetPassword(@Body() dto:any){
-    return this.authService.forgetPassword(dto)
+  async forgetPassword(@Body() dto: any) {
+    return this.authService.forgetPassword(dto);
   }
   @Post('reset/pass/:id/:token')
-  async resetPassword(@Body() dto:any, @Param('id',ParseIntPipe) id:number, @Param('token') token:any){
-   return this.authService.resetPassword(dto,id,token)
+  async resetPassword(
+    @Body() dto: any,
+    @Param('id', ParseIntPipe) id: number,
+    @Param('token') token: any,
+  ) {
+    return this.authService.resetPassword(dto, id, token);
   }
 
-  @Get('ask')
-  findAll(@Res({ passthrough: true }) response: Response) {
-      return {"msg":"you are good"}
+  @Get('role/:role')
+  getUsers(@Param('role') role: string) {
+    return this.authService.getUsers(role);
+  }
+  @Get('get')
+  getAdmin() {
+    return this.authService.getAdmin();
   }
 }

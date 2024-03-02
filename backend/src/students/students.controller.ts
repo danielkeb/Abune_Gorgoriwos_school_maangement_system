@@ -11,11 +11,13 @@ import {
 import { StudentsService } from './students.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { DtoAdmin, DtoStudent } from './dto';
-import { ApiTags } from '@nestjs/swagger';
-import PromoteStudentsDto from './dto/promote.students.dto';
-import PromoteStudentsNextGradeDto from './dto/promote.students.nextgrade.dto';
+import { GetUser } from 'src/auth/decorator';
+import { RoleGuard } from 'src/auth/decorator/roles.guard';
+import { Role } from 'src/auth/decorator/enums/role.enum';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { User } from '@prisma/client';
 
-@ApiTags('students')
+// @ApiTags('students')
 // @UseGuards(JwtGuard)
 @Controller('students')
 export class StudentsController {
@@ -33,32 +35,5 @@ export class StudentsController {
     @Body() dto: DtoAdmin,
   ) {
     return this.studentsService.updateStudentByAdmin(id, dto);
-  }
-
-  @Get('by/:schoolId/:gradeId/:sectionId/:subjectId')
-  getStudentbygrade(
-    @Param('schoolId', ParseIntPipe) schoolId: number,
-    @Param('gradeId', ParseIntPipe) gradeId: number,
-    @Param('sectionId', ParseIntPipe) sectionId: number,
-    @Param('subjectId', ParseIntPipe) subjectId: number,
-  ){
-    return this.studentsService.getStudentbygrade(schoolId,gradeId, sectionId, subjectId);
-  }
-
-  @Post('promote')
-  promoteStudents(
-    @Body() students:PromoteStudentsNextGradeDto[]
-    // @Param('user_id', ParseIntPipe) user_id: number,
-    // @Param('gradeId', ParseIntPipe) gradeId: number,
-    // @Param('sectionId', ParseIntPipe) sectionId: number,
-  ){
-    return this.studentsService.promoteStudents(students);
-  }
-  @Post('promoteSubjects')
-  promoteSubjects(
-    @Body() students: PromoteStudentsDto[]
-  ){
-
-    return this.studentsService.promoteSubjects(students);
   }
 }
