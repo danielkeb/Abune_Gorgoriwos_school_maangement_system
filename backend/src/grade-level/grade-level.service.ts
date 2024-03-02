@@ -43,7 +43,7 @@ export class GradeLevelService {
   }
 
   async getGradeLevel(){
-    const gradeLevel= await this.prismaService.gradeLevel.findMany({select:{id:true, section:true, grade:true}})
+    const gradeLevel= await this.prismaService.gradeLevel.findMany({select:{id:true, section:true, grade:true, subject:true}})
 
     return gradeLevel;
 

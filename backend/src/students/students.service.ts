@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DtoAdmin, DtoStudent } from './dto';
+import PromoteStudentsDto from './dto/promote.students.dto';
+import PromoteStudentsNextGradeDto from './dto/promote.students.nextgrade.dto';
 
 @Injectable()
 export class StudentsService {
@@ -30,5 +32,262 @@ export class StudentsService {
       },
     });
     return { updateStudent, studentTable };
+  }
+
+  async getStudentbygrade(
+    schoolId: number,
+    gradeId: number,
+    sectionId: number,
+    subjectId: number,
+  ) {
+    const students = await this.prismaService.student.findMany({
+      where: {
+        user: {
+          school_Id: schoolId,
+        },
+        gradeId: gradeId,
+        sectionId: sectionId,
+        subject: {
+          some: {
+            id: subjectId,
+          },
+        },
+      },
+      select: {
+        result: {
+          select: {
+            assignmentScore: true,
+            midtermScore: true,
+            finalExamScore: true,
+            totalScore: true,
+            subjectId: true,
+          },
+        },
+        user_Id: true,
+        user: {
+          select: {
+            id: true,
+            frist_name: true,
+            middle_name: true,
+          },
+        },
+      },
+    });
+
+    // return students.map((student) => ({
+    //   id: student.user_Id,
+    //   firstName: student.user.frist_name,
+    //   lastName: student.user.middle_name,
+    //   assignmentScore:student.result.map((r)=>r.assignmentScore)
+
+    // }));
+
+    return students;
+  }
+
+
+  async promoteStudents(students: PromoteStudentsNextGradeDto[]) {
+    try {
+      // Start a transaction
+      await this.prismaService.$transaction(async (prisma) => {
+        for (const student of students) {
+          const user_id = student.user_id;
+          const gradeId = student.gradeId;
+          const sectionId = student.sectionId;
+
+          // Step 1: Fetch Student Results
+          const studentResults = await prisma.result.findMany({
+            where: { studentId: user_id },
+            include: {
+              student: true,
+              subject: true,
+              gradeLevel: true,
+              teacher: true,
+            },
+          });
+
+          // Filter students with a totalScore greater than 50
+          const totalScores = studentResults.map((result) => result.totalScore);
+          const averageTotalScore =
+            totalScores.reduce((sum, score) => sum + score, 0) / totalScores.length;
+
+          // Filter students based on the average total score
+          const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
+
+          // Step 2: Prepare Data for Student History
+          const historyData = {
+            studentId: studentResults[0].studentId, // Use the studentId from the first result
+            gradeId: studentResults[0].gradeLevelId, // Use the gradeId from the first result
+            sectionId: studentResults[0].student.sectionId, // Use the sectionId from the first result
+            totalScore: averageTotalScore, // Use the calculated average
+            subjectScores: {}, // Initialize an empty object to store subject scores
+          };
+          
+          // Iterate over each subject and add it to subjectScores
+          for (const result of studentResults) {
+            const subject = await prisma.subject.findUnique({
+              where: { id: result.subjectId },
+            });
+            historyData.subjectScores[subject?.name || 'Unknown'] = result.totalScore;
+          }
+          
+          // Insert into Student History
+          await prisma.studentHistory.create({
+            data: historyData,
+          });
+
+          // Step 4: Remove records from Result table
+          const resultIdsToRemove = studentResults.map((result) => result.id);
+
+          await prisma.result.deleteMany({
+            where: {
+              id: {
+                in: resultIdsToRemove,
+              },
+            },
+          });
+
+          // Step 5: Update Student table with new gradeId and sectionId
+          if (eligibleStudents.length > 0) {
+            await prisma.student.update({
+              where: { user_Id: user_id },
+              data: {
+                gradeId: gradeId,
+                sectionId: sectionId,
+              },
+            });
+          }
+        }
+      });
+
+      return {
+        status: 'Success',
+        msg: 'Eligible students promoted to the new grade',
+      };
+    } catch (error) {
+      console.error('Error promoting students:', error);
+      return {
+        status: 'Error',
+        msg: 'An error occurred while promoting students',
+      };
+    }
+  }
+
+  // async promoteStudents(students: PromoteStudentsNextGradeDto[]) {
+  //   for (const student of students) {
+  //     const user_id = student.user_id;
+  //     const gradeId = student.gradeId;
+  //     const sectionId = student.sectionId;
+
+  //     // Step 1: Fetch Student Results
+  //     const studentResults = await this.prismaService.result.findMany({
+  //       where: { studentId: user_id },
+  //       include: {
+  //         student: true,
+  //         subject: true,
+  //         gradeLevel: true,
+  //         teacher: true,
+  //       },
+  //     });
+
+  //     // Filter students with a totalScore greater than 50
+  //     const eligibleStudents = studentResults.filter(
+  //       (result) => result.totalScore > 50,
+  //     );
+
+  //     // Step 2: Prepare Data for Student History
+  //     const historyData = studentResults.map((result) => ({
+  //       studentId: result.studentId,
+  //       gradeId: result.gradeLevelId,
+  //       sectionId: result.student.sectionId,
+  //       totalScore: result.totalScore,
+  //       subjectId: result.subjectId,
+  //     }));
+
+  //     // Step 3: Insert into Student History
+  //     await this.prismaService.studentHistory.createMany({
+  //       data: historyData,
+  //     });
+
+  //     // Step 4: Remove records from Result table
+  //     const resultIdsToRemove = studentResults.map((result) => result.id);
+
+  //     await this.prismaService.result.deleteMany({
+  //       where: {
+  //         id: {
+  //           in: resultIdsToRemove,
+  //         },
+  //       },
+  //     });
+
+  //     // Step 5: Update Student table with new gradeId and sectionId
+  //     if (eligibleStudents.length > 0) {
+  //       await this.prismaService.student.update({
+  //         where: { user_Id: user_id },
+  //         data: {
+  //           gradeId: gradeId,
+  //           sectionId: sectionId,
+  //         },
+  //       });
+  //     }
+
+  //     /*************************************** */
+      
+
+     
+
+
+
+
+
+  //     /*********************************************** */
+  //   }
+ 
+
+  //   return {
+  //     Status: 'Sucess',
+  //     msg: 'Students promoted to new grade ',
+  //   };
+  // }
+
+  async associateSubjects(userId: number, gradeId: number) {
+    const subjects = await this.prismaService.subject.findMany({
+      where: { gradeId: gradeId },
+    });
+
+    await this.prismaService.student.update({
+      where: { user_Id: userId },
+      data: {
+        subject: {
+          connect: subjects.map((subject) => ({ id: subject.id })),
+        },
+      },
+    });
+  }
+
+  async promoteSubjects(students: PromoteStudentsDto[]) {
+    for (const student of students) {
+      const user_id = student.user_id;
+      const gradeId = student.gradeId;
+      const existingSubjects = await this.prismaService.student
+        .findUnique({ where: { user_Id: user_id }, include: { subject: true } })
+        .then((student) => student?.subject);
+
+      // Step 2: Delete Existing Subjects
+      if (existingSubjects) {
+        const subjectIdsToRemove = existingSubjects.map((subject) => ({
+          id: subject.id,
+        }));
+        await this.prismaService.student.update({
+          where: { user_Id: user_id },
+          data: { subject: { disconnect: subjectIdsToRemove } },
+        });
+      }
+      await this.associateSubjects(user_id, gradeId);
+    }
+    return {
+      status: 'Sucess',
+      msg: 'All Students subject list promoted',
+    };
   }
 }

@@ -7,8 +7,8 @@ import { UpdateSubjectDto } from './dto/update.subject.dto';
 export class SubjectsService {
     constructor(private prisma:PrismaService){}
 
-    async addSubjects( dto:AddSubjectsDto, teacherId:number){
-      const subject= await this.prisma.subject.create({data:{name:dto.name, teacherId}})
+    async addSubjects( dto:AddSubjectsDto ){
+      const subject= await this.prisma.subject.create({data:{...dto}})
 
 
       return {

@@ -55,10 +55,6 @@ export class DtoStudent {
 
   @IsOptional()
   @IsString()
-  enrollment_date?: string;
-
-  @IsOptional()
-  @IsString()
   careOf_contact1?: string;
 
   @IsOptional()

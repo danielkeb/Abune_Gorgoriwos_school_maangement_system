@@ -50,8 +50,8 @@ const page = () => {
       try {
         setCheck(true);
         const response = await axios.post(
-          `http://localhost:3333/auth/signUp/2`,
-          formik.values
+          `http://localhost:3333/auth/signUp/1`,
+        {...values, gradeId:parseInt(values.gradeId), sectionId:parseInt(values.sectionId)}
         );
 
         toast.success("New Student Registerd ");

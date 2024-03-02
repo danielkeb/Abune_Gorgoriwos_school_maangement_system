@@ -88,4 +88,56 @@ export class TeachersService {
 
     return { msg:"Sucess" };
   }
+
+  async getTeachersGrade(id:number){
+  const teachersGrade= await this.prisma.teacher.findMany({
+    where:{
+      user_Id:id
+    },
+    select:{
+      gradelevel:{
+        select:{
+          id:true,
+          grade:true
+        }
+      },
+      section:true,
+      subject:true
+
+    }
+  })
+
+  return teachersGrade;
+  }
+
+  // async getTeacherSection(
+  //   schoolId: number,
+  //   gradeId: number,
+  //   subjectId: number,
+  // ){
+  //   const students = await this.prisma.student.findMany({
+  //     where :{
+  //       user:{
+  //         school_Id:schoolId
+  //       },
+  //       gradeId:gradeId,
+  //       subject: {
+  //         some: {
+  //           id: subjectId,
+  //         },
+  //       },
+  //     }
+  //   })
+  //   for (const student of students) {
+  //     const result= await this.prisma.result.findMany({
+  //       where:{
+
+  //       }
+  //     })
+  //   }
+
+   
+
+
+  // }
 }

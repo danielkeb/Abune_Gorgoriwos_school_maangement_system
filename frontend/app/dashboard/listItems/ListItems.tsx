@@ -15,7 +15,7 @@ import { usePathname } from 'next/navigation'
 
 const MainListItems = ()=>{
 const path= usePathname()
-  console.log("the path name is :", path)
+  // console.log("the path name is :", path)
   return(
   <React.Fragment>
     <Link href="/dashboard/">
@@ -47,12 +47,17 @@ const path= usePathname()
       </ListItemIcon>
       <ListItemText primary="Roles" />
     </ListItemButton>
-    <ListItemButton>
+    <Link href="/dashboard/grades">
+    <div className={`${path.startsWith("/dashboard/grades")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
+      
       <ListItemIcon>
-        <BarChartIcon />
+        <ShoppingCartIcon className={`${path.startsWith("/dashboard/grades")? " text-white":""}`}  />
       </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItemButton>
+      <ListItemText primary="Grades" />
+  
+    </div>
+    
+    </Link>
     <ListItemButton>
       <ListItemIcon>
         <LayersIcon />

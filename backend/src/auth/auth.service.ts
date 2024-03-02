@@ -79,13 +79,13 @@ export class AuthService {
       const student = await this.prismaService.student.create({
         data: {
           user_Id: addUser.id,
-          enrollment_date: dto.enrollment_date,
           careof_contact1: dto.careOf_contact1,
           careof_contact2: dto.careOf_contact2,
           gradeId: dto.gradeId,
           sectionId:dto.sectionId
         },
       });
+      await this.associateSubjects(student.user_Id, student.gradeId);
       const quickSelect= await this.prismaService.student.findUnique({where:{user_Id:addUser.id},include:{user:true, }})
       return { msg:"student registered", data:quickSelect };
     } else if (dto.role === 'teacher') {
@@ -104,6 +104,8 @@ export class AuthService {
       throw new ExceptionsHandler();
     }
   }
+
+
 
   async signIn(dto: DtoSignin) {
     const user = await this.prismaService.user.findUnique({
@@ -240,6 +242,25 @@ export class AuthService {
     }
   
   }
+
+  async associateSubjects(userId: number, gradeId: number) {
+    const subjects = await this.prismaService.subject.findMany({
+      where: { gradeId: gradeId },
+    });
+
+    await this.prismaService.student.update({
+      where: { user_Id: userId },
+      data: {
+        subject: {
+          connect: subjects.map((subject) => ({ id: subject.id })),
+        },
+      },
+    });
+  }
+
+
+
+  
 
  
 }

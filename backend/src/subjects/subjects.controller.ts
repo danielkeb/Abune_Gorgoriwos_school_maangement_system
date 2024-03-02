@@ -17,12 +17,12 @@ import { ApiTags } from '@nestjs/swagger';
 export class SubjectsController {
   constructor(private subjectsService: SubjectsService) {}
 
-  @Post('add/:id')
+  @Post('add/')
   addSubjects(
     @Body() dto: AddSubjectsDto,
-    @Param('id', ParseIntPipe) teacherId: number,
+    
   ) {
-    return this.subjectsService.addSubjects(dto, teacherId);
+    return this.subjectsService.addSubjects(dto);
   }
 
   @Patch('update/:id')

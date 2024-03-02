@@ -39,4 +39,19 @@ export class TeachersController {
   ) {
     return this.teacherService.updateAdminTeacher( dto, userId);
   }
+
+  @Get('grade/:id')
+  getTeachersGrade(
+    @Param('id', ParseIntPipe) id: number,){
+    return this.teacherService.getTeachersGrade(id)
+  }
+  // @Get('by/:schoolId/:gradeId/:subjectId')
+  // getTeacherSection(
+  //   @Param('schoolId', ParseIntPipe) schoolId: number,
+  //   @Param('gradeId', ParseIntPipe) gradeId: number,
+  //   // @Param('sectionId', ParseIntPipe) sectionId: number,
+  //   @Param('subjectId', ParseIntPipe) subjectId: number,
+  // ){
+  //   return this.teacherService.getTeacherSection(schoolId,gradeId, subjectId);
+  // }
 }

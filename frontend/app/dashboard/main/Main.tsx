@@ -149,7 +149,7 @@ const Main: React.FC<MainProps> = ({children})=> {
     
   const{decodedToken,token, logout}= React.useContext(AppContext);
 
-  console.log("The decoded token is 0",decodedToken)
+  // console.log("The decoded token is 0",decodedToken)
   const user = {
     name: decodedToken?.frist_name,
     avatar: '',

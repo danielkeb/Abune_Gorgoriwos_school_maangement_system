@@ -28,7 +28,8 @@ const page = () => {
     initialValues: {
       school_name: "",
       school_address: "",
-      school_phone:""
+      school_phone:"",
+      date:""
     },
     onSubmit: async (values) => {
       try {
@@ -61,6 +62,9 @@ const page = () => {
         .string()
         .required("School Address is Required !"),
       school_phone: yup
+        .string()
+        .required("School Phone is Required !"),
+      date: yup
         .string()
         .required("School Phone is Required !"),
      
@@ -141,6 +145,29 @@ const page = () => {
                       
                     />
                           {formik.errors.school_phone && (
+                <small className="text-red-500 ">
+                  {formik.errors.school_phone}
+                </small>
+              )}
+                  </div>
+                </div>
+                <div className="w-full lg:w-6/12 px-4">
+                  <div className="relative w-full mb-3">
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password">
+                      Date
+                    </label>
+                    <input
+                      id="dob"
+                      type="date"
+                      name="date"
+                      value={formik.values.date}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400"
+                    />
+                                       {formik.errors.school_phone && (
                 <small className="text-red-500 ">
                   {formik.errors.school_phone}
                 </small>
