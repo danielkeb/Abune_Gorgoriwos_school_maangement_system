@@ -57,10 +57,10 @@ model Teacher {
   education_level String
 
 user_Id Int  @id
-  user    User @relation(fields: [user_Id], references: [id])
-   result Result[]
- subject Subject[]
- gradelevel GradeLevel[]
+user    User @relation(fields: [user_Id], references: [id])
+result Result[]
+subject Subject[]
+gradelevel GradeLevel[]
 
 
 
@@ -88,23 +88,26 @@ model Student {
 model GradeLevel {
   id      Int      @id @default(autoincrement())
   grade   String
-  student Student[]
-  subject Subject[]
- result Result[]
+ 
  //Make the teacherId optional !
   teacher    Teacher    @relation(fields: [teacherId], references: [ user_Id])   
-   teacherId  Int 
-
-  
+    teacherId  Int 
     section Section[]
+    subject Subject[]
+    student Student[]
+    result Result[]
 
   // other fields specific to GradeLevel
 }
+
+
+
 model Section{
    id      Int      @id @default(autoincrement())
    name String
-    gradeId   Int
+   
   gradelevel     GradeLevel  @relation(fields: [gradeId], references: [id])
+   gradeId   Int
   
 }
 
@@ -112,20 +115,28 @@ model Subject {
   id   Int    @id @default(autoincrement())
   name String
   // other fields specific to Subject
-    student Student[]
-     result Result[]
+  student Student[]
+  result Result[]
   teacher    Teacher    @relation(fields: [teacherId], references: [ user_Id])   
-    teacherId  Int
-
-  gradelevel GradeLevel[]
+  teacherId  Int
+  gradelevel     GradeLevel  @relation(fields: [gradeId], references: [id])
+  gradeId   Int
+  //gradelevel GradeLevel[]
 }
 
 model Result {
   id     Int @id @default(autoincrement())
-  assignmentScore Int
-  midtermScore Int
-  finalExamScore Int
-  totalScore Int
+  test1 Float?
+  assignmentScore1 Float?
+  midtermScore1 Float?
+  finalExamScore1 Float?
+  totalScore1 Float?
+
+  test2 Float?
+  assignmentScore2 Float?
+  midtermScore2 Float?
+  finalExamScore2 Float?
+  totalScore2 Float?
 
   studentId Int
   student   Student @relation(fields: [studentId], references: [user_Id])

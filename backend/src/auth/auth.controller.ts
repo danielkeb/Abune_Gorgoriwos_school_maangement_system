@@ -8,9 +8,10 @@ import {
   Header,
   Res,
   Req,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { DtoSignin, DtoStudent } from './dto';
+import { CreateUserDto, DtoSignin, DtoStudent } from './dto';
 import { Response, response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 // import { DtoStudent } from 'src/students/dto';
@@ -55,8 +56,12 @@ export class AuthController {
     return this.authService.resetPassword(dto, id, token);
   }
 
-  @Get('ask')
-  findAll(@Res({ passthrough: true }) response: Response) {
-    return { msg: 'you are good' };
+  @Get('role/:role')
+  getUsers(@Param('role') role: string) {
+    return this.authService.getUsers(role);
+  }
+  @Get('get')
+  getAdmin() {
+    return this.authService.getAdmin();
   }
 }

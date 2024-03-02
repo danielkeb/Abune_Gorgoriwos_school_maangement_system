@@ -1,31 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GradeLevel } from './dto';
 
 @Injectable()
 export class GradeLevelService {
   constructor(private prismaService: PrismaService) {}
-  async addGradeLevel(id: number, dto: GradeLevel) {
+
+  async addGradeLevel(dto: GradeLevel) {
     //check if the Teacher existd!
     const findTeacher = await this.prismaService.teacher.findUnique({
       where: { user_Id: dto.teacher_id },
     });
 
-    if (findTeacher) {
-      //If  Teacher existed we create the gradeLevel
+    if (!findTeacher) {
+      throw new NotFoundException('Teacher not found');
+    }
+
+    //If  Teacher existed we create the gradeLevel
+    try {
       const addGrade = await this.prismaService.gradeLevel.create({
         data: {
           grade: dto.grade,
-          
           teacherId: dto.teacher_id,
         },
       });
       return addGrade;
-    } else {
-      //We return error message!
-      return {
-        msg: 'Please Insert a vald Teacher Id',
-      };
+    } catch (e) {
+      throw new NotAcceptableException('Please Insert a vald Teacher Id');
     }
   }
   async updateGradeLevel(gradeId: number, dto: GradeLevel) {
@@ -42,11 +47,11 @@ export class GradeLevelService {
     return updateGrade;
   }
 
-  async getGradeLevel(){
-    const gradeLevel= await this.prismaService.gradeLevel.findMany({select:{id:true, section:true, grade:true}})
+  async getGradeLevel() {
+    const gradeLevels = await this.prismaService.gradeLevel.findMany({
+      include: { section: true, subject: true },
+    });
 
-    return gradeLevel;
-
-
+    return gradeLevels;
   }
 }

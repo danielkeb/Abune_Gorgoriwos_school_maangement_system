@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -10,10 +11,14 @@ import {
 import { StudentsService } from './students.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { DtoAdmin, DtoStudent } from './dto';
-import { ApiTags } from '@nestjs/swagger';
+import { GetUser } from 'src/auth/decorator';
+import { RoleGuard } from 'src/auth/decorator/roles.guard';
+import { Role } from 'src/auth/decorator/enums/role.enum';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { User } from '@prisma/client';
 
-@ApiTags('students')
-@UseGuards(JwtGuard)
+// @ApiTags('students')
+// @UseGuards(JwtGuard)
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
@@ -30,5 +35,28 @@ export class StudentsController {
     @Body() dto: DtoAdmin,
   ) {
     return this.studentsService.updateStudentByAdmin(id, dto);
+  }
+  // @UseGuards(JwtGuard, RoleGuard)
+  // @Roles(Role.ADMIN)
+  @Get('get')
+  getStudents() {
+    return this.studentsService.getStudents();
+  }
+  // @UseGuards(JwtGuard, RoleGuard)
+  // @Roles(Role.STUDENT)
+  @Get('get/:id')
+  getStudent(@Param('id', ParseIntPipe) id: number) {
+    return this.studentsService.getStudent(id);
+  }
+
+  @UseGuards(JwtGuard, RoleGuard)
+  @Roles(Role.STUDENT)
+  @Get('me')
+  getMe(@GetUser() user: User) {
+    return user;
+  }
+  @Get('result')
+  getResult(@Param('id', ParseIntPipe) id: number) {
+    return this.studentsService.getResult(id);
   }
 }

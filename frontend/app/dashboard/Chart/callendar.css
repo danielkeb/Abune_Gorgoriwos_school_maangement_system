@@ -1,9 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-/* styles/global.css */
-@import url('https://unpkg.com/@fullcalendar/core/main.css');
-@import url('https://unpkg.com/@fullcalendar/daygrid/main.css');
+/* Custom styles for the FullCalendar component */
+
+/* Styles for the prev and next buttons */
 .fc-prev-button,
 .fc-next-button {
   background-color: #e2e8f0; /* Set custom background color */
@@ -29,6 +26,3 @@
     font-size: 12px;
   }
 }
-
-
-

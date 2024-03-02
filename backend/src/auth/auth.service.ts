@@ -2,18 +2,21 @@ import {
   ForbiddenException,
   Injectable,
   NotAcceptableException,
-  HttpException, HttpStatus, UnauthorizedException 
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { DtoSignin, DtoStudent } from './dto';
+import { DtoSignin, DtoStudent, CreateUserDto } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt/dist';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { Response } from 'express';
-import * as nodemailer from "nodemailer"
+import * as nodemailer from 'nodemailer';
 import { EmailService } from 'src/email/email.service';
 import { error } from 'console';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +24,7 @@ export class AuthService {
     private prismaService: PrismaService,
     private config: ConfigService,
     private jwt: JwtService,
-    private emailService:EmailService
+    private emailService: EmailService,
   ) {}
   // async signUp(school_id: number, dto: CreateUserDto) {
   //   const hash = await argon.hash(dto.password);
@@ -73,7 +76,6 @@ export class AuthService {
     });
 
     if (dto.role === 'student') {
-  
       const student = await this.prismaService.student.create({
         data: {
           user_Id: addUser.id,
@@ -83,8 +85,11 @@ export class AuthService {
           gradeId: dto.gradeId,
         },
       });
-      const quickSelect= await this.prismaService.student.findUnique({where:{user_Id:addUser.id},include:{user:true, }})
-      return { msg:"student registered", data:quickSelect };
+      const quickSelect = await this.prismaService.student.findUnique({
+        where: { user_Id: addUser.id },
+        include: { user: true },
+      });
+      return { msg: 'student registered', data: quickSelect };
     } else if (dto.role === 'teacher') {
       const teacher = await this.prismaService.teacher.create({
         data: {
@@ -110,7 +115,7 @@ export class AuthService {
     });
     if (!user) {
       throw new ForbiddenException('Username or password Incorrect!');
-      
+
       // return {
       //   statusCode: HttpStatus.FORBIDDEN,
       //   message: 'Username or password incorrect. Please try again.',
@@ -122,28 +127,20 @@ export class AuthService {
       throw new ForbiddenException('Username or password Incorrect!');
     }
     // const token = await this.signToken(user.email, user.id, user.role);
-    
-    return this.signToken(user.email, user.id, user.role,user.frist_name, user.middle_name);
+
+    return this.signToken(user.email, user.id, user.role);
   }
 
   async signToken(
     email: string,
     id: number,
     role: string,
-    frist_name:string,
-    middle_name:string
-  ): Promise<{ token_access: string , user:{}}> {
+  ): Promise<{ token_access: string; user: object }> {
     const payLoad = {
       sub: id,
       email,
       role,
-      frist_name,
-      middle_name
     };
-
-    const user={
-      id,email,role
-    }
     const hide = this.config.get('JWT_SECRET');
 
     //  ,{
@@ -158,17 +155,15 @@ export class AuthService {
 
     return {
       token_access: token,
-      user:{
+      user: {
+        id,
         email,
         role,
-        frist_name,
-        middle_name
-      }
-
+      },
     };
   }
 
-  async forgetPassword (dto:any){
+  async forgetPassword(dto: any) {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email,
@@ -176,9 +171,8 @@ export class AuthService {
     });
     if (!user) {
       throw new ForbiddenException('Incorrect email address!');
-    
     }
-   const coco= user.id;
+    const coco = user.id;
     const hide = this.config.get('JWT_SECRET');
 
     //  ,{
@@ -186,15 +180,18 @@ export class AuthService {
     //   secret:hide
     //  }
 
-    const token = await this.jwt.signAsync({coco}, {
-      expiresIn: '1d',
-      secret: hide,
-    });
-    
-     this.emailService.sendSecurityAlert(user.email,token,user.id)
-     return {
-      msg:"Password reset link sent to your Email"
-     }
+    const token = await this.jwt.signAsync(
+      { coco },
+      {
+        expiresIn: '1d',
+        secret: hide,
+      },
+    );
+
+    this.emailService.sendSecurityAlert(user.email, token, user.id);
+    return {
+      msg: 'Password reset link sent to your Email',
+    };
     // const transporter = nodemailer.createTransport({
     //   service: 'gmail',
     //   host: 'smtp.gmail.com',
@@ -206,21 +203,43 @@ export class AuthService {
     //     pass: 'p w p a t e w w i a t b m j k ap w p a t e w w i a t b m j k a'
     //   }
     // });
-    
- 
-
+  }
+  async getUsers(role: string) {
+    const allUsers = await this.prismaService.user.findMany({
+      where: {
+        role: role,
+      },
+    });
+    return allUsers;
+  }
+  async getAdmin() {
+    const admin = await this.prismaService.user.findMany({
+      where: {
+        role: 'admin',
+      },
+    });
+    const userWithMergedUser = admin.map((user) => {
+      return {
+        id: user.id,
+        frist_name: user.frist_name,
+        middle_name: user.middle_name,
+        last_name: user.last_name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        school_Id: user.school_Id,
+        createdAT: user.createdAT,
+      };
+    });
+    return userWithMergedUser;
   }
 
-  async resetPassword(dto:any, id:number, token:any){
-
+  async resetPassword(dto: any, id: number, token: any) {
     const hide = this.config.get('JWT_SECRET');
-    try{
-      const payload = await this.jwt.verifyAsync(
-        token,
-        {
-          secret: hide
-        }
-      );
+    try {
+      const payload = await this.jwt.verifyAsync(token, {
+        secret: hide,
+      });
       const hash = await argon.hash(dto.password);
       const updatedUser = await this.prismaService.user.update({
         where: {
@@ -230,13 +249,9 @@ export class AuthService {
           password: hash,
         },
       });
-   return{msg:"Password reseted !"}
-    
-    }catch{
+      return { msg: 'Password reseted !' };
+    } catch {
       throw new UnauthorizedException();
     }
-  
   }
-
- 
 }

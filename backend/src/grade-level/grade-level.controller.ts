@@ -17,8 +17,8 @@ export class GradeLevelController {
   constructor(private gradeLevelService: GradeLevelService) {}
 
   @Post('add')
-  addGradeLevel(id: number, @Body() dto: GradeLevel) {
-    return this.gradeLevelService.addGradeLevel(id, dto);
+  addGradeLevel(@Body() dto: GradeLevel) {
+    return this.gradeLevelService.addGradeLevel(dto);
   }
 
   @Patch('update/:id')
@@ -29,9 +29,8 @@ export class GradeLevelController {
     return this.gradeLevelService.updateGradeLevel(gradeId, dto);
   }
 
-  @Get("get")
-  getGradeLevel(){
-    return this.gradeLevelService.getGradeLevel()
-
+  @Get('get')
+  getGradeLevel() {
+    return this.gradeLevelService.getGradeLevel();
   }
 }

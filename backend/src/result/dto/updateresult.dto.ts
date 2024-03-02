@@ -1,36 +1,36 @@
-import { IsInt, IsNotEmpty, IsOptional } from "class-validator"
+import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 
-export class UpdateResultDto{
+export class UpdateResultDto {
   @IsNotEmpty()
-  @IsInt() 
+  @IsInt()
   @IsOptional()
-  assignmentScore?:number
+  assignmentScore?: number;
   @IsNotEmpty()
-  @IsInt() 
+  @IsInt()
   @IsOptional()
-  midtermScore? :number
+  midtermScore?: number;
   @IsNotEmpty()
-  @IsInt() 
+  @IsInt()
   @IsOptional()
-  finalExamScore? :number
+  finalExamScore?: number;
   @IsNotEmpty()
-  @IsInt() 
+  @IsInt()
   @IsOptional()
-  totalScore? :number
+  totalScore?: number;
   @IsNotEmpty()
-  @IsInt() 
+  @IsInt()
   @IsOptional()
-  studentId? :number
+  studentId?: number;
   @IsNotEmpty()
-  @IsInt() 
+  @IsInt()
   @IsOptional()
-  subjectId?:number
+  subjectId?: number;
   @IsNotEmpty()
-  @IsInt() 
+  @IsInt()
   @IsOptional()
-  gradeLevelId?:number
+  gradeLevelId?: number;
   @IsNotEmpty()
-  @IsInt() 
+  @IsInt()
   @IsOptional()
-  teacherId?:number
+  teacherId?: number;
 }

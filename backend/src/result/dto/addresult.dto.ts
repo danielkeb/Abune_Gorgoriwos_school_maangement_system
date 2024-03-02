@@ -1,44 +1,63 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { IsInt, IsNotEmpty } from "class-validator"
+import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 
-export class AddResultkDto{
+export class AddResultkDto {
   @ApiProperty()
-  @IsNotEmpty()
-  @IsInt() 
-  assignmentScore:number
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt() 
-  midtermScore :number
+  @IsOptional()
+  assignmentScore2?: number;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsInt() 
-  finalExamScore :number
+  @IsOptional()
+  midtermScore2?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  test2?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  test1?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  finalExamScore2?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  totalScore2?: number;
+
+  @IsOptional()
+  assignmentScore1?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  midtermScore1?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  finalExamScore1?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  totalScore1?: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsInt() 
-  totalScore :number
+  @IsInt()
+  studentId: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsInt() 
-  studentId :number
+  @IsInt()
+  subjectId: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsInt() 
-  subjectId:number
+  @IsInt()
+  gradeLevelId: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsInt() 
-  gradeLevelId:number
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt() 
-  teacherId:number
+  @IsInt()
+  teacherId: number;
 }
