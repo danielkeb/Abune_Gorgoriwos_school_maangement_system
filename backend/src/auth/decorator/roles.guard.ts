@@ -8,6 +8,7 @@ import { AccessContorlService } from 'src/shared/access-control.service';
 export class TokenDto {
   id: number;
   role: Role;
+  email: string;
 }
 
 @Injectable()
@@ -35,7 +36,7 @@ export class RoleGuard implements CanActivate {
     console.log('required role', requiredRoles);
     const request = context.switchToHttp().getRequest();
     const token = request['token'] as TokenDto;
-    console.log(token);
+    console.log('token ', token);
     for (const role of requiredRoles) {
       const result = this.accessControlService.isAuthorized({
         requiredRole: role,

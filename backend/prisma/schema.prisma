@@ -1,8 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-generator dbml {
-  provider = "prisma-dbml-generator"
-}
+// generator dbml {
+//   provider = "prisma-dbml-generator"
+// }
 
 generator client {
   provider = "prisma-client-js"
@@ -48,8 +48,8 @@ model User {
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
 
-  school_Id Int
-  school    School    @relation(fields: [school_Id], references: [id])
+  school_Id Int?
+  school    School?    @relation(fields: [school_Id], references: [id])
   Student   Student[]
   Teacher   Teacher[]
 

@@ -2,21 +2,17 @@ import {
   ForbiddenException,
   Injectable,
   NotAcceptableException,
-  HttpException,
-  HttpStatus,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { DtoSignin, DtoStudent, CreateUserDto } from './dto';
+import { DtoSignin, DtoStudent, DtoAdmin } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt/dist';
+import { JwtService } from '@nestjs/jwt';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
-import { Response } from 'express';
-import * as nodemailer from 'nodemailer';
+//import { Response } from 'express';
+//import * as nodemailer from 'nodemailer';
 import { EmailService } from 'src/email/email.service';
-import { error } from 'console';
-import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -26,29 +22,33 @@ export class AuthService {
     private jwt: JwtService,
     private emailService: EmailService,
   ) {}
-  // async signUp(school_id: number, dto: CreateUserDto) {
-  //   const hash = await argon.hash(dto.password);
-  //   const findUser = await this.prismaService.user.findUnique({
-  //     where: {
-  //       email: dto.email,
-  //     },
-  //   });
-  //   if (findUser) {
-  //     throw new NotAcceptableException('user already exist');
-  //   }
-  //   const addUser = await this.prismaService.user.create({
-  //     data: {
-  //       school_Id: school_id,
-  //       ...dto,
-  //       password: hash,
-  //     },
-  //   });
-  //   if (addUser) {
-  //     return addUser;
-  //   } else {
-  //     throw new ExceptionsHandler();
-  //   }
-  // }
+  async signUpSuperAdmin(dto: DtoAdmin) {
+    const hash = await argon.hash(dto.password);
+    const emailExists = await this.prismaService.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (emailExists) {
+      throw new NotAcceptableException('email exists');
+    }
+    await this.prismaService.user.create({
+      data: {
+        frist_name: dto.frist_name,
+        middle_name: dto.middle_name,
+        email: dto.email,
+        last_name: dto.last_name,
+        gender: dto.gender,
+        date_of_birth: dto.date_of_birth,
+        role: dto.role,
+        address: dto.address,
+        username: dto.username,
+        phone: dto.phone,
+        password: hash,
+      },
+    });
+    return { msg: 'sign up successfully' };
+  }
 
   async signUpStudent(school_id: number, dto: DtoStudent) {
     const hash = await argon.hash(dto.password);
@@ -67,24 +67,24 @@ export class AuthService {
         middle_name: dto.middle_name,
         email: dto.email,
         last_name: dto.last_name,
+        gender: dto.gender,
+        date_of_birth: dto.date_of_birth,
         role: dto.role,
         address: dto.address,
         username: dto.username,
         phone: dto.phone,
-        gender:dto.gender,
-        date_of_birth:dto.date_of_birth,
         password: hash,
       },
     });
 
     if (dto.role === 'student') {
-      const student = await this.prismaService.student.create({
+      await this.prismaService.student.create({
         data: {
           user_Id: addUser.id,
           careof_contact1: dto.careOf_contact1,
           careof_contact2: dto.careOf_contact2,
           gradeId: dto.gradeId,
-          sectionId:dto.sectionId
+          sectionId: dto.sectionId,
         },
       });
       const quickSelect = await this.prismaService.student.findUnique({
@@ -109,61 +109,47 @@ export class AuthService {
     }
   }
 
-
-
-  async signIn(dto: DtoSignin) {
+  async signIn(dto: DtoSignin): Promise<{ access_token: string }> {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email,
       },
     });
+
     if (!user) {
-      throw new ForbiddenException('Username or password Incorrect!');
-
-      // return {
-      //   statusCode: HttpStatus.FORBIDDEN,
-      //   message: 'Username or password incorrect. Please try again.',
-      // };
+      throw new UnauthorizedException('Incorrect email or password');
     }
 
-    const pwMatches = await argon.verify(user.password, dto.password);
-    if (!pwMatches) {
-      throw new ForbiddenException('Username or password Incorrect!');
-    }
-    // const token = await this.signToken(user.email, user.id, user.role);
+    console.log('dto.password', dto.password);
+    console.log('user', user.password);
 
-    return this.signToken(user.email, user.id, user.role);
+    const passwordMatches = await argon.verify(user.password, dto.password);
+    if (!passwordMatches) {
+      throw new UnauthorizedException('Incorrect email or password');
+    }
+
+    return this.signToken(user.id, user.role, user.email);
   }
 
   async signToken(
-    email: string,
-    id: number,
+    userId: number,
     role: string,
-  ): Promise<{ token_access: string; user: object }> {
-    const payLoad = {
-      sub: id,
-      email,
+    email: string,
+  ): Promise<{ access_token: string }> {
+    const payload = {
+      sub: userId,
       role,
+      email,
     };
-    const hide = this.config.get('JWT_SECRET');
+    const secret = this.config.get('JWT_SECRET');
 
-    //  ,{
-    //   expiresIn:"15m",
-    //   secret:hide
-    //  }
-
-    const token = await this.jwt.signAsync(payLoad, {
-      expiresIn: '40m',
-      secret: hide,
+    const token = await this.jwt.signAsync(payload, {
+      expiresIn: '50m',
+      secret: secret,
     });
 
     return {
-      token_access: token,
-      user: {
-        id,
-        email,
-        role,
-      },
+      access_token: token,
     };
   }
 
@@ -178,11 +164,6 @@ export class AuthService {
     }
     const coco = user.id;
     const hide = this.config.get('JWT_SECRET');
-
-    //  ,{
-    //   expiresIn:"15m",
-    //   secret:hide
-    //  }
 
     const token = await this.jwt.signAsync(
       { coco },
@@ -241,11 +222,11 @@ export class AuthService {
   async resetPassword(dto: any, id: number, token: any) {
     const hide = this.config.get('JWT_SECRET');
     try {
-      const payload = await this.jwt.verifyAsync(token, {
+      await this.jwt.verifyAsync(token, {
         secret: hide,
       });
       const hash = await argon.hash(dto.password);
-      const updatedUser = await this.prismaService.user.update({
+      await this.prismaService.user.update({
         where: {
           id: id,
         },

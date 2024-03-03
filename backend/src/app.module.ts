@@ -10,9 +10,14 @@ import { ResultModule } from './result/result.module';
 import { EmailModule } from './email/email.module';
 import { SectionModule } from './section/section.module';
 import { SharedModule } from './shared/shared.module';
+import { ConfigModule } from '@nestjs/config';
+import { YearModule } from './year/year.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     SharedModule,
     SchoolsModule,
     UsersModule,
@@ -25,6 +30,7 @@ import { SharedModule } from './shared/shared.module';
     EmailModule,
     SectionModule,
     SectionModule,
+    YearModule,
   ],
 })
 export class AppModule {}
