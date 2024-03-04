@@ -3,6 +3,7 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 interface StudentData {
+  section:{studentId: number}
   first_name: string;
   last_name: string;
   grade: {
@@ -22,16 +23,27 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
   const [secondSemesterTotal, setSecondSemesterTotal] = useState<number>(0);
   const [secondSemesterSubjectAverages, setSecondSemesterSubjectAverages] = useState<number[]>([]);
   const [secondSemesterTotalAverage, setSecondSemesterTotalAverage] = useState<number>(0);
+  const [studentRank, setStudentRank] = useState<{
+    [userId: number]: {
+      rankTotalScore1: number;
+      rankTotalScore2: number;
+      rankTotalSemester: number;
+    };
+  }>({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3333/students/get/6');
+        const response = await fetch('http://localhost:3333/students/get/11');
+        const rank = await fetch('http://localhost:3333/section/1'); // rank of student data
+
         if (!response.ok) {
           throw new Error('Failed to fetch student data');
         }
         const data = await response.json();
+        const rankstd = await rank.json();
         setStudentData(data);
+        setStudentRank(rankstd);
       } catch (error) {
         console.error('Error fetching student data:', error);
       }
@@ -58,22 +70,20 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
         return acc;
       }, 0);
       setSecondSemesterTotal(secondSemesterTotalScore);
-      
+
       const secondSemesterAverages: number[] = [];
       studentData.grade.subject.forEach(subject => {
         const subjectResults = studentData.results.filter(result => result.subjectId === subject.id);
         const subjectTotalScore1 = subjectResults.reduce((acc, cur) => acc + cur.totalScore1, 0);
         const subjectTotalScore2 = subjectResults.reduce((acc, cur) => acc + cur.totalScore2, 0);
-        const subjectAverage = (subjectTotalScore1 +  subjectTotalScore2) /2;
+        const subjectAverage = (subjectTotalScore1 + subjectTotalScore2) / 2;
         secondSemesterAverages.push(subjectAverage);
       });
       setSecondSemesterSubjectAverages(secondSemesterAverages);
 
       const secondSemesterTotalAverage = (secondSemesterTotalScore + firstSemesterTotalScore) / 2;
-      console.log(studentData.results.length);
       setSecondSemesterTotalAverage(secondSemesterTotalAverage);
     }
-    
   }, [studentData]);
 
   const downloadCertificate = () => {
@@ -147,16 +157,15 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
             </tr>
             <tr>
               <td className="border border-gray-400 py-2 px-4">Rank</td>
-              <td className="border border-gray-400 py-2 px-4" colSpan={2}>2</td>
-              <td className="border border-gray-400 py-2 px-4" >1</td>
-              <td className="border border-gray-400 py-2 px-4">2</td>
+              <td className="border border-gray-400 py-2 px-4">{studentRank[studentData?.id]?.rankTotalScore1}</td>
+  <td className="border border-gray-400 py-2 px-4">{studentRank[studentData?.id]?.rankTotalScore2}</td>
+  <td className="border border-gray-400 py-2 px-4">{studentRank[studentData?.id]?.rankTotalSemester}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <div className="text-center mt-8">
-        <p>Rank: 12</p>
         <p>Teacher's Digital Signature: hgrkgkrehgker</p>
       </div>
 

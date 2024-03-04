@@ -6,19 +6,19 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
+  //UseGuards,
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
-import { JwtGuard } from '../auth/guard/jwt.guard';
+//import { JwtGuard } from '../auth/guard/jwt.guard';
 import { DtoAdmin, DtoStudent } from './dto';
 import { GetUser } from 'src/auth/decorator';
 import { RoleGuard } from 'src/auth/decorator/roles.guard';
 import { Role } from 'src/auth/decorator/enums/role.enum';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { User } from '@prisma/client';
-import { ApiTags } from '@nestjs/swagger';
 import PromoteStudentsNextGradeDto from './dto/promote.students.nextgrade.dto';
 import PromoteStudentsDto from './dto/promote.students.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('students')
 // @UseGuards(JwtGuard)
@@ -80,4 +80,26 @@ export class StudentsController {
   ) {
     return this.studentsService.updateStudentByAdmin(id, dto);
   }
+  @Get('get/:id')
+  getStudent(@Param('id', ParseIntPipe) id: number) {
+    return this.studentsService.getStudent(id);
+  }
+
+  @Get('get')
+  getStudents() {
+    return this.studentsService.getStudents();
+  }
+  // @Get('section/:id')
+  // getSectionRank(@Param('id', ParseIntPipe) sectionName: string) {
+  //   return this.studentsService.calculateSectionRank(sectionName);
+  // }
+  // @Get('section/:id')
+  // getStudentsInSection(@Param('id', ParseIntPipe) id: number) {
+  //   return this.studentsService.getStudentsInSection(id);
+  // }
+
+  // @Get('rank')
+  // getRank() {
+  //   return this.studentsService.getRank();
+  // }
 }

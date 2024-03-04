@@ -31,7 +31,7 @@ const page = () => {
         setCheck(true);
         console.log("final values =", formik.values)
         const response = await axios.post(
-          "http://localhost:3333/auth/signUp/2",
+          "http://localhost:3333/auth/user/1",
           formik.values
         );
 

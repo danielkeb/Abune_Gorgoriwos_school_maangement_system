@@ -11,10 +11,10 @@ import Callendar from "./callendar";
 const HomePage: React.FC = () => {
   return (
     <div className="container mx-auto my-auto px-4 py-10">
-    <TotalData />
+    {/* <TotalData /> */}
     
     <div className="flex flex-col items-center mt-8 space-y-4">
-    {/* <Callendar/> */}
+    <Callendar/> 
       {/* <div className="flex flex-row space-x-4">
       
       

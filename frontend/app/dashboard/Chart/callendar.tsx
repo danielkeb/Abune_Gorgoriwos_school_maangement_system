@@ -34,8 +34,9 @@ const CalendarComponent: React.FC = () => {
 
       }}
       height={"90vh"}
-      titleFormat={"medium"}
-      // titleFormat={"small"}
+      //width={"80vh"}
+      //titleFormat={"medium"}
+      //titleFormat={"small"}
       
       />
     </div>

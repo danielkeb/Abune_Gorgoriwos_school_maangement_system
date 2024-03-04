@@ -27,13 +27,14 @@ export class AuthController {
     return this.authService.signUpSuperAdmin(dto);
   }
 
-  @Post('signUp/:school_id')
+  @Post('user/:school_id')
   signUpStudent(
-    @Param('school_id', ParseIntPipe) id: number,
     @Body() dto: DtoStudent,
+    @Param('school_id', ParseIntPipe) school_id: number,
   ) {
-    return this.authService.signUpStudent(id, dto);
+    return this.authService.signUpStudent(dto, school_id);
   }
+
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'sign in' })
   @ApiResponse({

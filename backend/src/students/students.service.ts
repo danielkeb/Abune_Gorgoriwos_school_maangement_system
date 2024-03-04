@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { DtoAdmin, DtoStudent } from './dto';
 import PromoteStudentsDto from './dto/promote.students.dto';
 import PromoteStudentsNextGradeDto from './dto/promote.students.nextgrade.dto';
+import { Student } from '@prisma/client';
 
 @Injectable()
 export class StudentsService {
@@ -117,26 +118,33 @@ export class StudentsService {
           // // Filter students based on the average total score
           // const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
 
-             // Calculate the average total score
-        const totalScores1 = studentResults.map((result) => result.totalScore1 || 0);
-        const totalScores2 = studentResults.map((result) => result.totalScore2 || 0);
+          // Calculate the average total score
+          const totalScores1 = studentResults.map(
+            (result) => result.totalScore1 || 0,
+          );
+          const totalScores2 = studentResults.map(
+            (result) => result.totalScore2 || 0,
+          );
 
-        if (totalScores1.some((score) => score === 0) || totalScores2.some((score) => score === 0)) {
-          const errorMessage = `Incomplete data for student with id: ${user_id}`;
-          console.error(errorMessage);
-          incompleteStudents.push(errorMessage);
-          continue;
-        }
-        const totalScores = totalScores1.map((score, index) =>
-          (score + totalScores2[index]) / 2,
-        );
+          if (
+            totalScores1.some((score) => score === 0) ||
+            totalScores2.some((score) => score === 0)
+          ) {
+            const errorMessage = `Incomplete data for student with id: ${user_id}`;
+            console.error(errorMessage);
+            incompleteStudents.push(errorMessage);
+            continue;
+          }
+          const totalScores = totalScores1.map(
+            (score, index) => (score + totalScores2[index]) / 2,
+          );
 
-        const averageTotalScore =
-          totalScores.reduce((sum, score) => sum + score, 0) / totalScores.length;
+          const averageTotalScore =
+            totalScores.reduce((sum, score) => sum + score, 0) /
+            totalScores.length;
 
-        // Filter students based on the average total score
-        const eligibleStudents =
-          averageTotalScore > 50 ? studentResults : [];
+          // Filter students based on the average total score
+          const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
 
           // Step 2: Prepare Data for Student History
           const historyData = {
@@ -188,7 +196,7 @@ export class StudentsService {
       return {
         status: 'Success',
         msg: 'Eligible students promoted to the new grade',
-        incompleteStudents
+        incompleteStudents,
       };
     } catch (error) {
       console.error('Error promoting students:', error);
@@ -316,6 +324,12 @@ export class StudentsService {
         gradelevel: {
           include: { subject: true, section: true },
         },
+        result: {
+          select: {
+            totalScore1: true,
+            totalScore2: true,
+          },
+        },
       },
     });
 
@@ -329,8 +343,9 @@ export class StudentsService {
         phone: student.user.phone,
         createdAT: student.user.createdAT,
         grade: student.gradelevel,
-        section: student.gradelevel,
-        subject: student.gradelevel,
+        results: student.result,
+        //section: student.gradelevel,
+        //subject: student.gradelevel,
         school_Id: student.user.school_Id, // Add school_Id to the return object
       };
     });
@@ -384,14 +399,15 @@ export class StudentsService {
     return result;
   }
 
-
-  async calculateRankForAll(
-    students: PromoteStudentsNextGradeDto[]
-  ){
+  async calculateRankForAll(students: PromoteStudentsNextGradeDto[]) {
     try {
       const incompleteStudents: string[] = [];
-      const rankedStudents: { user_id: number; rank: number; averageTotalScore: number }[] = [];
-  
+      const rankedStudents: {
+        user_id: number;
+        rank: number;
+        averageTotalScore: number;
+      }[] = [];
+
       // Iterate over each student in the input array
       for (const student of students) {
         const user_id = student.user_id;
@@ -401,12 +417,12 @@ export class StudentsService {
         const studentResults = await this.prismaService.result.findMany({
           where: { studentId: user_id, gradeLevelId:gradeId },
         });
-  
+
         // Calculate the average total score
         const totalScores = studentResults.map(
           (result) => (result.totalScore1 + result.totalScore2) / 2 || 0,
         );
-  
+
         // Check for incomplete data
         if (totalScores.some((score) => score === 0)) {
           const errorMessage = `Incomplete data for student with id: ${user_id}`;
@@ -414,15 +430,16 @@ export class StudentsService {
           incompleteStudents.push(errorMessage);
           continue;
         }
-  
+
         // Calculate the average total score
         const averageTotalScore =
-          totalScores.reduce((sum, score) => sum + score, 0) / totalScores.length;
-  
+          totalScores.reduce((sum, score) => sum + score, 0) /
+          totalScores.length;
+
         // Push the student and their average score to the rankedStudents array
         rankedStudents.push({ user_id, averageTotalScore, rank: 0 });
       }
-  
+
       // Sort the rankedStudents array by averageTotalScore in descending order
       // If scores are equal, use user ID as a tiebreaker
       rankedStudents.sort((a, b) => {
@@ -432,7 +449,7 @@ export class StudentsService {
           return a.user_id - b.user_id;
         }
       });
-  
+
       // Add ranks to the sorted array
       for (let i = 0; i < rankedStudents.length; i++) {
         rankedStudents[i].rank = i + 1;
@@ -612,4 +629,6 @@ export class StudentsService {
       };
     }
   }
+  //To be constructed
+
 }
