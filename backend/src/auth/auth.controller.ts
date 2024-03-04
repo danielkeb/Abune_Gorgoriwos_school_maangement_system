@@ -29,7 +29,7 @@ export class AuthController {
 
   @Post('signUp/:school_id')
   signUpStudent(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('school_id', ParseIntPipe) id: number,
     @Body() dto: DtoStudent,
   ) {
     return this.authService.signUpStudent(id, dto);
