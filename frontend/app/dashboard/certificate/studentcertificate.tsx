@@ -169,7 +169,7 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
         <p>Teacher's Digital Signature: hgrkgkrehgker</p>
       </div>
 
-      <button onClick={downloadCertificate} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+      <button onClick={downloadCertificate} className="bg-green-950 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
         Download PDF
       </button>
     </div>
