@@ -89,6 +89,7 @@ export class StudentsService {
   async promoteStudents(students: PromoteStudentsNextGradeDto[]) {
     try {
       // Start a transaction
+      const incompleteStudents: string[] = [];
       await this.prismaService.$transaction(async (prisma) => {
         for (const student of students) {
           const user_id = student.user_id;
@@ -106,10 +107,38 @@ export class StudentsService {
             },
           });
 
-          // Filter students with a totalScore greater than 50
-          const totalScores = studentResults.map(
-            (result) => result.totalScore1,
+          // // Filter students with a totalScore greater than 50
+          // const totalScores = studentResults.map(
+          //   (result) => result.totalScore1,
+          // );
+          // const averageTotalScore =
+          //   totalScores.reduce((sum, score) => sum + score, 0) /
+          //   totalScores.length;
+
+          // // Filter students based on the average total score
+          // const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
+
+          // Calculate the average total score
+          const totalScores1 = studentResults.map(
+            (result) => result.totalScore1 || 0,
           );
+          const totalScores2 = studentResults.map(
+            (result) => result.totalScore2 || 0,
+          );
+
+          if (
+            totalScores1.some((score) => score === 0) ||
+            totalScores2.some((score) => score === 0)
+          ) {
+            const errorMessage = `Incomplete data for student with id: ${user_id}`;
+            console.error(errorMessage);
+            incompleteStudents.push(errorMessage);
+            continue;
+          }
+          const totalScores = totalScores1.map(
+            (score, index) => (score + totalScores2[index]) / 2,
+          );
+
           const averageTotalScore =
             totalScores.reduce((sum, score) => sum + score, 0) /
             totalScores.length;
@@ -167,6 +196,7 @@ export class StudentsService {
       return {
         status: 'Success',
         msg: 'Eligible students promoted to the new grade',
+        incompleteStudents,
       };
     } catch (error) {
       console.error('Error promoting students:', error);
@@ -390,9 +420,6 @@ export class StudentsService {
     return await this.prismaService.student.findMany({
       select: {
         user_Id: true,
-        rank_simester1: true,
-        rank_simester2: true,
-        rank_both_simester1: true,
       },
     });
   }

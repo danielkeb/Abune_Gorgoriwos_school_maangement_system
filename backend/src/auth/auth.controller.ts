@@ -29,6 +29,10 @@ export class AuthController {
 
   @Post('user/:school_id')
   signUpStudent(
+<<<<<<< HEAD
+=======
+    @Param('school_id', ParseIntPipe) id: number,
+>>>>>>> refs/remotes/origin/main
     @Body() dto: DtoStudent,
     @Param('school_id', ParseIntPipe) school_id: number,
   ) {
