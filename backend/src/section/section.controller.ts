@@ -24,8 +24,8 @@ export class SectionController {
   getSection() {
     return this.sectionService.getSection();
   }
-  @Get(':id')
-  getStudent(@Param('id', ParseIntPipe) id: number) {
-    return this.sectionService.getStudent(id);
-  }
+  // @Get(':id')
+  // getStudentRanking(@Param('id', ParseIntPipe) id: number) {
+  //   return this.sectionService.getStudentRanking(id);
+  // }
 }

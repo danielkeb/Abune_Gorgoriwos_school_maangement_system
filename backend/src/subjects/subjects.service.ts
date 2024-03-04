@@ -12,7 +12,7 @@ import { UpdateSubjectDto } from './dto/update.subject.dto';
 export class SubjectsService {
   constructor(private prisma: PrismaService) {}
 
-  async addSubjects(dto: AddSubjectsDto, ) {
+  async addSubjects(dto: AddSubjectsDto) {
     try {
       // const teacher = await this.prisma.teacher.findUnique({
       //   where: { user_Id: teacherId },
@@ -48,13 +48,15 @@ export class SubjectsService {
       const addSubject = await this.prisma.subject.create({
         data: {
           name: dto.name,
-        
+
           gradeId: dto.gradeId,
+          teacherId: dto.teacherId,
         },
       });
 
       return addSubject;
     } catch (error) {
+      console.log(error);
       // Handle unexpected errors
       // console.error('Error adding subject:', error);
       throw new InternalServerErrorException(
@@ -88,5 +90,9 @@ export class SubjectsService {
     };
   }
 
-
+  async deleteSubject(id: number) {
+    await this.prisma.subject.delete({
+      where: { id: id },
+    });
+  }
 }

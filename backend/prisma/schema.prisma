@@ -89,7 +89,6 @@ model Student {
   subject Subject[]
   result  Result[]
   student_history StudentHistory[]
-
   @@map("students")
 }
 
@@ -108,7 +107,6 @@ model GradeLevel {
 
   // other fields specific to GradeLevel
 }
-
 model Section {
   id         Int        @id @default(autoincrement())
   name       String
@@ -125,8 +123,9 @@ model Subject {
   // other fields specific to Subject
   student   Student[]
   result    Result[]
+   teacherId Int?
   teacher   Teacher?   @relation(fields: [teacherId], references: [user_Id])
-  teacherId Int?
+ 
 
   gradeId    Int?
   gradelevel GradeLevel? @relation(fields: [gradeId], references: [id])

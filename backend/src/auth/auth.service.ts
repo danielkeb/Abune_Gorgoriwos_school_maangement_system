@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotAcceptableException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -50,8 +51,16 @@ export class AuthService {
     return { msg: 'sign up successfully' };
   }
 
-  async signUpStudent(school_id: number, dto: DtoStudent) {
+  async signUpStudent(dto: DtoStudent, school_id: number) {
     const hash = await argon.hash(dto.password);
+    const school = await this.prismaService.school.findUnique({
+      where: {
+        id: school_id,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('school not found');
+    }
     const findUser = await this.prismaService.user.findUnique({
       where: {
         email: dto.email,
@@ -76,7 +85,7 @@ export class AuthService {
         password: hash,
       },
     });
-
+    console.log('teacher created');
     if (dto.role === 'student') {
       await this.prismaService.student.create({
         data: {
@@ -99,6 +108,7 @@ export class AuthService {
           education_level: dto.education_level,
         },
       });
+      console.log('teacher created');
       return { addUser, teacher };
     }
 
@@ -147,7 +157,7 @@ export class AuthService {
       expiresIn: '50m',
       secret: secret,
     });
-
+    console.log(token);
     return {
       access_token: token,
     };

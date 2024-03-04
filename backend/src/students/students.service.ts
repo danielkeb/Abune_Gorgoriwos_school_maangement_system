@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { DtoAdmin, DtoStudent } from './dto';
 import PromoteStudentsDto from './dto/promote.students.dto';
 import PromoteStudentsNextGradeDto from './dto/promote.students.nextgrade.dto';
+import { Student } from '@prisma/client';
 
 @Injectable()
 export class StudentsService {
@@ -293,6 +294,12 @@ export class StudentsService {
         gradelevel: {
           include: { subject: true, section: true },
         },
+        result: {
+          select: {
+            totalScore1: true,
+            totalScore2: true,
+          },
+        },
       },
     });
 
@@ -306,8 +313,9 @@ export class StudentsService {
         phone: student.user.phone,
         createdAT: student.user.createdAT,
         grade: student.gradelevel,
-        section: student.gradelevel,
-        subject: student.gradelevel,
+        results: student.result,
+        //section: student.gradelevel,
+        //subject: student.gradelevel,
         school_Id: student.user.school_Id, // Add school_Id to the return object
       };
     });
@@ -359,5 +367,33 @@ export class StudentsService {
       },
     });
     return result;
+  }
+
+  async getStudentsInSection(sectionId: number): Promise<Student[]> {
+    return this.prismaService.student.findMany({
+      where: {
+        gradelevel: {
+          section: {
+            some: {
+              id: sectionId,
+            },
+          },
+        },
+      },
+      include: {
+        result: true, // Include the 'result' relation
+      },
+    });
+  }
+
+  async getRank() {
+    return await this.prismaService.student.findMany({
+      select: {
+        user_Id: true,
+        rank_simester1: true,
+        rank_simester2: true,
+        rank_both_simester1: true,
+      },
+    });
   }
 }

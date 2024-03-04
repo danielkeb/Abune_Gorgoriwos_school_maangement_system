@@ -52,7 +52,7 @@ export class SchoolsController {
     return this.schoolService.schoolUpdate(id, dto);
   }
 
-  @UseGuards(JwtGuard)
+  //@UseGuards(JwtGuard)
   @Get('get')
   schoolsGet() {
     return this.schoolService.schoolsGet();
