@@ -49,6 +49,27 @@ export class StudentsController {
     return this.studentsService.promoteSubjects(dto);
 
   }
+  @Post('firstrank')
+  calculateRankForFirst(
+    @Body() dto: PromoteStudentsNextGradeDto[]
+  ){
+    return this.studentsService.calculateRankForFirst(dto);
+
+  }
+  @Post('secondrank')
+  calculateRankForSecond(
+    @Body() dto: PromoteStudentsNextGradeDto[]
+  ){
+    return this.studentsService.calculateRankForSecond(dto);
+
+  }
+  @Post('allrank')
+  calculateRankForAll(
+    @Body() dto: PromoteStudentsNextGradeDto[]
+  ){
+    return this.studentsService.calculateRankForAll(dto);
+
+  }
   @Patch('updateStudent/:id')
   updateStudentByAdmin(
     @Param('id', ParseIntPipe) id: number,
