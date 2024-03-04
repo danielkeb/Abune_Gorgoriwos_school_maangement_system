@@ -383,4 +383,84 @@ export class StudentsService {
     });
     return result;
   }
+
+
+  async calculateRankForAll(
+    students: PromoteStudentsNextGradeDto[]
+  ){
+    try {
+      const incompleteStudents: string[] = [];
+      const rankedStudents: { user_id: number; rank: number; averageTotalScore: number }[] = [];
+  
+      // Iterate over each student in the input array
+      for (const student of students) {
+        const user_id = student.user_id;
+  
+        // Fetch student results
+        const studentResults = await this.prismaService.result.findMany({
+          where: { studentId: user_id },
+        });
+  
+        // Calculate the average total score
+        const totalScores = studentResults.map(
+          (result) => (result.totalScore1 + result.totalScore2) / 2 || 0,
+        );
+  
+        // Check for incomplete data
+        if (totalScores.some((score) => score === 0)) {
+          const errorMessage = `Incomplete data for student with id: ${user_id}`;
+          console.error(errorMessage);
+          incompleteStudents.push(errorMessage);
+          continue;
+        }
+  
+        // Calculate the average total score
+        const averageTotalScore =
+          totalScores.reduce((sum, score) => sum + score, 0) / totalScores.length;
+  
+        // Push the student and their average score to the rankedStudents array
+        rankedStudents.push({ user_id, averageTotalScore, rank: 0 });
+      }
+  
+      // Sort the rankedStudents array by averageTotalScore in descending order
+      // If scores are equal, use user ID as a tiebreaker
+      rankedStudents.sort((a, b) => {
+        if (a.averageTotalScore !== b.averageTotalScore) {
+          return b.averageTotalScore - a.averageTotalScore;
+        } else {
+          return a.user_id - b.user_id;
+        }
+      });
+  
+      // Add ranks to the sorted array
+      for (let i = 0; i < rankedStudents.length; i++) {
+        rankedStudents[i].rank = i + 1;
+      }
+  
+      // Return the result
+      return {
+        status: 'Success',
+        msg: 'Ranking completed successfully',
+        incompleteStudents,
+        rankedStudents,
+      };
+    } catch (error) {
+      console.error('Error calculating rank:', error);
+      return {
+        status: 'Error',
+        msg: 'An error occurred while calculating rank',
+        incompleteStudents: [],
+        rankedStudents: [],
+      };
+    }
+
+  }
+  //To be constructed 
+  async calculateRankForFirst(students: PromoteStudentsNextGradeDto[]){
+    
+  }
+    //To be constructed 
+  async calculateRankForSecond(students: PromoteStudentsNextGradeDto[]){
+    
+  }
 }
