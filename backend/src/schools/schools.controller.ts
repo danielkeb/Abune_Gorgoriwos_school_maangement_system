@@ -2,8 +2,6 @@ import {
   Controller,
   Body,
   Post,
-  HttpException,
-  HttpStatus,
   UseGuards,
   ParseIntPipe,
   Patch,
@@ -20,7 +18,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
+import { RoleGuard } from '../auth/decorator/roles.guard';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { Role } from '../auth/decorator/enums/role.enum';
 
 @ApiTags('schools')
 @Controller('schools')
@@ -31,10 +31,14 @@ export class SchoolsController {
     description: 'The record has been successfully created.',
   })
   @ApiForbiddenResponse({ description: 'Forbidden.' })
-  @UseGuards(JwtGuard)
-  @Post('register')
-  async schoolRegistered(@Body() dto: DtoSchool) {
-    return this.schoolService.schoolRegistered(dto);
+  @UseGuards(JwtGuard, RoleGuard)
+  @Roles(Role.SUPERUSER)
+  @Post('register/:id')
+  async schoolRegistered(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: DtoSchool,
+  ) {
+    return this.schoolService.schoolRegistered(id, dto);
   }
 
   @ApiHeader({ name: 'Authorization', required: true }) // Authentication header

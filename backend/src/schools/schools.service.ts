@@ -1,11 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DtoSchool } from './dto';
 
 @Injectable()
 export class SchoolsService {
   constructor(private prisamService: PrismaService) {}
-  async schoolRegistered(dto: DtoSchool) {
+  async schoolRegistered(id: number, dto: DtoSchool) {
+    const userexist = this.prisamService.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!userexist) {
+      throw new NotFoundException('super admin not found');
+    }
     const school = await this.prisamService.school.create({
       data: {
         ...dto,
@@ -27,13 +35,18 @@ export class SchoolsService {
     return { updateSchool, school };
   }
 
-  async schoolsGet(){
-    const getSchool= await this.prisamService.school.findMany({select:{id:true, school_name:true, }})
+  async schoolsGet() {
+    const getSchool = await this.prisamService.school.findMany({
+      select: { id: true, school_name: true },
+    });
 
-    return getSchool
+    return getSchool;
   }
-  async getSchoolById(id:number){
-    const singleSchool= await this.prisamService.school.findUnique({where:{id}, select:{id:true, school_name:true}})
+  async getSchoolById(id: number) {
+    const singleSchool = await this.prisamService.school.findUnique({
+      where: { id },
+      select: { id: true, school_name: true },
+    });
 
     return singleSchool;
   }

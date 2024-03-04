@@ -93,25 +93,24 @@ export class TeachersService {
     return { teacher, teacherUser, msg: 'Sucess' };
   }
 
-  async getTeachersGrade(id:number){
-  const teachersGrade= await this.prisma.teacher.findMany({
-    where:{
-      user_Id:id
-    },
-    select:{
-      gradelevel:{
-        select:{
-          id:true,
-          grade:true
-        }
+  async getTeachersGrade(id: number) {
+    const teachersGrade = await this.prisma.teacher.findMany({
+      where: {
+        user_Id: id,
       },
-      section:true,
-      subject:true
+      select: {
+        gradelevel: {
+          select: {
+            id: true,
+            grade: true,
+          },
+        },
+        section: true,
+        subject: true,
+      },
+    });
 
-    }
-  })
-
-  return teachersGrade;
+    return teachersGrade;
   }
 
   // async getTeacherSection(
@@ -139,9 +138,6 @@ export class TeachersService {
   //       }
   //     })
   //   }
-
-   
-
 
   // }
 }

@@ -33,7 +33,9 @@ export class JwtGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      console.log(error);
+      throw new UnauthorizedException('Invalid token  ');
+      console.log(error);
     }
   }
 

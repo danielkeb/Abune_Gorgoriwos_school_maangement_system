@@ -5,44 +5,62 @@ import {
   Param,
   ParseIntPipe,
   Get,
-  Header,
-  Res,
-  Req,
-  Query,
+  HttpCode,
+  HttpStatus,
+  //Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto, DtoSignin, DtoStudent } from './dto';
-import { Response, response } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { DtoAdmin, DtoSignin, DtoStudent } from './dto';
+//import { Response, response } from 'express';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 // import { DtoStudent } from 'src/students/dto';
+//import { Response } from 'express';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-  //@Post('signUp/:school_id')
-  // signUp(
-  //   @Param('school_id', ParseIntPipe) school_Id: number,
-  //   @Body() dto: CreateUserDto,
-  // ) {
-  //   return this.authService.signUp(school_Id, dto);
-  // }
-  @Post('signUp/:school_id')
-  signUpStudent(
-    @Param('school_id', ParseIntPipe) school_Id: number,
-    @Body() dto: DtoStudent,
-  ) {
-    return this.authService.signUpStudent(school_Id, dto);
+
+  //super admin registration
+  @Post('signup/admin')
+  signUpAdmin(@Body() dto: DtoAdmin) {
+    return this.authService.signUpSuperAdmin(dto);
   }
 
-  @Post('signin')
-  async signIn(
-    @Body() dto: DtoSignin,
-    @Res({ passthrough: true }) response,
-  ): Promise<any> {
-    return this.authService.signIn(dto);
-    // response.cookie('token', token, { httpOnly: true, secure: true ,sameSite: 'lax' ,expires: new Date(Date.now()+10000)});
+  @Post('signUp/:school_id')
+  signUpStudent(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: DtoStudent,
+  ) {
+    return this.authService.signUpStudent(id, dto);
   }
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'sign in' })
+  @ApiResponse({
+    description: 'The news has been successfully logged.',
+  })
+  @Post('signin')
+  signIn(@Body() dto: DtoSignin) {
+    return this.authService.signIn(dto);
+  }
+  // @Post('signin')
+  // async signIn(
+  //   @Body() dto: DtoSignin,
+  //   //@Res() response: Response,
+  // ): Promise<any> {
+  //   const token = await this.authService.signIn(dto);
+  //   return token;
+  // Set the token as a cookie in the response
+  // response.cookie('token', token, {
+  //   httpOnly: true,
+  //   secure: true,
+  //   sameSite: 'lax',
+  //   expires: new Date(Date.now() + 100000), // Adjust the expiration time as needed
+  // });
+
+  // Send a response indicating successful sign-in (if desired)
+  //response.status(200).json({ message: 'Sign-in successful' });
+  // }
   @Post('forget')
   async forgetPassword(@Body() dto: any) {
     return this.authService.forgetPassword(dto);

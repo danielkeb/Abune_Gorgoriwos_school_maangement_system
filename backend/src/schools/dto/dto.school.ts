@@ -19,5 +19,5 @@ export class DtoSchool {
   @ApiProperty()
   @IsNotEmpty()
   @IsInt()
-  schoolYearId:number
+  schoolYearId: number;
 }

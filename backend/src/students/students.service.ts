@@ -85,7 +85,6 @@ export class StudentsService {
     return students;
   }
 
-
   async promoteStudents(students: PromoteStudentsNextGradeDto[]) {
     try {
       // Start a transaction
@@ -107,9 +106,12 @@ export class StudentsService {
           });
 
           // Filter students with a totalScore greater than 50
-          const totalScores = studentResults.map((result) => result.totalScore1);
+          const totalScores = studentResults.map(
+            (result) => result.totalScore1,
+          );
           const averageTotalScore =
-            totalScores.reduce((sum, score) => sum + score, 0) / totalScores.length;
+            totalScores.reduce((sum, score) => sum + score, 0) /
+            totalScores.length;
 
           // Filter students based on the average total score
           const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
@@ -122,15 +124,16 @@ export class StudentsService {
             totalScore: averageTotalScore, // Use the calculated average
             subjectScores: {}, // Initialize an empty object to store subject scores
           };
-          
+
           // Iterate over each subject and add it to subjectScores
           for (const result of studentResults) {
             const subject = await prisma.subject.findUnique({
               where: { id: result.subjectId },
             });
-            historyData.subjectScores[subject?.name || 'Unknown'] = result.totalScore1;
+            historyData.subjectScores[subject?.name || 'Unknown'] =
+              result.totalScore1;
           }
-          
+
           // Insert into Student History
           await prisma.studentHistory.create({
             data: historyData,
@@ -232,17 +235,9 @@ export class StudentsService {
   //     }
 
   //     /*************************************** */
-      
-
-     
-
-
-
-
 
   //     /*********************************************** */
   //   }
- 
 
   //   return {
   //     Status: 'Sucess',
@@ -365,5 +360,4 @@ export class StudentsService {
     });
     return result;
   }
-
 }
