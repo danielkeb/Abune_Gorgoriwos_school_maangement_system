@@ -6,19 +6,22 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
   //UseGuards,
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
-//import { JwtGuard } from '../auth/guard/jwt.guard';
+import { JwtGuard } from '../auth/guard/jwt.guard';
 import { DtoAdmin, DtoStudent } from './dto';
 import { GetUser } from 'src/auth/decorator';
-import { RoleGuard } from 'src/auth/decorator/roles.guard';
-import { Role } from 'src/auth/decorator/enums/role.enum';
-import { Roles } from 'src/auth/decorator/roles.decorator';
-import { User } from '@prisma/client';
+import { RoleGuard } from '../auth/decorator/roles.guard';
+import { Role } from '../auth/decorator/enums/role.enum';
+import { Roles } from '../auth/decorator/roles.decorator';
+import PromoteStudentsNextGradeDto from './dto/promote.students.nextgrade.dto';
+import PromoteStudentsDto from './dto/promote.students.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('students')
-// @UseGuards(JwtGuard)
+//@UseGuards(JwtGuard)
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
@@ -36,39 +39,21 @@ export class StudentsController {
     @Param('schoolId', ParseIntPipe) gradeId: number,
     @Param('sectionId', ParseIntPipe) sectionId: number,
     @Param('subjectId', ParseIntPipe) subjectId: number,
-  ){
-    return this.studentsService.getStudentbygrade(schoolId, gradeId,sectionId,subjectId);
+  ) {
+    return this.studentsService.getStudentbygrade(
+      schoolId,
+      gradeId,
+      sectionId,
+      subjectId,
+    );
   }
   @Post('promote')
-  promoteStudents(@Body() dto: PromoteStudentsNextGradeDto[],){
+  promoteStudents(@Body() dto: PromoteStudentsNextGradeDto[]) {
     return this.studentsService.promoteStudents(dto);
-
   }
   @Post('promoteSubjects')
-  promoteSubjects(@Body() dto: PromoteStudentsDto[]){
+  promoteSubjects(@Body() dto: PromoteStudentsDto[]) {
     return this.studentsService.promoteSubjects(dto);
-
-  }
-  @Post('firstrank')
-  calculateRankForFirst(
-    @Body() dto: PromoteStudentsNextGradeDto[]
-  ){
-    return this.studentsService.calculateRankForFirst(dto);
-
-  }
-  @Post('secondrank')
-  calculateRankForSecond(
-    @Body() dto: PromoteStudentsNextGradeDto[]
-  ){
-    return this.studentsService.calculateRankForSecond(dto);
-
-  }
-  @Post('allrank')
-  calculateRankForAll(
-    @Body() dto: PromoteStudentsNextGradeDto[]
-  ){
-    return this.studentsService.calculateRankForAll(dto);
-
   }
   @Patch('updateStudent/:id')
   updateStudentByAdmin(
@@ -77,6 +62,8 @@ export class StudentsController {
   ) {
     return this.studentsService.updateStudentByAdmin(id, dto);
   }
+  @UseGuards(JwtGuard, RoleGuard)
+  @Roles(Role.STUDENT)
   @Get('get/:id')
   getStudent(@Param('id', ParseIntPipe) id: number) {
     return this.studentsService.getStudent(id);
@@ -86,17 +73,29 @@ export class StudentsController {
   getStudents() {
     return this.studentsService.getStudents();
   }
+  @Post('firstrank')
+  calculateRankForFirst(@Body() dto: PromoteStudentsNextGradeDto[]) {
+    return this.studentsService.calculateRankForFirst(dto);
+  }
+  @Post('secondrank')
+  calculateRankForSecond(@Body() dto: PromoteStudentsNextGradeDto[]) {
+    return this.studentsService.calculateRankForSecond(dto);
+  }
+  @Post('allrank')
+  calculateRankForAll(@Body() dto: PromoteStudentsNextGradeDto[]) {
+    return this.studentsService.calculateRankForAll(dto);
+  }
   // @Get('section/:id')
   // getSectionRank(@Param('id', ParseIntPipe) sectionName: string) {
   //   return this.studentsService.calculateSectionRank(sectionName);
   // }
-  @Get('section/:id')
-  getStudentsInSection(@Param('id', ParseIntPipe) id: number) {
-    return this.studentsService.getStudentsInSection(id);
-  }
+  // @Get('section/:id')
+  // getStudentsInSection(@Param('id', ParseIntPipe) id: number) {
+  //   return this.studentsService.getStudentsInSection(id);
+  // }
 
-  @Get('rank')
-  getRank() {
-    return this.studentsService.getRank();
-  }
+  // @Get('rank')
+  // getRank() {
+  //   return this.studentsService.getRank();
+  // }
 }

@@ -58,12 +58,19 @@ const path= usePathname()
     </div>
     
     </Link>
-    <ListItemButton>
+
+    <Link href="/dashboard/certificate">
+    <div className={`${path.startsWith("/dashboard/certificate")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
+      
       <ListItemIcon>
-        <LayersIcon />
+        <ShoppingCartIcon className={`${path.startsWith("/dashboard/certificate")? " text-white":""}`}  />
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItemButton>
+      <ListItemText primary="Certification" />
+  
+    </div>
+    
+    </Link>
+
   </React.Fragment>
 
   )

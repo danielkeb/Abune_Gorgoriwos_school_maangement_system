@@ -85,6 +85,9 @@ model Student {
 
   sectionId Int
   section   Section @relation(fields: [sectionId], references: [id])
+  firstrank            Int?        
+  secondtrank            Int? 
+  overallrank            Int?
 
   subject Subject[]
   result  Result[]

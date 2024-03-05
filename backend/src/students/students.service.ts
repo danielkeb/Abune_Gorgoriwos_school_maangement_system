@@ -63,6 +63,7 @@ export class StudentsService {
             subjectId: true,
           },
         },
+
         user_Id: true,
         user: {
           select: {
@@ -318,7 +319,7 @@ export class StudentsService {
   async getStudents() {
     // Adjust the return type as per your requirement
     const allStudents = await this.prismaService.student.findMany({
-      include: {
+      select: {
         user: true,
         gradelevel: {
           include: { subject: true, section: true },
@@ -329,6 +330,9 @@ export class StudentsService {
             totalScore2: true,
           },
         },
+        firstrank: true,
+        secondtrank: true,
+        overallrank: true,
       },
     });
 
@@ -343,6 +347,9 @@ export class StudentsService {
         createdAT: student.user.createdAT,
         grade: student.gradelevel,
         results: student.result,
+        firstrank: student.firstrank,
+        secondtrank: student.secondtrank,
+        overallrank: student.overallrank,
         //section: student.gradelevel,
         //subject: student.gradelevel,
         school_Id: student.user.school_Id, // Add school_Id to the return object
@@ -356,12 +363,15 @@ export class StudentsService {
       where: {
         user_Id: std,
       },
-      include: {
+      select: {
         user: true,
         gradelevel: {
           include: { subject: true, section: true },
         },
         result: true,
+        firstrank: true,
+        secondtrank: true,
+        overallrank: true,
       },
     });
 
@@ -369,7 +379,7 @@ export class StudentsService {
       throw new NotFoundException('Student not found');
     }
 
-    const student = {
+    const student: any = {
       id: studentWithUser.user.id,
       first_name: studentWithUser.user.frist_name,
       middle_name: studentWithUser.user.middle_name,
@@ -379,13 +389,24 @@ export class StudentsService {
       createdAT: studentWithUser.user.createdAT,
       grade: studentWithUser.gradelevel,
       results: studentWithUser.result,
-      //section: studentWithUser.gradelevel.section,
-      //subject: studentWithUser.gradelevel.subject,
-      school_Id: studentWithUser.user.school_Id,
+      // Add conditions to check if ranks exist before assigning them
     };
 
+    // Check if ranks exist before assigning them
+    if (studentWithUser.firstrank) {
+      student.firstrank = studentWithUser.firstrank;
+    }
+    if (studentWithUser.secondtrank) {
+      student.secondtrank = studentWithUser.secondtrank;
+    }
+    if (studentWithUser.overallrank) {
+      student.overallrank = studentWithUser.overallrank;
+    }
+
+    // Return the student object
     return student;
   }
+
   async getResult(userid: number) {
     const result = await this.prismaService.student.findUnique({
       where: {
@@ -452,7 +473,176 @@ export class StudentsService {
       for (let i = 0; i < rankedStudents.length; i++) {
         rankedStudents[i].rank = i + 1;
       }
+      for (const rankedStudent of rankedStudents) {
+        await this.prismaService.student.update({
+          where: { user_Id: rankedStudent.user_id },
+          data: {
+            overallrank: rankedStudent.rank,
+          },
+        });
+      }
 
+      // Return the result
+      return {
+        status: 'Success',
+        msg: 'Ranking completed successfully',
+        incompleteStudents,
+        rankedStudents,
+      };
+    } catch (error) {
+      console.error('Error calculating rank:', error);
+      return {
+        status: 'Error',
+        msg: 'An error occurred while calculating rank',
+        incompleteStudents: [],
+        rankedStudents: [],
+      };
+    }
+  }
+  async calculateRankForFirst(students: PromoteStudentsNextGradeDto[]) {
+    try {
+      const incompleteStudents: string[] = [];
+      const rankedStudents: {
+        user_id: number;
+        rank: number;
+        averageTotalScore: number;
+      }[] = [];
+
+      // Iterate over each student in the input array
+      for (const student of students) {
+        const user_id = student.user_id;
+
+        // Fetch student results
+        const studentResults = await this.prismaService.result.findMany({
+          where: { studentId: user_id },
+        });
+
+        // Calculate the average total score for the first semester (totalScore1)
+        const totalScores1 = studentResults.map(
+          (result) => result.totalScore1 || 0,
+        );
+
+        // Check for incomplete data
+        if (totalScores1.some((score) => score === 0)) {
+          const errorMessage = `Incomplete data for student with id: ${user_id}`;
+          console.error(errorMessage);
+          incompleteStudents.push(errorMessage);
+          continue;
+        }
+
+        // Calculate the average total score for the first semester
+
+        const averageTotalScore =
+          totalScores1.reduce((sum, score) => sum + score, 0) /
+          totalScores1.length;
+
+        // Push the student and their average score to the rankedStudents array
+        rankedStudents.push({ user_id, averageTotalScore, rank: 0 });
+      }
+
+      // Sort the rankedStudents array by averageTotalScore in descending order
+      // If scores are equal, use user ID as a tiebreaker
+      rankedStudents.sort((a, b) => {
+        if (a.averageTotalScore !== b.averageTotalScore) {
+          return b.averageTotalScore - a.averageTotalScore;
+        } else {
+          return a.user_id - b.user_id;
+        }
+      });
+
+      // Add ranks to the sorted array
+      for (let i = 0; i < rankedStudents.length; i++) {
+        rankedStudents[i].rank = i + 1;
+      }
+      for (const rankedStudent of rankedStudents) {
+        await this.prismaService.student.update({
+          where: { user_Id: rankedStudent.user_id },
+          data: {
+            firstrank: rankedStudent.rank,
+          },
+        });
+      }
+      // Return the result
+      return {
+        status: 'Success',
+        msg: 'Ranking completed successfully',
+        incompleteStudents,
+        rankedStudents,
+      };
+    } catch (error) {
+      console.error('Error calculating rank:', error);
+      return {
+        status: 'Error',
+        msg: 'An error occurred while calculating rank',
+        incompleteStudents: [],
+        rankedStudents: [],
+      };
+    }
+  }
+
+  async calculateRankForSecond(students: PromoteStudentsNextGradeDto[]) {
+    try {
+      const incompleteStudents: string[] = [];
+      const rankedStudents: {
+        user_id: number;
+        rank: number;
+        averageTotalScore: number;
+      }[] = [];
+
+      // Iterate over each student in the input array
+      for (const student of students) {
+        const user_id = student.user_id;
+
+        // Fetch student results
+        const studentResults = await this.prismaService.result.findMany({
+          where: { studentId: user_id },
+        });
+
+        // Calculate the average total score for the first semester (totalScore1)
+        const totalScores2 = studentResults.map(
+          (result) => result.totalScore2 || 0,
+        );
+
+        // Check for incomplete data
+        if (totalScores2.some((score) => score === 0)) {
+          const errorMessage = `Incomplete data for student with id: ${user_id}`;
+          console.error(errorMessage);
+          incompleteStudents.push(errorMessage);
+          continue;
+        }
+
+        // Calculate the average total score for the first semester
+
+        const averageTotalScore =
+          totalScores2.reduce((sum, score) => sum + score, 0) /
+          totalScores2.length;
+
+        // Push the student and their average score to the rankedStudents array
+        rankedStudents.push({ user_id, averageTotalScore, rank: 0 });
+      }
+
+      // Sort the rankedStudents array by averageTotalScore in descending order
+      // If scores are equal, use user ID as a tiebreaker
+      rankedStudents.sort((a, b) => {
+        if (a.averageTotalScore !== b.averageTotalScore) {
+          return b.averageTotalScore - a.averageTotalScore;
+        } else {
+          return a.user_id - b.user_id;
+        }
+      });
+
+      // Add ranks to the sorted array
+      for (let i = 0; i < rankedStudents.length; i++) {
+        rankedStudents[i].rank = i + 1;
+      }
+      for (const rankedStudent of rankedStudents) {
+        await this.prismaService.student.update({
+          where: { user_Id: rankedStudent.user_id },
+          data: {
+            secondtrank: rankedStudent.rank,
+          },
+        });
+      }
       // Return the result
       return {
         status: 'Success',

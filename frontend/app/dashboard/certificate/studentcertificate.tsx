@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { AppContext } from '@/app/context';
 
 interface StudentData {
+  role: string;
   section:{studentId: number}
   first_name: string;
   last_name: string;
@@ -11,6 +13,9 @@ interface StudentData {
     subject: { id: number; name: string }[];
   };
   results: { totalScore1: number; totalScore2: number; subjectId: number }[];
+  firstrank?: number;
+  secondtrank?: number;
+  overallrank?: number;
 }
 
 interface CertificateProps {
@@ -23,33 +28,26 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
   const [secondSemesterTotal, setSecondSemesterTotal] = useState<number>(0);
   const [secondSemesterSubjectAverages, setSecondSemesterSubjectAverages] = useState<number[]>([]);
   const [secondSemesterTotalAverage, setSecondSemesterTotalAverage] = useState<number>(0);
-  const [studentRank, setStudentRank] = useState<{
-    [userId: number]: {
-      rankTotalScore1: number;
-      rankTotalScore2: number;
-      rankTotalSemester: number;
-    };
-  }>({});
-
+  const{decodedToken,token, logout}= React.useContext(AppContext);
+  console.log(decodedToken);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3333/students/get/11');
-        const rank = await fetch('http://localhost:3333/section/1'); // rank of student data
+        const response = await fetch(`http://localhost:3333/students/get/${decodedToken.sub}`);// rank of student data
 
         if (!response.ok) {
           throw new Error('Failed to fetch student data');
         }
         const data = await response.json();
-        const rankstd = await rank.json();
+        console.log(data);
         setStudentData(data);
-        setStudentRank(rankstd);
       } catch (error) {
         console.error('Error fetching student data:', error);
       }
     };
     fetchData();
-  }, [id]);
+  }, [decodedToken]);
+  console.log(decodedToken)
 
   useEffect(() => {
     if (studentData) {
@@ -157,9 +155,9 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
             </tr>
             <tr>
               <td className="border border-gray-400 py-2 px-4">Rank</td>
-              <td className="border border-gray-400 py-2 px-4">{studentRank[studentData?.id]?.rankTotalScore1}</td>
-  <td className="border border-gray-400 py-2 px-4">{studentRank[studentData?.id]?.rankTotalScore2}</td>
-  <td className="border border-gray-400 py-2 px-4">{studentRank[studentData?.id]?.rankTotalSemester}</td>
+              <td className="border border-gray-400 py-2 px-4" colSpan ={2}>{studentData?.firstrank}</td>
+  <td className="border border-gray-400 py-2 px-4">{studentData?.secondtrank}</td>
+  <td className="border border-gray-400 py-2 px-4">{studentData?.overallrank}</td>
             </tr>
           </tbody>
         </table>
@@ -169,7 +167,7 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
         <p>Teacher's Digital Signature: hgrkgkrehgker</p>
       </div>
 
-      <button onClick={downloadCertificate} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+      <button onClick={downloadCertificate} className="bg-green-950 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
         Download PDF
       </button>
     </div>

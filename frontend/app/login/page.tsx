@@ -61,7 +61,8 @@ export default function Login() {
           formik.values
         );
 
-        const tokk = response?.data.token_access;
+        const tokk = response?.data.access_token;
+        console.log("Here is your token",tokk, response)
         const user = response.data.user;
         const decodedToken = jwt.decode(tokk);
         const userString = JSON.stringify(user);
@@ -78,7 +79,7 @@ export default function Login() {
 
         router.push("/dashboard");
 
-        // router.push('/head')
+// router.push('/head')
       } catch (error) {
         // Handle error (e.g., display error message)
         console.error("Error submitting form:", error?.response.data.message);
