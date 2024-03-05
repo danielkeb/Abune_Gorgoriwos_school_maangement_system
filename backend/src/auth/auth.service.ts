@@ -151,6 +151,7 @@ export class AuthService {
       sub: userId,
       role,
       email,
+      frist_name
     };
     const secret = this.config.get('JWT_SECRET');
 
