@@ -31,18 +31,6 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
   const [secondSemesterSubjectAverages, setSecondSemesterSubjectAverages] = useState<number[]>([]);
   const [secondSemesterTotalAverage, setSecondSemesterTotalAverage] = useState<number>(0);
   const{decodedToken,token, logout}= React.useContext(AppContext);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-
-  // const res= localStorage.getItem('authToken')
-  // setAuthToken(res) 
-
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-
 
   useEffect(() => {
     const fetchData = async () => {
