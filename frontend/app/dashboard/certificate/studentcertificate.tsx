@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import { AppContext } from '@/app/context';
+
+import axios from 'axios';
+import { AppContext } from '@/components/context/UserContext';
 
 interface StudentData {
   role: string;
@@ -29,25 +31,39 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
   const [secondSemesterSubjectAverages, setSecondSemesterSubjectAverages] = useState<number[]>([]);
   const [secondSemesterTotalAverage, setSecondSemesterTotalAverage] = useState<number>(0);
   const{decodedToken,token, logout}= React.useContext(AppContext);
-  console.log(decodedToken);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+
+  // const res= localStorage.getItem('authToken')
+  // setAuthToken(res) 
+
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3333/students/get/${decodedToken.sub}`);// rank of student data
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch student data');
+        const response = await axios.get(`http://localhost:3333/students/get/${decodedToken?.sub}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        const data = await response.json();
-        console.log(data);
+        );// rank of student data
+    
+        const data =  response.data
         setStudentData(data);
       } catch (error) {
         console.error('Error fetching student data:', error);
       }
     };
     fetchData();
-  }, [decodedToken]);
-  console.log(decodedToken)
+  }, []);
+  
 
   useEffect(() => {
     if (studentData) {
