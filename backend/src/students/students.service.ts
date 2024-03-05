@@ -3,7 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { DtoAdmin, DtoStudent } from './dto';
 import PromoteStudentsDto from './dto/promote.students.dto';
 import PromoteStudentsNextGradeDto from './dto/promote.students.nextgrade.dto';
-import { Student } from '@prisma/client';
 
 @Injectable()
 export class StudentsService {
@@ -471,8 +470,8 @@ export class StudentsService {
       };
     }
   }
-  //To be constructed
-  async calculateRankForFirst(students: PromoteStudentsNextGradeDto[]) {}
-  //To be constructed
-  async calculateRankForSecond(students: PromoteStudentsNextGradeDto[]) {}
+  // //To be constructed
+  // async calculateRankForFirst(students: PromoteStudentsNextGradeDto[]) {}
+  // //To be constructed
+  // async calculateRankForSecond(students: PromoteStudentsNextGradeDto[]) {}
 }
