@@ -17,6 +17,7 @@ export class CallanderController {
 addCallander(@Body() dto:CallanderDto){
 return this.callnderService.addCallander(dto)
 }
+
 @Get('all')
 getAllCallanders(){
     return this.callnderService.getAllCallanders()

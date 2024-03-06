@@ -25,11 +25,11 @@ export class JwtGuard implements CanActivate {
       console.log('token get successful', request['token']);
 
       // Check if the requested resource ID matches the user ID from the token
-      const userIdFromToken = payload.sub;
-      const requestedUserId = parseInt(request.params.id);
-      if (userIdFromToken !== requestedUserId) {
-        throw new UnauthorizedException('Unauthorized access to this resource');
-      }
+      // const userIdFromToken = payload.sub;
+      // const requestedUserId = parseInt(request.params.id);
+      // if (userIdFromToken !== requestedUserId) {
+      //   throw new UnauthorizedException('Unauthorized access to this resource');
+      // }
 
       return true;
     } catch (error) {

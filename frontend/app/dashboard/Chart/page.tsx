@@ -80,11 +80,11 @@ export default function Home() {
 
 
   function handleDateClick(arg: { date: Date, allDay: boolean }) {
-    // if(decodedToken.role=="admin"){
+    if(decodedToken.role=="admin"){
     setNewEvent({ ...newEvent, start: arg.date, allDay: arg.allDay, id: new Date().getTime() })
     setShowModal(true)
 
-    // }
+    }
   }
 
   function addEvent(data: DropArg) {
@@ -96,11 +96,11 @@ export default function Home() {
   }
 
   function handleDeleteModal(data: { event: { id: string } }) {
-    // if(decodedToken.role=="admin"){
+    if(decodedToken.role=="admin"){
     setShowDeleteModal(true)
     setIdToDelete(Number(data.event.id))
 
-    // }
+    }
   }
 
   async function handleDelete() {
