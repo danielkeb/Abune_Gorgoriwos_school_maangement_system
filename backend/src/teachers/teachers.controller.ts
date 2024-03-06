@@ -1,6 +1,6 @@
 import {
   Controller,
-  UseGuards,
+  // UseGuards,
   Patch,
   Body,
   Param,
@@ -8,7 +8,7 @@ import {
   Get,
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
+//import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { UpdateAdminTeacherDto, UpdateTeacherDto } from './dto';
 import { TeachersService } from './teachers.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -40,9 +40,13 @@ export class TeachersController {
   }
 
   @Get('grade/:id')
-  getTeachersGrade(
-    @Param('id', ParseIntPipe) id: number,){
-    return this.teacherService.getTeachersGrade(id)
+  getTeachersGrade(@Param('id', ParseIntPipe) id: number) {
+    return this.teacherService.getTeachersGrade(id);
+  }
+
+  @Get('graderte/:id646')
+  getTeachersStudent(@Param('id', ParseIntPipe) id: number) {
+    return this.teacherService.getTeachersGrade(id);
   }
   // @Get('by/:schoolId/:gradeId/:subjectId')
   // getTeacherSection(

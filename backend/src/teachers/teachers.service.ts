@@ -54,6 +54,7 @@ export class TeachersService {
       where: { user_Id: id },
       select: { gradelevel: { include: { subject: true, section: true } } },
     });
+    console.log(teacher);
     const flatTeacher = teacher.gradelevel.map((teach) => {
       return {
         id: teach.id,
@@ -62,6 +63,7 @@ export class TeachersService {
         subjects: teach.subject,
       };
     });
+    console.log('hello', flatTeacher);
     // return teacher;
     return flatTeacher;
   }
@@ -98,19 +100,53 @@ export class TeachersService {
       where: {
         user_Id: id,
       },
-      select: {
+      include: {
         gradelevel: {
           select: {
             id: true,
             grade: true,
           },
         },
-        section: true,
-        subject: true,
+        section: {
+          include: {
+            student: {
+              select: {
+                user_Id: true,
+                user: { select: { frist_name: true, last_name: true } },
+              },
+            },
+          },
+        },
+        subject: { include: { result: true } },
       },
     });
 
     return teachersGrade;
+  }
+
+  async getTeacherStudent(id: number) {
+    const teacherInfo = await this.prisma.teacher.findUnique({
+      where: {
+        user_Id: id,
+      },
+      include: {
+        subject: {
+          include: {
+            gradelevel: {
+              include: {
+                section: {
+                  include: {
+                    student: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return teacherInfo;
   }
 
   // async getTeacherSection(
