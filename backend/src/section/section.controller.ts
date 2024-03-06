@@ -20,9 +20,9 @@ export class SectionController {
     return this.sectionService.addSection(dto);
   }
 
-  @Get('get')
-  getSection() {
-    return this.sectionService.getSection();
+  @Get('get/:id/students')
+  getSection(@Param('id', ParseIntPipe) id: number) {
+    return this.sectionService.getSection(id);
   }
   // @Get(':id')
   // getStudentRanking(@Param('id', ParseIntPipe) id: number) {

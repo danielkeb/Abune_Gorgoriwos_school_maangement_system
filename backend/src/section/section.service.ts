@@ -77,8 +77,16 @@ export class SectionService {
     }
   }
 
-  async getSection(): Promise<any[]> {
+  async getSection(secId: number): Promise<any[]> {
     try {
+      const exist = await this.prismaService.section.findUnique({
+        where: {
+          id: secId,
+        },
+      });
+      if (!exist) {
+        throw new NotFoundException(`Section ${secId} not found`);
+      }
       const getSection = await this.prismaService.section.findMany({
         select: {
           gradeId: true,

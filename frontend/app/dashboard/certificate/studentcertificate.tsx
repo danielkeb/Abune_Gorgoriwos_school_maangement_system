@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-
 import axios from 'axios';
 import { AppContext } from '@/components/context/UserContext';
 
 interface StudentData {
-  role: string;
   section:{studentId: number}
   first_name: string;
   last_name: string;
@@ -31,7 +29,7 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
   const [secondSemesterSubjectAverages, setSecondSemesterSubjectAverages] = useState<number[]>([]);
   const [secondSemesterTotalAverage, setSecondSemesterTotalAverage] = useState<number>(0);
   const{decodedToken,token, logout}= React.useContext(AppContext);
-
+  console.log(decodedToken);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,7 +49,7 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
     };
     fetchData();
   }, []);
-  
+  console.log(decodedToken)
 
   useEffect(() => {
     if (studentData) {
