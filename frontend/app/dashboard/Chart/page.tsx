@@ -34,6 +34,8 @@ import { CheckIcon, ExclamationTriangleIcon } from '@heroicons/react/20/solid'
 import { EventSourceInput } from '@fullcalendar/core/index.js'
 import axios from 'axios'
 import { AppContext } from '@/components/context/UserContext'
+import BasicCard from './totaldata'
+import CardAdmin from './cardAdmin'
 
 
 interface Event {
@@ -78,11 +80,11 @@ export default function Home() {
 
 
   function handleDateClick(arg: { date: Date, allDay: boolean }) {
-    if(decodedToken.role=="admin"){
+    // if(decodedToken.role=="admin"){
     setNewEvent({ ...newEvent, start: arg.date, allDay: arg.allDay, id: new Date().getTime() })
     setShowModal(true)
 
-    }
+    // }
   }
 
   function addEvent(data: DropArg) {
@@ -94,17 +96,23 @@ export default function Home() {
   }
 
   function handleDeleteModal(data: { event: { id: string } }) {
-    if(decodedToken.role=="admin"){
+    // if(decodedToken.role=="admin"){
     setShowDeleteModal(true)
     setIdToDelete(Number(data.event.id))
 
-    }
+    // }
   }
 
   async function handleDelete() {
     try{
     setAllEvents(allEvents.filter(event => Number(event.id) !== Number(idToDelete)))
-    const response = await axios.delete(`http://localhost:3333/callander/remove/${idToDelete}`);
+    const response = await axios.delete(`http://localhost:3333/callander/remove/${idToDelete}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    );
     setShowDeleteModal(false)
     setIdToDelete(null)
     }catch(error){
@@ -135,7 +143,14 @@ export default function Home() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     try{
-    await axios.post("http://localhost:3333/callander/add",newEvent)
+    const res= await axios.post(`http://localhost:3333/callander/add`,newEvent,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    )
+
     setAllEvents([...allEvents, newEvent])
     console.log("the all event:",allEvents, "the new event: ",newEvent)
     setShowModal(false)
@@ -153,7 +168,11 @@ export default function Home() {
 
   return (
     <>
+    
+             <div className='w-full h-full  flex flex-col mt-[100px] '>
 
+              <CardAdmin/>
+            
         
           <div className=" container mx-auto my-auto px-4 py-10 text-sm lg:font-normal  ">
             <FullCalendar
@@ -319,7 +338,7 @@ export default function Home() {
             </div>
           </Dialog>
         </Transition.Root>
-   
+        </div>
     </>
   )
 }

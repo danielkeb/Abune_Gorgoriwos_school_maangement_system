@@ -85,7 +85,7 @@ export class AuthService {
         password: hash,
       },
     });
-    console.log('teacher created');
+  
     if (dto.role === 'student') {
       await this.prismaService.student.create({
         data: {
@@ -108,7 +108,7 @@ export class AuthService {
           education_level: dto.education_level,
         },
       });
-      console.log('teacher created');
+     
       return { addUser, teacher };
     }
 
@@ -130,8 +130,7 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect email or password');
     }
 
-    console.log('dto.password', dto.password);
-    console.log('user', user.password);
+
 
     const passwordMatches = await argon.verify(user.password, dto.password);
     if (!passwordMatches) {
@@ -151,15 +150,15 @@ export class AuthService {
       sub: userId,
       role,
       email,
-      frist_name
+     
     };
     const secret = this.config.get('JWT_SECRET');
 
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: '50m',
+      expiresIn: '90m',
       secret: secret,
     });
-    console.log(token);
+ 
     return {
       access_token: token,
     };
