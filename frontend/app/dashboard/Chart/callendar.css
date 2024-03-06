@@ -12,6 +12,9 @@
 .fc-toolbar-title {
   font-size: 18px; /* Set custom font size for the title */
 }
+.fc-prev-button .fc-button .fc-button-primary{
+  background-color: blue;
+}
 
 /* Media query to adjust styles for smaller screens */
 @media (max-width: 768px) {
@@ -25,4 +28,5 @@
   .fc-next-button {
     font-size: 12px;
   }
+
 }

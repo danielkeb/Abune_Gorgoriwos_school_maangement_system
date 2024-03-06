@@ -12,6 +12,7 @@ import { SectionModule } from './section/section.module';
 import { SharedModule } from './shared/shared.module';
 import { ConfigModule } from '@nestjs/config';
 import { YearModule } from './year/year.module';
+import { CallanderModule } from './callander/callander.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { YearModule } from './year/year.module';
     SectionModule,
     SectionModule,
     YearModule,
+    CallanderModule,
   ],
 })
 export class AppModule {}

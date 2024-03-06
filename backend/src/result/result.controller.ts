@@ -10,6 +10,7 @@ import {
 import { AddResultkDto, UpdateResultDto } from './dto';
 import { ResultService } from './result.service';
 import { ApiTags } from '@nestjs/swagger';
+import { AddManyResultkDto } from './dto/addmanyresult.dto';
 @ApiTags('result')
 @Controller('result')
 export class ResultController {
@@ -18,6 +19,16 @@ export class ResultController {
   addMark(@Body() dto: AddResultkDto) {
     return this.resultService.addMark(dto);
   }
+  @Post('addmany/:gradeLevelId/:teacherId/:subjectId')
+  addManyResult(
+    @Param('gradeLevelId', ParseIntPipe) gradeLevelId: number,
+    @Param('teacherId', ParseIntPipe) teacherId: number,
+    @Param('subjectId', ParseIntPipe) subjectId: number,
+    @Body() dto:AddManyResultkDto[]
+  ){
+    return this.resultService.addManyResult(dto, gradeLevelId,teacherId,subjectId);
+  }
+
 
   @Patch('update/:id')
   updateMark(

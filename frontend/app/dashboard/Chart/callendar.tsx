@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import "./callendar.css"
 
 const CalendarComponent: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const CalendarComponent: React.FC = () => {
     //   />
     // </div>
     <div className='min-h-screen flex flex-col w-full'>
+    
       <FullCalendar
       plugins={[dayGridPlugin, timeGridPlugin,interactionPlugin]}
       initialView={"dayGridMonth"}
@@ -33,10 +35,11 @@ const CalendarComponent: React.FC = () => {
         end:"prev,next",
 
       }}
-      height={"90vh"}
-      //width={"80vh"}
+      height={"100vh"}
+     
+      // width={"100vw"}
       //titleFormat={"medium"}
-      //titleFormat={"small"}
+      // titleFormat={"small"}
       
       />
     </div>

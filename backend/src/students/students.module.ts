@@ -14,6 +14,4 @@ import { JwtModule } from '@nestjs/jwt';
 export class StudentsModule {}
 // student.model.ts
 
-export type StudentUpdateInput = Prisma.StudentUpdateInput & {
-  phone?: string;
-};
+
