@@ -44,6 +44,7 @@ const Page = () => {
     const handleSave = async (resultId) => {
         try {
             // Your logic to save a single result here
+            const results = await axios.post('http://localhost:3333/result/add', resultId);
         } catch (error) {
             console.error('Error saving result:', error);
         }
@@ -52,6 +53,7 @@ const Page = () => {
     const handleUpdate = async (resultId) => {
         try {
             // Your logic to update a single result here
+            const results = await axios.put(`http://localhost:3333/result/update/${resultId}`);
         } catch (error) {
             console.error('Error updating result:', error);
         }
@@ -60,6 +62,7 @@ const Page = () => {
     const handleDelete = async (resultId) => {
         try {
             // Your logic to delete a single result here
+            const results = await axios.delete(`http://localhost:3333/result/delete/${resultId}`);
         } catch (error) {
             console.error('Error deleting result:', error);
         }
