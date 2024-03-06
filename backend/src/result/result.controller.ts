@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   ParseIntPipe,
   Patch,
@@ -24,11 +25,15 @@ export class ResultController {
     @Param('gradeLevelId', ParseIntPipe) gradeLevelId: number,
     @Param('teacherId', ParseIntPipe) teacherId: number,
     @Param('subjectId', ParseIntPipe) subjectId: number,
-    @Body() dto:AddManyResultkDto[]
-  ){
-    return this.resultService.addManyResult(dto, gradeLevelId,teacherId,subjectId);
+    @Body() dto: AddManyResultkDto[],
+  ) {
+    return this.resultService.addManyResult(
+      dto,
+      gradeLevelId,
+      teacherId,
+      subjectId,
+    );
   }
-
 
   @Patch('update/:id')
   updateMark(
@@ -36,5 +41,9 @@ export class ResultController {
     @Param('id', ParseIntPipe) resultId: number,
   ) {
     return this.resultService.updateMark(dto, resultId);
+  }
+  @Delete('delete/:id')
+  deleteResult(@Param('id', ParseIntPipe) id: number) {
+    return this.resultService.deleteResult(id);
   }
 }
