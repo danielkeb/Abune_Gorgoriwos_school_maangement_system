@@ -147,9 +147,10 @@ model Result {
   midtermScore2 Float?
   finalExamScore2 Float?
   totalScore2 Float?
+  sectionId Int?
   
-  teacher   Teacher   @relation(fields: [teacherId], references: [user_Id])
-  teacherId Int
+  teacher   Teacher?   @relation(fields: [teacherId], references: [user_Id])
+  teacherId Int?
     studentId Int
   student   Student @relation(fields: [studentId], references: [user_Id])
 

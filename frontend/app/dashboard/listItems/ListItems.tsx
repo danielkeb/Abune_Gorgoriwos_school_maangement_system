@@ -7,8 +7,11 @@ import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
+import GradingIcon from '@mui/icons-material/Grading';
+import CardMembershipIcon from '@mui/icons-material/CardMembership';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
@@ -33,7 +36,7 @@ const path= usePathname()
     <div className={`${path.startsWith("/dashboard/register")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
       
       <ListItemIcon>
-        <ShoppingCartIcon className={`${path.startsWith("/dashboard/register")? " text-white":""}`}  />
+        <AppRegistrationIcon className={`${path.startsWith("/dashboard/register")? " text-white":""}`}  />
       </ListItemIcon>
       <ListItemText primary="Registration" />
   
@@ -51,7 +54,7 @@ const path= usePathname()
     <div className={`${path.startsWith("/dashboard/grades")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
       
       <ListItemIcon>
-        <ShoppingCartIcon className={`${path.startsWith("/dashboard/grades")? " text-white":""}`}  />
+        <GradingIcon className={`${path.startsWith("/dashboard/grades")? " text-white":""}`}  />
       </ListItemIcon>
       <ListItemText primary="Grades" />
   
@@ -63,7 +66,7 @@ const path= usePathname()
     <div className={`${path.startsWith("/dashboard/certificate")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
       
       <ListItemIcon>
-        <ShoppingCartIcon className={`${path.startsWith("/dashboard/certificate")? " text-white":""}`}  />
+        <CardMembershipIcon className={`${path.startsWith("/dashboard/certificate")? " text-white":""}`}  />
       </ListItemIcon>
       <ListItemText primary="Certification" />
   

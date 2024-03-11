@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -29,12 +30,28 @@ export class ResultController {
     return this.resultService.addManyResult(dto, gradeLevelId,teacherId,subjectId);
   }
 
+  @Get("get/:id/:gradeId/:sectionId/:subjectId")
+  getTeacherResult(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('gradeId', ParseIntPipe) gradeId: number,
+    @Param('sectionId', ParseIntPipe) sectionId: number,
+    @Param('subjectId', ParseIntPipe) subjectId: number,
+    
+    ){
+    return this.resultService.getTeacherResult( id,gradeId,sectionId,subjectId);
+  }
 
-  @Patch('update/:id')
+
+  @Patch('update/:id/:teacherId/:gradeId/:sectionId/:subjectId')
   updateMark(
     @Body() dto: UpdateResultDto,
     @Param('id', ParseIntPipe) resultId: number,
+    @Param('id', ParseIntPipe) teacherId: number,
+    @Param('gradeId', ParseIntPipe) gradeId: number,
+    @Param('sectionId', ParseIntPipe) sectionId: number,
+    @Param('subjectId', ParseIntPipe) subjectId: number,
   ) {
-    return this.resultService.updateMark(dto, resultId);
+    return this.resultService.updateMark(dto, resultId,teacherId,gradeId,sectionId,subjectId);
+    
   }
 }

@@ -20,6 +20,7 @@
     "@mui/icons-material": "^5.15.7",
     "@mui/material": "^5.15.7",
     "@mui/x-charts": "^6.19.3",
+    "@mui/x-data-grid": "^6.19.6",
     "@types/cookie": "^0.6.0",
     "apexcharts": "^3.45.2",
     "axios": "^1.6.2",
