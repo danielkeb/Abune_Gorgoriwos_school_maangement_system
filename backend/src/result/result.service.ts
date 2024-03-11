@@ -120,7 +120,6 @@ export class ResultService {
       };
     }
   }
-
   async addManyResult(
     results: AddManyResultkDto[],
     gradeLevelId: number,

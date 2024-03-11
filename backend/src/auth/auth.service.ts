@@ -174,21 +174,18 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect email or password');
     }
 
-    return this.signToken(user.id, user.role, user.email, user.frist_name);
+    return this.signToken(user.id, user.role, user.email);
   }
 
   async signToken(
     userId: number,
     role: string,
     email: string,
-    frist_name: string,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       role,
       email,
-      frist_name
-     
     };
     const secret = this.config.get('JWT_SECRET');
 
