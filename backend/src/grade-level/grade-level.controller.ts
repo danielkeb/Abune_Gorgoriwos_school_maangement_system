@@ -33,4 +33,8 @@ export class GradeLevelController {
   getGradeLevel() {
     return this.gradeLevelService.getGradeLevel();
   }
+  @Get('manage')
+  manageGradeLevel() {
+    return this.gradeLevelService.manageGradeLevel();
+  }
 }

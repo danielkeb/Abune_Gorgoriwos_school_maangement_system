@@ -364,7 +364,7 @@ export class StudentsService {
         user_Id: std,
       },
       select: {
-        user: true,
+        user: { include: { school: { select: { school_name: true } } } },
         gradelevel: {
           include: { subject: true, section: true },
         },
@@ -389,6 +389,7 @@ export class StudentsService {
       createdAT: studentWithUser.user.createdAT,
       grade: studentWithUser.gradelevel,
       results: studentWithUser.result,
+      school_name: studentWithUser.user.school.school_name,
       // Add conditions to check if ranks exist before assigning them
     };
 
