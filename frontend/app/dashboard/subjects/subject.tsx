@@ -240,10 +240,10 @@ const SubjectComponent = () => {
                   </td>
                   <td className="py-2 px-4 border-b">
                     <button
-                      onClick={() => {handleManageSubject(subject.id); setShowCreateForm(false); }}
+                      onClick={() => handleManageSubject(subject.id)}
                       className="bg-green-500 hover:bg-blue-300 text-white font-bold py-2 px-4 rounded"
                     >
-                      Edit
+                      Update
                     </button>
                   </td>
                 </tr>
