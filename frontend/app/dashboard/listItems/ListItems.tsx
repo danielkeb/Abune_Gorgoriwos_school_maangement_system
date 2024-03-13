@@ -106,6 +106,18 @@ const path= usePathname()
     
     </Link>
 
+    <Link href="/dashboard/students">
+    <div className={`${path.startsWith("/dashboard/students")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
+      
+      <ListItemIcon>
+        <PeopleIcon className={`${path.startsWith("/dashboard/students")? " text-white":""}`}  />
+      </ListItemIcon>
+      <ListItemText primary="Students" />
+  
+    </div>
+    
+    </Link>
+
   </React.Fragment>
 
   )
