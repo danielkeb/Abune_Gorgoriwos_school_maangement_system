@@ -36,6 +36,8 @@ const SubjectComponent = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<SubjectData | null>(null);
   const [showUpdateForm, setShowUpdateForm] = useState(false); 
+  const [showModal, setShowModal] = useState(false);
+
   // Flag to display update form
 
   useEffect(() => {
@@ -81,18 +83,15 @@ const SubjectComponent = () => {
   };
 
   const handleManageSubject = async (subjectId?: number) => {
-    setShowCreateForm(false);
-        //setShowCreateForm(!subjectId); // Show create form if no subjectId is provided
-        //setShowUpdateForm(!!subjectId);
-    setShowUpdateForm(false); // Hide update form when managing subjects
+     // Open modal when managing subjects
+     
+     setShowCreateForm(false);
     try {
       let response;
       if (subjectId) {
         response = await axios.get<SubjectData>(`http://localhost:3333/subjects/get/${subjectId}`);
         setSelectedSubject(response.data);
-        // Set showUpdateForm to true when fetching data for a specific subject
-        setShowCreateForm(false);
-        setShowUpdateForm(true);
+        setShowModal(true);
       } else {
         response = await axios.get<SubjectData[]>('http://localhost:3333/subjects/get');
         setClassData(response.data);
@@ -104,9 +103,9 @@ const SubjectComponent = () => {
     }
   };
   
+  
 
   const handleUpdateSubject = async () => {
-    setShowCreateForm(false);
     if (!selectedSubject) {
       setError('Please select a subject to update.');
       return;
@@ -123,11 +122,15 @@ const SubjectComponent = () => {
       });
       handleManageSubject();
       setError('');
+      setShowModal(false); // Close modal after update
+      // Refresh page after successful update
+      //window.location.reload();
     } catch (error) {
       console.error('Error updating subject:', error);
       setError('An error occurred while updating the subject');
     }
   };
+  
   const handleSubmit = async () => {
     if (!subject || !gradeId || !teacherId) {
       setError('Please fill in all the fields');
@@ -243,7 +246,7 @@ const SubjectComponent = () => {
                       onClick={() => handleManageSubject(subject.id)}
                       className="bg-green-500 hover:bg-blue-300 text-white font-bold py-2 px-4 rounded"
                     >
-                      Update
+                      Edit
                     </button>
                   </td>
                 </tr>
@@ -253,72 +256,84 @@ const SubjectComponent = () => {
         </div>
       )}
       {/* Display update form for the selected subject */}
-      {showUpdateForm && selectedSubject && (
-        <div className="w-full max-w-md mt-8">
-          {/* Update subject form */}
-          <input
-            type="text"
-            className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
-            placeholder="Subject"
-            value={selectedSubject.name}
-            onChange={(e) =>
-              setSelectedSubject({
-                ...selectedSubject,
-                name: e.target.value,
-              })
-            }
-          />
-  {/* <select
-  className="w-full p-3 border border-gray-300 rounded-md mb-4"
-  value={selectedSubject.gradeId}
-  disabled
->
-  <option value="">Select Grade</option>
-  {grades.map((grade) => (
-    <option key={grade.id} value={grade.id}>
-      {grade.grade}
-    </option>
-  ))}
-</select> */}
-<select
-            className="w-full p-3 border border-gray-300 rounded-md mb-4"
-            value={selectedSubject.gradeId}
-            disabled
-          >
-            <option value="">Select Grade</option>
-            {grades.map((grade) => (
-              <option key={grade.id} value={grade.id}>
-                {grade.grade}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="w-full p-3 border border-gray-300 rounded-md mb-4"
-            value={selectedSubject.teacherId}
-            onChange={(e) =>
-              setSelectedSubject({
-                ...selectedSubject,
-                teacherId: parseInt(e.target.value),
-              })
-            }
-          >
-            <option value="">Select Teacher</option>
-            {teachers.map((teacher) => (
-              <option key={teacher.id} value={teacher.id}>
-                {teacher.first_name} {teacher.last_name}
-              </option>
-            ))}
-          </select>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <button
-            className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md w-full"
-            onClick={handleUpdateSubject}
-          >
-            Update
-          </button>
+      {showModal && selectedSubject && (
+  <div className="fixed z-10 inset-0 overflow-y-auto">
+    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+      <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div className="sm:flex sm:items-start">
+            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">Update Subject</h3>
+              <div className="mt-2 mx-auto max-w-md">
+                <input
+                  type="text"
+                  className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
+                  placeholder="Subject"
+                  value={selectedSubject.name}
+                  onChange={(e) =>
+                    setSelectedSubject({
+                      ...selectedSubject,
+                      name: e.target.value,
+                    })
+                  }
+                />
+                <select
+                  className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                  value={selectedSubject.gradeId}
+                  disabled
+                >
+                  <option value="">Select Grade</option>
+                  {grades.map((grade) => (
+                    <option key={grade.id} value={grade.id}>
+                      {grade.grade}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                  value={selectedSubject.teacherId}
+                  onChange={(e) =>
+                    setSelectedSubject({
+                      ...selectedSubject,
+                      teacherId: parseInt(e.target.value),
+                    })
+                  }
+                >
+                  <option value="">Select Teacher</option>
+                  {teachers.map((teacher) => (
+                    <option key={teacher.id} value={teacher.id}>
+                      {teacher.first_name} {teacher.last_name}
+                    </option>
+                  ))}
+                </select>
+                {error && <p className="text-red-500 mb-4">{error}</p>}
+                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button
+                    onClick={handleUpdateSubject}
+                    className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-2"
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
