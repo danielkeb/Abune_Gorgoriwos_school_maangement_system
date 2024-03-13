@@ -44,12 +44,12 @@ const path= usePathname()
     
     </Link>
    
-    <ListItemButton>
+    {/* <ListItemButton>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="Roles" />
-    </ListItemButton>
+    </ListItemButton> */}
     <Link href="/dashboard/grades">
     <div className={`${path.startsWith("/dashboard/grades")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
       
@@ -69,6 +69,18 @@ const path= usePathname()
         <CardMembershipIcon className={`${path.startsWith("/dashboard/certificate")? " text-white":""}`}  />
       </ListItemIcon>
       <ListItemText primary="Certification" />
+  
+    </div>
+    
+    </Link>
+
+    <Link href="/dashboard/students">
+    <div className={`${path.startsWith("/dashboard/students")?"bg-green-950 hover:bg-green-950 text-white":""} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
+      
+      <ListItemIcon>
+        <PeopleIcon className={`${path.startsWith("/dashboard/students")? " text-white":""}`}  />
+      </ListItemIcon>
+      <ListItemText primary="Students" />
   
     </div>
     

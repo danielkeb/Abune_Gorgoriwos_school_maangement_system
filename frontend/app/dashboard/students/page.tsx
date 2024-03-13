@@ -1,0 +1,146 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import Main from "../main/Main";
+import axios from "axios";
+import { AppContext } from "@/components/context/UserContext";
+import { SchoolSharp } from "@mui/icons-material";
+import * as yup from "yup";
+import { useFormik } from "formik";
+
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const Page = () => {
+  const { decodedToken } = React.useContext(AppContext);
+  const [teacherView, setTeacherView] = useState([]);
+  const [schoolss, setSchoolss] = useState([]);
+  // const[searchId, setSearchId]= useState();
+  // const [selectedSection, setSelectedSection] = useState(); // State to store the selected section
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const school = await axios.get(
+          `http://localhost:3333/teachers/grade/${decodedToken?.sub}`
+        );
+        setSchoolss(school.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [decodedToken]);
+
+  const formik = useFormik({
+    initialValues: {
+      searchId: "",
+      selectedSection: "",
+      subject: "",
+      semester: "",
+    },
+    onSubmit: async (values) => {
+      try {
+        if (
+          formik.values.searchId &&
+          formik.values.selectedSection &&
+          formik.values.selectedSection &&
+          formik.values.semester &&
+          formik.values.subject
+        ) {
+          const res = await axios.get(
+            `http://localhost:3333/result/get/${decodedToken?.sub}/${formik.values.searchId}/${formik.values.selectedSection}/${formik.values.subject}`
+          );
+          setTeacherView(res.data);
+        } else {
+          toast.error("Please Select all fields!");
+        }
+
+        // router.push('/head')
+      } catch (error: any) {
+        // Handle error (e.g., display error message)
+        // console.error("Error submitting form:", error?.response.data.message);
+      }
+    },
+  });
+
+  const filteredSections = schoolss[0]?.section.filter(
+    (obj) => obj.gradeId == parseInt(formik.values.searchId)
+  );
+  const filteredSubjects = schoolss[0]?.subject.filter(
+    (obj) => obj.gradeId == parseInt(formik.values.searchId)
+  );
+  const filteredResult =
+    formik.values.subject != "" &&
+    schoolss[0]?.section.filter(
+      (obj) => obj.id == parseInt(formik.values.selectedSection)
+    );
+
+  //  console.log("Students: ", filteredResult[0].student )
+  return (
+    <Main>
+   <div className="w-full  flex justify-center items-center">
+
+   <div className=" px-4">
+              <div className="relative w-full mb-3">
+                <label
+                  className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                  htmlFor="grid-password">
+                  Assigned Grade
+                </label>
+                <select
+                  id="yourSelect"
+                  name="searchId"
+                  value={formik.values.searchId}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
+                  <option value="">Select Grade Level</option>
+                  {schoolss[0]?.gradelevel.map((g) => {
+                    return <option value={g.id}>Grade{g.grade}</option>;
+                  })}
+                </select>
+              </div>
+
+
+            </div>
+
+            <div className=" px-4">
+              <div className="relative w-full mb-3">
+                <label
+                  className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                  htmlFor="grid-password">
+                  Assigned Grade
+                </label>
+                <select
+                  id="yourSelect"
+                  name="searchId"
+                  value={formik.values.searchId}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
+                  <option value="">Select Grade Level</option>
+                  {schoolss[0]?.gradelevel.map((g) => {
+                    return <option value={g.id}>Grade{g.grade}</option>;
+                  })}
+                </select>
+              </div>
+            </div>
+
+
+            <button
+                type="submit"
+                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                // Handle submission of all results here
+              >
+                Find Section
+              </button>
+   </div>
+   
+    </Main>
+  );
+};
+
+export default Page;
+
