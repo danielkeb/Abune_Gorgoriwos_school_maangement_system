@@ -1,18 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
-
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+enum ClassType {
+  nursery = 'nursery',
+  junior_primary = 'junior primary',
+  senior_primary = 'senior primary',
+  junior_secondary = 'junior secondary',
+  senior_secondary = 'senior secondary',
+}
 export class GradeLevel {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   grade: string;
 
-  // // @IsNotEmpty()
-  // // @IsInt()
-  // // section_id: number;
+  @IsOptional()
+  @IsEnum(ClassType)
+  classType?: ClassType;
+  //classType?: keyof typeof ClassType;
 
-  // @ApiProperty()
-  // @IsNotEmpty()
-  // @IsInt()
-  // teacher_id: number;
+  // If you want to use Prisma's ClassType instead
 }

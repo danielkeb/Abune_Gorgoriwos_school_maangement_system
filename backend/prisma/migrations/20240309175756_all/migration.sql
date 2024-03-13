@@ -28,7 +28,7 @@ CREATE TABLE "users" (
     "loggedInAt" TIMESTAMP(3),
     "createdAT" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAT" TIMESTAMP(3) NOT NULL,
-    "school_Id" INTEGER NOT NULL,
+    "school_Id" INTEGER,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -48,6 +48,9 @@ CREATE TABLE "students" (
     "user_Id" INTEGER NOT NULL,
     "gradeId" INTEGER NOT NULL,
     "sectionId" INTEGER NOT NULL,
+    "firstrank" INTEGER,
+    "secondtrank" INTEGER,
+    "overallrank" INTEGER,
 
     CONSTRAINT "students_pkey" PRIMARY KEY ("user_Id")
 );
@@ -56,6 +59,7 @@ CREATE TABLE "students" (
 CREATE TABLE "GradeLevel" (
     "id" SERIAL NOT NULL,
     "grade" TEXT NOT NULL,
+    "classType" TEXT,
 
     CONSTRAINT "GradeLevel_pkey" PRIMARY KEY ("id")
 );
@@ -136,6 +140,17 @@ CREATE TABLE "StudentHistory" (
 );
 
 -- CreateTable
+CREATE TABLE "Calander" (
+    "sub" SERIAL NOT NULL,
+    "id" DOUBLE PRECISION NOT NULL,
+    "title" TEXT NOT NULL,
+    "start" TEXT NOT NULL,
+    "allDay" BOOLEAN NOT NULL,
+
+    CONSTRAINT "Calander_pkey" PRIMARY KEY ("sub")
+);
+
+-- CreateTable
 CREATE TABLE "_StudentToSubject" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
@@ -163,6 +178,9 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE INDEX "users_id_email_idx" ON "users"("id", "email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "GradeLevel_grade_key" ON "GradeLevel"("grade");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "results_subjectId_studentId_key" ON "results"("subjectId", "studentId");
 
 -- CreateIndex
@@ -187,7 +205,7 @@ CREATE INDEX "_SectionToTeacher_B_index" ON "_SectionToTeacher"("B");
 ALTER TABLE "schools" ADD CONSTRAINT "schools_schoolYearId_fkey" FOREIGN KEY ("schoolYearId") REFERENCES "SchoolYear"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_school_Id_fkey" FOREIGN KEY ("school_Id") REFERENCES "schools"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_school_Id_fkey" FOREIGN KEY ("school_Id") REFERENCES "schools"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "teachers" ADD CONSTRAINT "teachers_user_Id_fkey" FOREIGN KEY ("user_Id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

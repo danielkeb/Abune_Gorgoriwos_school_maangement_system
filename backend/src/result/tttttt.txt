@@ -1,0 +1,285 @@
+{
+    "id": 11,
+    "first_name": "yonas",
+    "middle_name": "kasa",
+    "last_name": "kebede",
+    "email": "yonas@gmail.com",
+    "phone": "+251921154404",
+    "createdAT": "2024-03-03T13:51:41.874Z",
+    "grade": {
+        "id": 1,
+        "grade": "9",
+        "subject": [
+            {
+                "id": 13,
+                "name": "mathematics",
+
+            },
+            {
+                "id": 14,
+                "name": "history",
+
+            },
+            {
+                "id": 15,
+                "name": "chemistry",
+
+            },
+            {
+                "id": 16,
+                "name": "physics",
+
+            },
+            {
+                "id": 17,
+                "name": "civics",
+
+            },
+            {
+                "id": 18,
+                "name": "biolody",
+
+            }
+        ],
+        "section": [
+            {
+                "id": 1,
+                "name": "a class",
+                "gradeId": 1
+            }
+        ]
+    },
+    "results": [
+        {
+            "id": 9,
+   
+            "totalScore1": 85,
+      
+            "totalScore2": 80,
+
+        },
+        {
+            "id": 10,
+
+
+            "totalScore2": 80,
+
+        },
+        {
+            "id": 11,
+
+            "totalScore1": 85,
+
+            "totalScore2": 90,
+
+        },
+        {
+            "id": 12,
+
+            "totalScore1": 80,
+
+            "totalScore2": 95,
+
+        },
+        {
+            "id": 13,
+
+            "totalScore1": 91,
+
+            "totalScore2": 70,
+
+        }
+    ],
+    "school_Id": 1
+}
+
+{
+    "id": 11,
+    "first_name": "daniel",
+    "middle_name": "kasa",
+    "last_name": "abue",
+    "email": "daniel@gmail.com",
+    "phone": "+25190254404",
+    "createdAT": "2024-03-03T13:51:41.874Z",
+    "grade": {
+        "id": 1,
+        "grade": "9",
+        "subject": [
+            {
+                "id": 13,
+                "name": "mathematics",
+
+            },
+            {
+                "id": 14,
+                "name": "history",
+
+            },
+            {
+                "id": 15,
+                "name": "chemistry",
+
+            },
+            {
+                "id": 16,
+                "name": "physics",
+
+            },
+            {
+                "id": 17,
+                "name": "civics",
+
+            },
+            {
+                "id": 18,
+                "name": "biolody",
+
+            }
+        ],
+        "section": [
+            {
+                "id": 1,
+                "name": "a class",
+                "gradeId": 1
+            }
+        ]
+    },
+    "results": [
+        {
+            "id": 9,
+   
+            "totalScore1": 85,
+      
+            "totalScore2": 90,
+
+        },
+        {
+            "id": 10,
+
+
+            "totalScore2": 83,
+
+        },
+        {
+            "id": 11,
+
+            "totalScore1": 85,
+
+            "totalScore2": 90,
+
+        },
+        {
+            "id": 12,
+
+            "totalScore1": 80,
+
+            "totalScore2": 95,
+
+        },
+        {
+            "id": 13,
+
+            "totalScore1": 91,
+
+            "totalScore2": 70,
+
+        }
+    ],
+    "school_Id": 1
+}
+
+
+{
+    "id": 11,
+    "first_name": "bereket",
+    "middle_name": "kioo",
+    "last_name": "adert",
+    "email": "qadtt@gmail.com",
+    "phone": "+251927454404",
+    "createdAT": "2024-03-03T13:51:41.874Z",
+    "grade": {
+        "id": 1,
+        "grade": "9",
+        "subject": [
+            {
+                "id": 13,
+                "name": "mathematics",
+
+            },
+            {
+                "id": 14,
+                "name": "history",
+
+            },
+            {
+                "id": 15,
+                "name": "chemistry",
+
+            },
+            {
+                "id": 16,
+                "name": "physics",
+
+            },
+            {
+                "id": 17,
+                "name": "civics",
+
+            },
+            {
+                "id": 18,
+                "name": "biolody",
+
+            }
+        ],
+        "section": [
+            {
+                "id": 1,
+                "name": "a class",
+                "gradeId": 1
+            }
+        ]
+    },
+    "results": [
+        {
+            "id": 9,
+   
+            "totalScore1": 85,
+      
+            "totalScore2": 80,
+
+        },
+        {
+            "id": 10,
+
+
+            "totalScore2": 60,
+
+        },
+        {
+            "id": 11,
+
+            "totalScore1": 85,
+
+            "totalScore2": 92,
+
+        },
+        {
+            "id": 12,
+
+            "totalScore1": 80,
+
+            "totalScore2": 95,
+
+        },
+        {
+            "id": 13,
+
+            "totalScore1": 81,
+
+            "totalScore2": 90,
+
+        }
+    ],
+    "school_Id": 1
+}

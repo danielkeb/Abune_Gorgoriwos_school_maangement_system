@@ -1,0 +1,248 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+interface Teacher {
+  id: number;
+  first_name: string;
+  last_name: string;
+  user: { first_name: string; last_name: string; id: number };
+}
+
+interface Grade {
+  id: number;
+  grade: string;
+}
+
+interface SubjectData {
+  id: number;
+  name: string;
+  gradelevel: {
+    id: number;
+    grade: string;
+    teacher: Teacher[];
+  };
+  teacherId?: number;
+}
+
+const SubjectComponent = () => {
+  const [subject, setSubject] = useState('');
+  const [gradeId, setGradeId] = useState<number | null>(null); // Initialize with null
+  const [teacherId, setTeacherId] = useState<number | null>(null); // Initialize with null
+  const [error, setError] = useState('');
+  const [classData, setClassData] = useState<SubjectData[]>([]);
+  const [updateSubject, setUpdateSubject] = useState(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [grades, setGrades] = useState<Grade[]>([]);
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  useEffect(() => {
+    fetchGrades();
+    fetchTeachers();
+    handleManageSubject();
+  }, []);
+
+
+
+
+  const fetchGrades = async () => {
+    try {
+      const response = await axios.get<Grade[]>('http://localhost:3333/grade/get');
+      setGrades(response.data);
+    } catch (error) {
+      console.error('Error fetching grades:', error);
+      setError('An error occurred while fetching grades');
+    }
+  };
+  const fetchTeachers = async () => {
+    try {
+      const response = await axios.get<Teacher[]>('http://localhost:3333/teachers/get');
+      setTeachers(response.data);
+    } catch (error) {
+      console.error('Error fetching teachers:', error);
+      setError('An error occurred while fetching teachers');
+    }
+  };
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    if (name === 'gradeId') {
+      setGradeId(value === '' ? null : parseInt(value) || null); // Parse as integer if not empty string
+      setTeacherId(null); // Reset teacherId when grade changes
+    } else if (name === 'teacherId') {
+      setTeacherId(value === '' ? null : parseInt(value) || null); // Parse as integer if not empty string
+    }
+  };
+
+  const handleCreateNewClass = () => {
+    setShowCreateForm(true);
+    setError('');
+  };
+
+  const handleManageSubject = async () => {
+    setShowCreateForm(false);
+    try {
+      const response = await axios.get<SubjectData[]>('http://localhost:3333/subjects/get');
+      setClassData(response.data);
+    } catch (error) {
+      console.error('Error fetching class data:', error);
+      setError('An error occurred while fetching class data');
+    }
+  };
+
+  const handleUpdateSubject = async () => {
+    setShowCreateForm(false);
+    try {
+      const response = await axios.put('http://localhost:3333/subjects/update/${subjectId}`);
+      setUpdateSubject(response.data);
+    } catch (error) {
+      console.error('Error fetching class data:', error);
+      setError('An error occurred while fetching class data');
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!subject || !gradeId || !teacherId) {
+      setError('Please fill in all the fields');
+      return;
+    }
+
+    try {
+      await axios.post('http://localhost:3333/subjects/add', { name: subject, gradeId, teacherId });
+      setSubject('');
+      setGradeId(null);
+      setTeacherId(null);
+      setError('');
+      handleManageSubject();
+    } catch (error) {
+      console.error('Error registering subject:', error);
+      setError('An error occurred while registering the subject');
+    }
+  };
+
+  return (
+    <div className="w-full bg-green-100 p-8 mt-8 text-center">
+      <div className="w-full flex flex-wrap gap-4 mb-4">
+        <button
+          className="bg-blue-50 hover:bg-blue-100 text-green-900 font-semibold py-2 px-4 rounded-md"
+          onClick={handleManageSubject}
+        >
+          Manage Subject
+        </button>
+        <button
+          className="bg-blue-50 hover:bg-blue-100 text-green-900 font-semibold py-2 px-4 rounded-md"
+          onClick={handleCreateNewClass}
+        >
+          Create New Subject
+        </button>
+      </div>
+      {showCreateForm && (
+        <div className="w-full max-w-md">
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
+            placeholder="Subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+          />
+          <select
+            className="w-full p-3 border border-gray-300 rounded-md mb-4"
+            value={gradeId || ''}
+            onChange={handleChange}
+            name="gradeId"
+          >
+            <option value="">Select Grade</option>
+            {grades.map((grade) => (
+              <option key={grade.id} value={grade.id}>
+                {grade.grade}
+              </option>
+            ))}
+          </select>
+
+
+          {gradeId !== null && (
+              <select
+              className="w-full p-3 border border-gray-300 rounded-md mb-4"
+              value={teacherId || ''}
+              onChange={handleChange}
+              name="teacherId"
+            >
+              <option value="">Select Teacher</option>
+              {teachers.map((teacher) => (
+                <option key={teacher.id} value={teacher.id}>
+                  {teacher.first_name} {teacher.last_name}
+                </option>
+              ))}
+            </select>
+            // <select
+            //   className="w-full p-3 border border-gray-300 rounded-md mb-4"
+            //   value={teacherId || ''}
+            //   onChange={handleChange}
+            //   name="teacherId"
+            // >
+            //   <option value="">Select Teacher</option>
+            //   {Array.from(
+            //     new Set(
+            //       classData
+            //         .filter(subject => subject.gradelevel?.id === (gradeId || 0))
+            //         .flatMap(subject => subject.gradelevel?.teacher.map(teacher => teacher.user.id))
+            //     )
+            //   ).map(teacherId => {
+            //     const teacher = classData
+            //       .flatMap(subject => subject.gradelevel?.teacher)
+            //       .find(teacher => teacher.user.id === teacherId);
+            //     return (
+            //       <option key={teacher?.user.id} value={teacher?.user.id}>
+            //         {teacher?.user.first_name} {teacher?.user.last_name}
+            //       </option>
+            //     );
+            //   })}
+            // </select>
+          )}
+
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <button
+            className="bg-green-500 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-md w-full"
+            onClick={handleSubmit}
+          >
+            Register
+          </button>
+        </div>
+      )}
+      {!showCreateForm && (
+        <div className="mt-8 w-full">
+          <table className="min-w-full bg-white border border-gray-300">
+            <thead>
+              <tr>
+                <th className="py-2 px-4 border-b">ID</th>
+                <th className="py-2 px-4 border-b">Subject Name</th>
+                <th className="py-2 px-4 border-b">Grade</th>
+                <th className="py-2 px-4 border-b">Teacher</th>
+                <th className="py-2 px-4 border-b">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {classData.map((subject) => (
+                <tr key={subject.id}>
+                  <td className="py-2 px-4 border-b">{subject.id}</td>
+                  <td className="py-2 px-4 border-b">{subject.name}</td>
+                  <td className="py-2 px-4 border-b">{subject.gradelevel?.grade}</td>
+                  <td className="py-2 px-4 border-b">
+                    {subject.teacherId ? (
+                      <span>
+                        {subject.gradelevel?.teacher?.find(teacher => teacher.user.id === (subject.teacherId || 0))?.user.first_name}{' '}
+                        {subject.gradelevel?.teacher?.find(teacher => teacher.user.id === (subject.teacherId || 0))?.user.last_name}
+                      </span>
+                    ) : (
+                      <span>No teacher assigned</span>
+                    )}
+                  </td>
+                  <td className="py-2 px-4 border-b">update</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SubjectComponent;

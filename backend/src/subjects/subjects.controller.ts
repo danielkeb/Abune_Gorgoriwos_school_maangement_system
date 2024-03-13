@@ -19,8 +19,8 @@ export class SubjectsController {
   constructor(private subjectsService: SubjectsService) {}
 
   @Post('add/')
-  addSubjects(@Body() dto: AddSubjectsDto) {
-    return this.subjectsService.addSubjects(dto);
+  addSubject(@Body() dto: AddSubjectsDto) {
+    return this.subjectsService.addSubject(dto);
   }
 
   @Get('get')
@@ -31,7 +31,10 @@ export class SubjectsController {
   deleteSubject(@Param('id', ParseIntPipe) id: number) {
     return this.subjectsService.deleteSubject(id);
   }
-
+  @Get('get/:id')
+  searchSubjects(@Param('id', ParseIntPipe) subId: number) {
+    return this.subjectsService.searchSubjects(subId);
+  }
   @Patch('update/:id')
   updateSubjects(
     @Body() dto: UpdateSubjectDto,

@@ -66,7 +66,7 @@ model Teacher {
   result     Result[]
   subject    Subject[]
   gradelevel GradeLevel[]
-  section  Section[]
+  section  Section[] //@relation("TeacherSections", references: [id])
 
   @@map("teachers")
 }
@@ -97,7 +97,8 @@ model Student {
 
 model GradeLevel {
   id      Int       @id @default(autoincrement())
-  grade   String
+  grade   String @unique
+  classType String?
  
  //Make the teacherId optional !
     section Section[]
@@ -110,6 +111,13 @@ model GradeLevel {
 
   // other fields specific to GradeLevel
 }
+// enum ClassType{
+//   nursery
+//   junior_primary
+//   senior_primary
+//   junior_secondary
+//   senior_secondary
+// }
 model Section {
   id         Int        @id @default(autoincrement())
   name       String
@@ -118,6 +126,7 @@ model Section {
 
   student Student[]
   teacher Teacher[]
+  @@map("sections")
 }
 
 model Subject {
@@ -126,7 +135,7 @@ model Subject {
   // other fields specific to Subject
   student   Student[]
   result    Result[]
-   teacherId Int?
+  teacherId Int?
   teacher   Teacher?   @relation(fields: [teacherId], references: [user_Id])
  
 
@@ -147,11 +156,10 @@ model Result {
   midtermScore2 Float?
   finalExamScore2 Float?
   totalScore2 Float?
-  sectionId Int?
   
-  teacher   Teacher?   @relation(fields: [teacherId], references: [user_Id])
-  teacherId Int?
-    studentId Int
+  teacher   Teacher   @relation(fields: [teacherId], references: [user_Id])
+  teacherId Int
+  studentId Int
   student   Student @relation(fields: [studentId], references: [user_Id])
 
   subjectId Int

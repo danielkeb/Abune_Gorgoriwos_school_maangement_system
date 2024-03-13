@@ -8,6 +8,7 @@ interface StudentData {
   section:{studentId: number}
   first_name: string;
   last_name: string;
+  school_name: string;
   grade: {
     grade: string;
     subject: { id: number; name: string }[];
@@ -42,6 +43,7 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
         );// rank of student data
     
         const data =  response.data
+        //console.log('data ',data);
         setStudentData(data);
       } catch (error) {
         console.error('Error fetching student data:', error);
@@ -49,7 +51,7 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
     };
     fetchData();
   }, []);
-  console.log(decodedToken)
+  //console.log(decodedToken)
 
   useEffect(() => {
     if (studentData) {
@@ -101,7 +103,7 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
 
   return (
     <div id="certificate" className="p-8 text-center">
-      <h2 className="text-2xl font-bold">Abune gorgoriwos school tebase branch</h2>
+      <h2 className="text-2xl font-bold">{studentData?.school_name} school </h2>
       <p className="text-lg font-semibold">Grade {studentData?.grade.grade} student card</p>
 
       <div className="mt-8">
