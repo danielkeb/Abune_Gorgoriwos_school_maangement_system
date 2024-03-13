@@ -111,13 +111,6 @@ model GradeLevel {
 
   // other fields specific to GradeLevel
 }
-// enum ClassType{
-//   nursery
-//   junior_primary
-//   senior_primary
-//   junior_secondary
-//   senior_secondary
-// }
 model Section {
   id         Int        @id @default(autoincrement())
   name       String
@@ -212,17 +205,3 @@ model Calander{
   allDay Boolean
 
 }
-// model StudentHistory {
-//   id              Int      @id @default(autoincrement())
-//   studentId       Int
-//   student         Student  @relation(fields: [studentId], references: [user_Id])
-//   gradeId         Int
-//   sectionId       Int
-//   totalScore      Int
-//   subjectId       Int
-  
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   // @@map("student_history")
-// }

@@ -116,7 +116,6 @@ const SubjectComponent = () => {
       return;
     }
     try {
-      console.log('hjfgjkfdh error det');
       await axios.patch(`http://localhost:3333/subjects/update/${selectedSubject.id}`, {
         name: selectedSubject.name,
         gradeId: selectedSubject.gradeId,
@@ -241,10 +240,10 @@ const SubjectComponent = () => {
                   </td>
                   <td className="py-2 px-4 border-b">
                     <button
-                      onClick={() => handleManageSubject(subject.id)}
+                      onClick={() => {handleManageSubject(subject.id); setShowCreateForm(false); }}
                       className="bg-green-500 hover:bg-blue-300 text-white font-bold py-2 px-4 rounded"
                     >
-                      Update
+                      Edit
                     </button>
                   </td>
                 </tr>
