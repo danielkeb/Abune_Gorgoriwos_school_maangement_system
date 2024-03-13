@@ -204,17 +204,3 @@ model Calander{
   allDay Boolean
 
 }
-// model StudentHistory {
-//   id              Int      @id @default(autoincrement())
-//   studentId       Int
-//   student         Student  @relation(fields: [studentId], references: [user_Id])
-//   gradeId         Int
-//   sectionId       Int
-//   totalScore      Int
-//   subjectId       Int
-  
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   // @@map("student_history")
-// }
