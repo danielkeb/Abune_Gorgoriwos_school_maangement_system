@@ -107,7 +107,6 @@ export class StudentsService {
             },
           });
 
-
           const totalScores1 = studentResults.map(
             (result) => result.totalScore1 || 0,
           );
@@ -196,14 +195,16 @@ export class StudentsService {
     }
   }
 
-
-
-  async associateSubjectsAndCreateResults(userId: number, gradeId: number, sectionId:number): Promise<void> {
+  async associateSubjectsAndCreateResults(
+    userId: number,
+    gradeId: number,
+    sectionId: number,
+  ): Promise<void> {
     // Step 1: Get subjects associated with the grade
     const subjects = await this.prismaService.subject.findMany({
       where: { gradeId: gradeId },
     });
-  
+
     // Step 2: Associate subjects with the student
     await this.prismaService.student.update({
       where: { user_Id: userId },
@@ -213,22 +214,20 @@ export class StudentsService {
         },
       },
     });
-  
+
     // Step 3: Create result records for each associated subject
     for (const subject of subjects) {
       // Get the teacherId associated with the subject, or set it to null if not available
       const teacherId = subject.teacherId || null;
-  
+
       // Create a result record for the student, subject, and grade
       await this.prismaService.result.create({
-        
         data: {
           studentId: userId,
           subjectId: subject.id,
           gradeLevelId: gradeId,
-          sectionId:sectionId,
+          sectionId: sectionId,
           teacherId: teacherId,
-
         },
       });
     }
@@ -268,7 +267,7 @@ export class StudentsService {
           data: { subject: { disconnect: subjectIdsToRemove } },
         });
       }
-      await this.associateSubjectsAndCreateResults(user_id, gradeId,sectionId);
+      await this.associateSubjectsAndCreateResults(user_id, gradeId, sectionId);
     }
     return {
       status: 'Sucess',
@@ -620,4 +619,40 @@ export class StudentsService {
     }
   }
 
+  async getStudentsForAdmin(
+    schoolId: number,
+    gradeId: number,
+    sectionId: number,
+  ) {
+    const stud = await this.prismaService.student.findMany({
+      where: {
+        user: { school_Id: schoolId },
+        gradeId: gradeId,
+        sectionId: sectionId,
+      },
+      select: {
+        user: true,
+        careof_contact1: true,
+        gradeId: true,
+        sectionId: true,
+      },
+    });
+    const filterdList = stud.map((s) => ({
+      id: s.user.id,
+      first_name: s.user.frist_name,
+      middle_name: s.user.middle_name,
+      last_name: s.user.last_name,
+      email: s.user.email,
+      address: s.user.address,
+      phone: s.user.phone,
+
+      date_of_birth: s.user.date_of_birth,
+      school_Id: s.user.school_Id,
+
+      careof_contact1: s.careof_contact1,
+      gradeId: s.gradeId,
+      sectionId: s.sectionId,
+    }));
+    return filterdList;
+  }
 }
