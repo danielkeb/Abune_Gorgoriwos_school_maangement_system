@@ -61,7 +61,7 @@ const NewWay = ({teacherView,gradeId,subjectId,selectedSection,semester}) => {
         },
       ],[rowId]);
   return (
-    <div className='w-[75%] ml-4'>
+    <div className='w-full ml-4'>
        <div style={{ height: 400, width: '100%' }}>
       <DataGrid rows={teacherView} getRowId={row=>row.id} columns={columns}  
             initialState={{

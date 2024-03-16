@@ -107,6 +107,7 @@ export class StudentsService {
             },
           });
 
+<<<<<<< HEAD
           // // Filter students with a totalScore greater than 50
           // const totalScores = studentResults.map(
           //   (result) => result.totalScore1,
@@ -119,6 +120,8 @@ export class StudentsService {
           // const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
 
           // Calculate the average total score
+=======
+>>>>>>> origin/main
           const totalScores1 = studentResults.map(
             (result) => result.totalScore1 || 0,
           );
@@ -207,6 +210,7 @@ export class StudentsService {
     }
   }
 
+<<<<<<< HEAD
   // async promoteStudents(students: PromoteStudentsNextGradeDto[]) {
   //   for (const student of students) {
   //     const user_id = student.user_id;
@@ -275,6 +279,45 @@ export class StudentsService {
   //     msg: 'Students promoted to new grade ',
   //   };
   // }
+=======
+  async associateSubjectsAndCreateResults(
+    userId: number,
+    gradeId: number,
+    sectionId: number,
+  ): Promise<void> {
+    // Step 1: Get subjects associated with the grade
+    const subjects = await this.prismaService.subject.findMany({
+      where: { gradeId: gradeId },
+    });
+
+    // Step 2: Associate subjects with the student
+    await this.prismaService.student.update({
+      where: { user_Id: userId },
+      data: {
+        subject: {
+          connect: subjects.map((subject) => ({ id: subject.id })),
+        },
+      },
+    });
+
+    // Step 3: Create result records for each associated subject
+    for (const subject of subjects) {
+      // Get the teacherId associated with the subject, or set it to null if not available
+      const teacherId = subject.teacherId || null;
+
+      // Create a result record for the student, subject, and grade
+      await this.prismaService.result.create({
+        data: {
+          studentId: userId,
+          subjectId: subject.id,
+          gradeLevelId: gradeId,
+          sectionId: sectionId,
+          teacherId: teacherId,
+        },
+      });
+    }
+  }
+>>>>>>> origin/main
 
   async associateSubjects(userId: number, gradeId: number) {
     const subjects = await this.prismaService.subject.findMany({
@@ -309,7 +352,11 @@ export class StudentsService {
           data: { subject: { disconnect: subjectIdsToRemove } },
         });
       }
+<<<<<<< HEAD
       await this.associateSubjects(user_id, gradeId);
+=======
+      await this.associateSubjectsAndCreateResults(user_id, gradeId, sectionId);
+>>>>>>> origin/main
     }
     return {
       status: 'Sucess',
@@ -661,8 +708,48 @@ export class StudentsService {
       };
     }
   }
+<<<<<<< HEAD
   // //To be constructed
   // async calculateRankForFirst(students: PromoteStudentsNextGradeDto[]) {}
   // //To be constructed
   // async calculateRankForSecond(students: PromoteStudentsNextGradeDto[]) {}
+=======
+
+  async getStudentsForAdmin(
+    schoolId: number,
+    gradeId: number,
+    sectionId: number,
+  ) {
+    const stud = await this.prismaService.student.findMany({
+      where: {
+        user: { school_Id: schoolId },
+        gradeId: gradeId,
+        sectionId: sectionId,
+      },
+      select: {
+        user: true,
+        careof_contact1: true,
+        gradeId: true,
+        sectionId: true,
+      },
+    });
+    const filterdList = stud.map((s) => ({
+      id: s.user.id,
+      first_name: s.user.frist_name,
+      middle_name: s.user.middle_name,
+      last_name: s.user.last_name,
+      email: s.user.email,
+      address: s.user.address,
+      phone: s.user.phone,
+
+      date_of_birth: s.user.date_of_birth,
+      school_Id: s.user.school_Id,
+
+      careof_contact1: s.careof_contact1,
+      gradeId: s.gradeId,
+      sectionId: s.sectionId,
+    }));
+    return filterdList;
+  }
+>>>>>>> origin/main
 }

@@ -73,6 +73,15 @@ export class StudentsController {
   getStudents() {
     return this.studentsService.getStudents();
   }
+  @Get('getstu/:schoolId/:gradeId/:sectionId')
+  getStudentsForAdmin(
+
+    @Param('schoolId', ParseIntPipe) schoolId: number,
+    @Param('gradeId', ParseIntPipe) gradeId: number,
+    @Param('sectionId', ParseIntPipe) sectionId: number
+  ){
+    return this.studentsService.getStudentsForAdmin(schoolId,gradeId,sectionId);
+  }
   @Post('firstrank')
   calculateRankForFirst(@Body() dto: PromoteStudentsNextGradeDto[]) {
     return this.studentsService.calculateRankForFirst(dto);
