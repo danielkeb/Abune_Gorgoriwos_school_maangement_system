@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -27,7 +28,7 @@ export class SubjectsController {
   getSubject() {
     return this.subjectsService.getSubject();
   }
-  @Get('delete/:id')
+  @Delete('delete/:id')
   deleteSubject(@Param('id', ParseIntPipe) id: number) {
     return this.subjectsService.deleteSubject(id);
   }

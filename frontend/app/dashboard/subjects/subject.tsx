@@ -30,6 +30,7 @@ const SubjectComponent = () => {
   const [gradeId, setGradeId] = useState<number | null>(null);
   const [teacherId, setTeacherId] = useState<number | null>(null);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [classData, setClassData] = useState<SubjectData[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [grades, setGrades] = useState<Grade[]>([]);
@@ -80,6 +81,7 @@ const SubjectComponent = () => {
     setShowCreateForm(true);
     setShowUpdateForm(false); // Hide update form when creating a new subject
     setError('');
+    setSuccessMessage(''); // Clear success message
   };
 
   const handleManageSubject = async (subjectId?: number) => {
@@ -97,6 +99,7 @@ const SubjectComponent = () => {
         setClassData(response.data);
       }
       setError('');
+      setSuccessMessage(''); // Clear success message
     } catch (error) {
       console.error('Error fetching class data:', error);
       setError('An error occurred while fetching class data');
@@ -123,13 +126,51 @@ const SubjectComponent = () => {
       handleManageSubject();
       setError('');
       setShowModal(false); // Close modal after update
-      // Refresh page after successful update
-      //window.location.reload();
+      setSuccessMessage('Subject updated successfully');
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000); // Set success message
     } catch (error) {
       console.error('Error updating subject:', error);
       setError('An error occurred while updating the subject');
+      setSuccessMessage(''); // Clear success message
     }
   };
+  const handleDeleteSubject = async (subjectId: number) => {
+    if (!selectedSubject) {
+      setError('Please select a subject to delete.');
+      return;
+    }
+    
+    // Confirm before deleting the subject
+    const confirmDelete = window.confirm('Are you sure you want to delete this subject?');
+    if (!confirmDelete) return; // If user cancels deletion, do nothing
+    try {
+      // Send DELETE request to delete the subject
+      await axios.delete(`http://localhost:3333/subjects/delete/${subjectId}`);
+
+      // Update the UI by removing the deleted subject from classData
+      setClassData(classData.filter(subject => subject.id !== subjectId));
+
+      // Reset selectedSubject state if it matches the deleted subject
+      if (selectedSubject && selectedSubject.id === subjectId) {
+        setSelectedSubject(null);
+        setShowModal(false);
+      }
+
+      // Show success message
+      setSuccessMessage('Subject deleted successfully');
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+    } catch (error) {
+      console.error('Error deleting subject:', error);
+      setError('An error occurred while deleting the subject');
+    }
+  };
+  
   
   const handleSubmit = async () => {
     if (!subject || !gradeId || !teacherId) {
@@ -144,14 +185,21 @@ const SubjectComponent = () => {
       setTeacherId(null);
       setError('');
       handleManageSubject();
+      setSuccessMessage('Subject updated successfully');
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 10000);  // Set success message
     } catch (error) {
       console.error('Error registering subject:', error);
       setError('An error occurred while registering the subject');
+      setSuccessMessage(''); // Clear success message
     }
   };
 
   return (
     <div className="w-full  p-8 mt-8 text-center">
+      {/* <p>hhh{successMessage}</p> */}
+      {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
       <div className="w-full flex flex-wrap gap-4 mb-4">
         <button
           className="bg-blue-50 hover:bg-blue-100 text-green-900 font-semibold py-2 px-4 rounded-md"
@@ -242,12 +290,24 @@ const SubjectComponent = () => {
                     )}
                   </td>
                   <td className="py-2 px-4 border-b">
-                    <button
-                      onClick={() => handleManageSubject(subject.id)}
-                      className="bg-green-500 hover:bg-blue-300 text-white font-bold py-2 px-4 rounded"
-                    >
-                      Edit
-                    </button>
+                  <button
+  onClick={() => handleManageSubject(subject.id)}
+  className="bg-green-500 hover:bg-blue-300 text-white font-bold py-2 px-4 mr-10 rounded"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+  </svg>
+</button>
+
+<button
+  onClick={() => handleDeleteSubject(subject.id)}
+  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M10 3a.75.75 0 0 0-.75.75v7.5a.75.75 0 0 1-1.5 0V4.5a2.75 2.75 0 0 1 5.5 0v11a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 0-1.5 0v7.5a2.75 2.75 0 1 0 5.5 0v-11A.75.75 0 0 0 12.5 3H10z" clipRule="evenodd" />
+  </svg>
+</button>
+
                   </td>
                 </tr>
               ))}
