@@ -36,10 +36,8 @@ const SubjectComponent = () => {
   const [grades, setGrades] = useState<Grade[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<SubjectData | null>(null);
-  const [showUpdateForm, setShowUpdateForm] = useState(false); 
   const [showModal, setShowModal] = useState(false);
-
-  // Flag to display update form
+  const [showModalDelete, setShowModalDelete] = useState(false);
 
   useEffect(() => {
     fetchGrades();
@@ -70,43 +68,40 @@ const SubjectComponent = () => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     if (name === 'gradeId') {
-      setGradeId(value === '' ? null : parseInt(value) || null); // Parse as integer if not empty string
-      setTeacherId(null); // Reset teacherId when grade changes
+      setGradeId(value === '' ? null : parseInt(value) || null);
+      setTeacherId(null);
     } else if (name === 'teacherId') {
-      setTeacherId(value === '' ? null : parseInt(value) || null); // Parse as integer if not empty string
+      setTeacherId(value === '' ? null : parseInt(value) || null);
     }
   };
 
   const handleCreateNewClass = () => {
     setShowCreateForm(true);
-    setShowUpdateForm(false); // Hide update form when creating a new subject
+    //setShowUpdateForm(false);
     setError('');
-    setSuccessMessage(''); // Clear success message
+    setSuccessMessage('');
   };
 
   const handleManageSubject = async (subjectId?: number) => {
-     // Open modal when managing subjects
-     
-     setShowCreateForm(false);
+    setShowCreateForm(false);
     try {
       let response;
       if (subjectId) {
         response = await axios.get<SubjectData>(`http://localhost:3333/subjects/get/${subjectId}`);
         setSelectedSubject(response.data);
         setShowModal(true);
+        //setShowModalDelete(true); 
       } else {
         response = await axios.get<SubjectData[]>('http://localhost:3333/subjects/get');
         setClassData(response.data);
       }
       setError('');
-      setSuccessMessage(''); // Clear success message
+      setSuccessMessage('');
     } catch (error) {
       console.error('Error fetching class data:', error);
       setError('An error occurred while fetching class data');
     }
   };
-  
-  
 
   const handleUpdateSubject = async () => {
     if (!selectedSubject) {
@@ -122,56 +117,53 @@ const SubjectComponent = () => {
         name: selectedSubject.name,
         gradeId: selectedSubject.gradeId,
         teacherId: selectedSubject.teacherId
-      });
+      })
+      .then(() => {
       handleManageSubject();
       setError('');
-      setShowModal(false); // Close modal after update
+      setShowModal(false);
       setSuccessMessage('Subject updated successfully');
       setTimeout(() => {
         setSuccessMessage('');
-      }, 3000); // Set success message
+      }, 3000);
+    })
     } catch (error) {
       console.error('Error updating subject:', error);
       setError('An error occurred while updating the subject');
-      setSuccessMessage(''); // Clear success message
+      setSuccessMessage('');
     }
   };
+
   const handleDeleteSubject = async (subjectId: number) => {
-    if (!selectedSubject) {
-      setError('Please select a subject to delete.');
-      return;
-    }
-    
-    // Confirm before deleting the subject
-    const confirmDelete = window.confirm('Are you sure you want to delete this subject?');
-    if (!confirmDelete) return; // If user cancels deletion, do nothing
-    try {
-      // Send DELETE request to delete the subject
-      await axios.delete(`http://localhost:3333/subjects/delete/${subjectId}`);
-
-      // Update the UI by removing the deleted subject from classData
-      setClassData(classData.filter(subject => subject.id !== subjectId));
-
-      // Reset selectedSubject state if it matches the deleted subject
-      if (selectedSubject && selectedSubject.id === subjectId) {
-        setSelectedSubject(null);
-        setShowModal(false);
-      }
-
-      // Show success message
-      setSuccessMessage('Subject deleted successfully');
-
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 3000);
-    } catch (error) {
-      console.error('Error deleting subject:', error);
-      setError('An error occurred while deleting the subject');
+    const selectedSubject = classData.find(subject => subject.id === subjectId);
+    if (selectedSubject) {
+      setSelectedSubject(selectedSubject);
+      //setShowModal(true);
+      setShowModalDelete(true); // Ensure this line is here
+    } else {
+      console.error('Subject not found');
     }
   };
   
-  
+
+  const confirmDelete = () => {
+    axios.delete(`http://localhost:3333/subjects/delete/${selectedSubject?.id}`)
+      .then(() => {
+        setClassData(classData.filter(subject => subject.id !== selectedSubject?.id));
+        setSuccessMessage('Subject deleted successfully');
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 3000);
+      })
+      .catch(error => {
+        console.error('Error deleting subject:', error);
+        setError('An error occurred while deleting the subject');
+      })
+      .finally(() => {
+        setShowModalDelete(false);
+      });
+  };
+
   const handleSubmit = async () => {
     if (!subject || !gradeId || !teacherId) {
       setError('Please fill in all the fields');
@@ -179,26 +171,27 @@ const SubjectComponent = () => {
     }
 
     try {
-      await axios.post('http://localhost:3333/subjects/add', { name: subject, gradeId, teacherId });
-      setSubject('');
-      setGradeId(null);
-      setTeacherId(null);
-      setError('');
-      handleManageSubject();
-      setSuccessMessage('Subject updated successfully');
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 10000);  // Set success message
+      await axios.post('http://localhost:3333/subjects/add', { name: subject, gradeId, teacherId })
+      .then(() => {
+        setSubject('');
+        setGradeId(null);
+        setTeacherId(null);
+        setError('');
+        handleManageSubject();
+        setSuccessMessage('Subject added successfully');
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 3000);
+      });
     } catch (error) {
       console.error('Error registering subject:', error);
       setError('An error occurred while registering the subject');
-      setSuccessMessage(''); // Clear success message
+      setSuccessMessage('');
     }
   };
 
   return (
-    <div className="w-full  p-8 mt-8 text-center">
-      {/* <p>hhh{successMessage}</p> */}
+    <div className="w-full p-8 mt-8 text-center">
       {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
       <div className="w-full flex flex-wrap gap-4 mb-4">
         <button
@@ -214,9 +207,9 @@ const SubjectComponent = () => {
           Create New Subject
         </button>
       </div>
+      {/* Create new subject form */}
       {showCreateForm && (
         <div className="w-full max-w-md">
-          {/* Create new subject form */}
           <input
             type="text"
             className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
@@ -261,6 +254,7 @@ const SubjectComponent = () => {
           </button>
         </div>
       )}
+      {/* Existing code... */}
       {!showCreateForm && (
         <div className="mt-8 w-full">
           <table className="min-w-full bg-white border border-gray-300">
@@ -306,8 +300,8 @@ const SubjectComponent = () => {
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor">
     <path fillRule="evenodd" d="M10 3a.75.75 0 0 0-.75.75v7.5a.75.75 0 0 1-1.5 0V4.5a2.75 2.75 0 0 1 5.5 0v11a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 0-1.5 0v7.5a2.75 2.75 0 1 0 5.5 0v-11A.75.75 0 0 0 12.5 3H10z" clipRule="evenodd" />
   </svg>
+  <span className="ml-2">Delete</span>
 </button>
-
                   </td>
                 </tr>
               ))}
@@ -392,8 +386,24 @@ const SubjectComponent = () => {
       </div>
     </div>
   </div>
+  
 )}
-
+      {showModalDelete && selectedSubject && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
+          <div className="bg-white rounded-lg p-8 z-10">
+            <p className="mb-4 text-xl">Are you sure you want to delete this subject?</p>
+            <div className="flex justify-end">
+              <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mr-2 rounded" onClick={() => setShowModalDelete(false)}>
+                Cancel
+              </button>
+              <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" onClick={confirmDelete}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -164,6 +164,7 @@ model Result {
 
   subjectId Int
   subject   Subject @relation(fields: [subjectId], references: [id])
+  sectionId Int?
 
   gradeLevelId Int
   gradeLevel   GradeLevel @relation(fields: [gradeLevelId], references: [id])

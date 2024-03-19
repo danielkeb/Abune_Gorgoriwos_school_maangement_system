@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import Link from "next/link";
+import ThemeSwitch from "@/components/context/ThemeSwitch";
 import {
   ShieldCheckmarkOutline,
   EarthOutline,
@@ -88,6 +89,7 @@ export default function DrawerAppBar(props: Props) {
         <Button style={{ backgroundColor: "green", color: "white" }}>
           Portal
         </Button>
+        <ThemeSwitch/>
       </List>
     </Box>
   );
@@ -121,6 +123,16 @@ export default function DrawerAppBar(props: Props) {
             }}>
             ABGSMS
           </Typography>
+
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", sm: "block", color: "black" },
+            }}>
+            <ThemeSwitch/>
+          </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
               <Button key={item} sx={{ color: "black" }}>
@@ -132,6 +144,7 @@ export default function DrawerAppBar(props: Props) {
                 Portal
               </Button>
             </Link>
+          
           </Box>
         </Toolbar>
       </AppBar>
