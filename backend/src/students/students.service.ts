@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { DtoAdmin, DtoStudent } from './dto';
-import PromoteStudentsDto from './dto/promote.students.dto';
+//import PromoteStudentsDto from './dto/promote.students.dto';
 import PromoteStudentsNextGradeDto from './dto/promote.students.nextgrade.dto';
 
 @Injectable()
@@ -107,7 +107,6 @@ export class StudentsService {
             },
           });
 
-<<<<<<< HEAD
           // // Filter students with a totalScore greater than 50
           // const totalScores = studentResults.map(
           //   (result) => result.totalScore1,
@@ -120,8 +119,6 @@ export class StudentsService {
           // const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
 
           // Calculate the average total score
-=======
->>>>>>> origin/main
           const totalScores1 = studentResults.map(
             (result) => result.totalScore1 || 0,
           );
@@ -210,7 +207,6 @@ export class StudentsService {
     }
   }
 
-<<<<<<< HEAD
   // async promoteStudents(students: PromoteStudentsNextGradeDto[]) {
   //   for (const student of students) {
   //     const user_id = student.user_id;
@@ -279,8 +275,7 @@ export class StudentsService {
   //     msg: 'Students promoted to new grade ',
   //   };
   // }
-=======
-  async associateSubjectsAndCreateResults(
+  async associateSubjezctsAndCreateResults(
     userId: number,
     gradeId: number,
     sectionId: number,
@@ -317,7 +312,6 @@ export class StudentsService {
       });
     }
   }
->>>>>>> origin/main
 
   async associateSubjects(userId: number, gradeId: number) {
     const subjects = await this.prismaService.subject.findMany({
@@ -334,10 +328,11 @@ export class StudentsService {
     });
   }
 
-  async promoteSubjects(students: PromoteStudentsDto[]) {
+  async promoteSubjects(students: PromoteStudentsNextGradeDto[]) {
     for (const student of students) {
       const user_id = student.user_id;
       const gradeId = student.gradeId;
+      const sectionId = student.sectionId;
       const existingSubjects = await this.prismaService.student
         .findUnique({ where: { user_Id: user_id }, include: { subject: true } })
         .then((student) => student?.subject);
@@ -352,17 +347,51 @@ export class StudentsService {
           data: { subject: { disconnect: subjectIdsToRemove } },
         });
       }
-<<<<<<< HEAD
       await this.associateSubjects(user_id, gradeId);
-=======
       await this.associateSubjectsAndCreateResults(user_id, gradeId, sectionId);
->>>>>>> origin/main
     }
     return {
       status: 'Sucess',
       msg: 'All Students subject list promoted',
     };
   }
+  async associateSubjectsAndCreateResults(
+    userId: number,
+    gradeId: number,
+    sectionId: number,
+  ): Promise<void> {
+    // Step 1: Get subjects associated with the grade
+    const subjects = await this.prismaService.subject.findMany({
+      where: { gradeId: gradeId },
+    });
+
+    // Step 2: Associate subjects with the student
+    await this.prismaService.student.update({
+      where: { user_Id: userId },
+      data: {
+        subject: {
+          connect: subjects.map((subject) => ({ id: subject.id })),
+        },
+      },
+    });
+    // Step 3: Create result records for each associated subject
+    for (const subject of subjects) {
+      // Get the teacherId associated with the subject, or set it to null if not available
+      const teacherId = subject.teacherId;
+
+      // Create a result record for the student, subject, and grade
+      await this.prismaService.result.create({
+        data: {
+          studentId: userId,
+          subjectId: subject.id,
+          gradeLevelId: gradeId,
+          sectionId: sectionId,
+          teacherId: teacherId,
+        },
+      });
+    }
+  }
+
   async getStudents() {
     // Adjust the return type as per your requirement
     const allStudents = await this.prismaService.student.findMany({
@@ -708,12 +737,6 @@ export class StudentsService {
       };
     }
   }
-<<<<<<< HEAD
-  // //To be constructed
-  // async calculateRankForFirst(students: PromoteStudentsNextGradeDto[]) {}
-  // //To be constructed
-  // async calculateRankForSecond(students: PromoteStudentsNextGradeDto[]) {}
-=======
 
   async getStudentsForAdmin(
     schoolId: number,
@@ -751,5 +774,4 @@ export class StudentsService {
     }));
     return filterdList;
   }
->>>>>>> origin/main
 }
