@@ -18,59 +18,47 @@ const StudentActions = ({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  console.log("cocococ", params.id, rowId);
+  // console.log("cocococ", params.id, rowId);
   const handleSubmit = async () => {
     try {
       setLoading(true);
-  
+       
       const {
         id,
-        studentId,
-        gradeLevelId,
-        subjectId,
-        teacherId,
-        test1,
-        midtermScore1,
-        assignmentScore1,
-        finalExamScore1,
-        totalScore1,
-        test2,
-        midtermScore2,
-        assignmentScore2,
-        finalExamScore2,
-        totalScore2,
+        first_name,
+        middle_name,
+        last_name,
+        email,
+        address,
+        phone,
+        careof_contact1,
+        date_of_birth,
+        sectionId,
+        section,
+        gradeId
+
+  
       } = params.row;
   
-      const commonData = {
-        studentId: studentId,
-        gradeLevelId: gradeLevelId,
-        teacherId: teacherId,
-        subjectId: subjectId,
+   
+  
+      let tobeSent = {
+        first_name,
+        middle_name,
+        last_name,
+        email,
+        address,
+        phone,
+        careof_contact1,
+        date_of_birth,
+        sectionId,
+        section,
+        gradeId
       };
   
-      let tobeSent = {};
-  
-      if (semester === 1) {
-        tobeSent = {
-          ...commonData,
-          test1,
-          midtermScore1,
-          assignmentScore1,
-          finalExamScore1,
-          totalScore1,
-        };
-      } else if (semester === 2) {
-        tobeSent = {
-          ...commonData,
-          test2,
-          midtermScore2,
-          assignmentScore2,
-          finalExamScore2,
-          totalScore2,
-        };
-      }
-  
-      const url = `http://localhost:3333/result/update/${parseInt(id)}/${decodedToken?.sub}/${gradeId}/${selectedSection}/${subjectId}`;
+
+      console.log("it's trying ", section,gradeId)
+      const url = `http://localhost:3333/students/updateStudent/${parseInt(id)}`;
   
       const res = await axios.patch(url, tobeSent);
   
@@ -79,6 +67,8 @@ const StudentActions = ({
         setRowId(null);
         toast.success("Record Updated :)");
       }
+
+      console.log("Done ", res)
     } catch (error) {
       console.log(error);
     }

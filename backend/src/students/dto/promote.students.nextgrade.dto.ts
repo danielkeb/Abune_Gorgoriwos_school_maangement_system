@@ -1,5 +1,5 @@
 class PromoteStudentsNextGradeDto {
-  user_id: number;
+  user_Id: number;
   gradeId: number;
   sectionId: number;
 }

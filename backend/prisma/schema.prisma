@@ -89,6 +89,10 @@ model Student {
   secondtrank            Int? 
   overallrank            Int?
 
+  firstScore            Int?        
+  secondScore            Int? 
+  overallScore           Int?
+
   subject Subject[]
   result  Result[]
   student_history StudentHistory[]
@@ -97,7 +101,8 @@ model Student {
 
 model GradeLevel {
   id      Int       @id @default(autoincrement())
-  grade   String
+  grade   String @unique
+  classType String?
  
  //Make the teacherId optional !
     section Section[]

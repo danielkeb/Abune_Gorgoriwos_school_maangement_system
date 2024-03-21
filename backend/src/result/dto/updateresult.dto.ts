@@ -41,27 +41,27 @@ export class UpdateResultDto {
   @IsOptional()
   totalScore1?: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt()
-  studentId: number;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsInt()
+  // studentId: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt()
-  subjectId?: number;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsInt()
+  // subjectId?: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt()
-  gradeLevelId?: number;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsInt()
+  // gradeLevelId?: number;
 
-  @ApiProperty()
-  @IsOptional()
-  sectionId?: number;
+  // @ApiProperty()
+  // @IsOptional()
+  // sectionId?: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt()
-  teacherId?: number;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsInt()
+  // teacherId?: number;
 }

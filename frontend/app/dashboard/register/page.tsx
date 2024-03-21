@@ -50,7 +50,7 @@ const page = () => {
       try {
         setCheck(true);
         const response = await axios.post(
-          `http://localhost:3333/auth/signUp/1`,
+          `http://localhost:3333/auth/user/1`,
         {...values, gradeId:parseInt(values.gradeId), sectionId:parseInt(values.sectionId)}
         );
 

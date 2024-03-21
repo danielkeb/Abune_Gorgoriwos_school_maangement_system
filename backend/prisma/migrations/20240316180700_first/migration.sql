@@ -96,7 +96,8 @@ CREATE TABLE "results" (
     "midtermScore2" DOUBLE PRECISION,
     "finalExamScore2" DOUBLE PRECISION,
     "totalScore2" DOUBLE PRECISION,
-    "teacherId" INTEGER NOT NULL,
+    "sectionId" INTEGER,
+    "teacherId" INTEGER,
     "studentId" INTEGER NOT NULL,
     "subjectId" INTEGER NOT NULL,
     "gradeLevelId" INTEGER NOT NULL,
@@ -229,7 +230,7 @@ ALTER TABLE "Subject" ADD CONSTRAINT "Subject_teacherId_fkey" FOREIGN KEY ("teac
 ALTER TABLE "Subject" ADD CONSTRAINT "Subject_gradeId_fkey" FOREIGN KEY ("gradeId") REFERENCES "GradeLevel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "results" ADD CONSTRAINT "results_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "teachers"("user_Id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "results" ADD CONSTRAINT "results_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "teachers"("user_Id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "results" ADD CONSTRAINT "results_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("user_Id") ON DELETE RESTRICT ON UPDATE CASCADE;

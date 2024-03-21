@@ -61,9 +61,9 @@ export class ResultService {
         totalScore2: dto.totalScore2,
 
 
-        teacherId:dto.teacherId,
-        gradeLevelId:dto.gradeLevelId,
-        subjectId:dto.subjectId
+        // teacherId:dto.teacherId,
+        // gradeLevelId:dto.gradeLevelId,
+        // subjectId:dto.subjectId
       },
     });
 

@@ -1,8 +1,9 @@
 import {
   Injectable,
-  InternalServerErrorException,
-  NotAcceptableException,
   NotFoundException,
+  // InternalServerErrorException,
+  //NotAcceptableException,
+  //NotFoundException,
 } from '@nestjs/common';
 import { AddSubjectsDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -12,70 +13,120 @@ import { UpdateSubjectDto } from './dto/update.subject.dto';
 export class SubjectsService {
   constructor(private prisma: PrismaService) {}
 
-  async addSubjects(dto: AddSubjectsDto) {
+  async addSubject(
+    dto: AddSubjectsDto,
+  ): Promise<{ msg: string; addSubject?: any }> {
     try {
-      // const teacher = await this.prisma.teacher.findUnique({
-      //   where: { user_Id: teacherId },
-      // });
-
-      // if (!teacher) {
-      //   throw new NotFoundException('Teacher not found');
-      // }
+      const { gradeId, name } = dto;
 
       // Check if gradeId exists
       const gradeLevel = await this.prisma.gradeLevel.findUnique({
         where: {
-          id: dto.gradeId,
+          id: gradeId,
         },
       });
 
       if (!gradeLevel) {
-        throw new NotFoundException('Grade level does not exist!');
+        return {
+          msg: 'Grade level does not exist!',
+        };
       }
 
       // Check if a section with the same gradeId and name already exists
       const existingSubject = await this.prisma.subject.findFirst({
         where: {
-          name: dto.name,
+          gradeId,
+          name,
         },
       });
 
       if (existingSubject) {
-        throw new NotAcceptableException('Subject already exists');
+        await this.prisma.teacher.update({
+          where: { user_Id: dto.teacherId },
+          data: {
+            subject: {
+              connect: { id: existingSubject.id },
+            },
+          },
+        });
+        return {
+          msg: 'Subject already exists!',
+        };
       }
 
-      // If no section with the same gradeId and name exists, create the new section
+      // If no subject with the same gradeId and name exists, create the new subject
       const addSubject = await this.prisma.subject.create({
         data: {
           name: dto.name,
-
           gradeId: dto.gradeId,
           teacherId: dto.teacherId,
         },
       });
 
-      return addSubject;
+      // Connect the newly created subject to the teacher and grade level
+      await this.prisma.teacher.update({
+        where: { user_Id: dto.teacherId },
+        data: {
+          subject: {
+            connect: { id: addSubject.id },
+          },
+        },
+      });
+      return {
+        msg: 'Subject added!',
+        addSubject,
+      };
     } catch (error) {
-      console.log(error);
-      // Handle unexpected errors
-      // console.error('Error adding subject:', error);
-      throw new InternalServerErrorException(
-        'An error occurred while adding the subject.',
-      );
+      console.error('Error adding section:', error);
+      return {
+        msg: 'An error occurred while adding the subject.',
+      };
     }
   }
-
   async getSubject() {
     const subjects = await this.prisma.subject.findMany({
       select: {
         name: true,
         id: true,
-        gradelevel: { select: { grade: true } },
+        gradelevel: {
+          select: {
+            id: true,
+            grade: true,
+            teacher: {
+              select: {
+                user_Id: true,
+                user: {
+                  select: {
+                    id: true,
+                    frist_name: true, // Corrected spelling
+                    last_name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        teacherId: true, // Include teacherId field
       },
     });
+
     return subjects;
   }
-
+  async searchSubjects(subj: number) {
+    const searchSubjects = await this.prisma.subject.findUnique({
+      where: { id: subj },
+      include: {
+        gradelevel: { select: { grade: true } },
+        teacher: {
+          include: { user: { select: { frist_name: true, last_name: true } } },
+        },
+      },
+    });
+    if (!searchSubjects) {
+      throw new NotFoundException('Subject not found');
+    }
+    return searchSubjects;
+  }
   async updateSubjects(dto: UpdateSubjectDto, subId: number) {
     const updateSubject = await this.prisma.subject.update({
       where: { id: subId },
@@ -83,6 +134,19 @@ export class SubjectsService {
         ...dto,
       },
     });
+    const existingResult = await this.prisma.result.findFirst({
+      where: { subjectId: subId }, // Assuming subId is the subjectId you want to update
+    });
+
+    if (existingResult) {
+      await this.prisma.result.update({
+        where: { id: existingResult.id },
+        data: {
+          teacherId: dto.teacherId,
+          // Include other fields you want to update here
+        },
+      });
+    }
 
     return {
       msg: 'Updated!',

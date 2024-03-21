@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SectionAddDto } from './dto/sectionAdd.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { SectionUpdateAddDto } from './dto/sectionadd.update.dto';
 
 // interface StudentResult {
 //   totalScore1: number;
@@ -26,7 +27,7 @@ export class SectionService {
   constructor(private prismaService: PrismaService) {}
 
   async addSection(
-    dto: SectionAddDto,
+    dto: SectionUpdateAddDto,
   ): Promise<{ msg: string; addSection?: any }> {
     try {
       const { gradeId, name } = dto;
@@ -53,6 +54,17 @@ export class SectionService {
       });
 
       if (existingSection) {
+        await this.prismaService.teacher.update({
+          where: { user_Id: dto.teacherId },
+          data: {
+            section: {
+              connect: { id: existingSection.id },
+            },
+            gradelevel: {
+              connect: { id: dto.gradeId },
+            },
+          },
+        });
         return {
           msg: 'Section already exists!',
         };
@@ -61,7 +73,21 @@ export class SectionService {
       // If no section with the same gradeId and name exists, create the new section
       const addSection = await this.prismaService.section.create({
         data: {
-          ...dto,
+          name: dto.name,
+          gradeId: dto.gradeId,
+        },
+      });
+
+      // Connect the newly created section to the teacher and grade level
+      await this.prismaService.teacher.update({
+        where: { user_Id: dto.teacherId },
+        data: {
+          section: {
+            connect: { id: addSection.id },
+          },
+          gradelevel: {
+            connect: { id: dto.gradeId },
+          },
         },
       });
 
@@ -77,6 +103,7 @@ export class SectionService {
     }
   }
 
+
   async getSection(secId: number): Promise<any[]> {
     try {
       const exist = await this.prismaService.section.findUnique({
@@ -87,18 +114,61 @@ export class SectionService {
       if (!exist) {
         throw new NotFoundException(`Section ${secId} not found`);
       }
-      const getSection = await this.prismaService.section.findMany({
-        select: {
-          gradeId: true,
-          name: true,
-          gradelevel: { select: { grade: true, student: true } },
-        },
-      });
+      const getSection = await this.prismaService.section.findMany({});
       return getSection;
     } catch (error) {
       console.error('Error fetching sections:', error);
       return [];
     }
+  }
+
+  async searchSection(secId: number) {
+    const exist = await this.prismaService.section.findUnique({
+      where: {
+        id: secId,
+      },
+    });
+    return exist;
+  }
+  async manageSection() {
+    const section = await this.prismaService.section.findMany({
+      include: {
+        teacher: {
+          select: { user: { select: { frist_name: true, middle_name: true } } },
+        },
+      },
+    });
+    return section;
+  }
+  async updateSection(dto: SectionUpdateAddDto, sectionId: number) {
+    const exist = await this.prismaService.section.findUnique({
+      where: {
+        id: sectionId,
+      },
+    });
+    if (!exist) {
+      throw new NotFoundException(`Section ${sectionId} does not exist`);
+    }
+    const update = await this.prismaService.section.update({
+      where: {
+        id: sectionId,
+      },
+      data: {
+        name: dto.name,
+        gradeId: dto.gradeId,
+      },
+    });
+    await this.prismaService.teacher.update({
+      where: { user_Id: dto.teacherId },
+      data: {
+        section: {
+          connect: { id: update.id },
+        },
+        gradelevel: {
+          connect: { id: update.gradeId },
+        },
+      },
+    });
   }
 
   // async getStudentRanking(secid: number): Promise<{
