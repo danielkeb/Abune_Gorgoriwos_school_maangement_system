@@ -11,24 +11,32 @@ import { useEffect, useMemo, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function FindStudent({ teacherView }) {
+function ForAll({ teacherView }) {
   const [pageSize, setPageSize] = useState(5);
 
   const row = teacherView.map((teach) => ({
     first_name: teach.user.frist_name,
     middle_name: teach.user.middle_name,
     user_Id: teach.user_Id,
+    overallrank: teach.overallrank,
+    overallScore: teach.overallScore,
     firstrank: teach.firstrank,
     firstScore: teach.firstScore,
+    secondtrank: teach.secondtrank,
+    secondScore: teach.secondScore,
   }));
 
   const columns = useMemo(
     () => [
-      { field: "user_Id", headerName: "ID", width: 200 },
-      { field: "first_name", headerName: "First Name", width: 200 },
-      { field: "middle_name", headerName: "Middle Name", width: 200 },
-      { field: "firstScore", headerName: "Total Score", width: 200 },
-      { field: "firstrank", headerName: "Rank", width: 200 },
+      { field: "user_Id", headerName: "ID", width: 100 },
+      { field: "first_name", headerName: "First Name", width: 150 },
+      { field: "middle_name", headerName: "Middle Name", width: 150 },
+      { field: "firstScore", headerName: "Semester I Total", width: 150 },
+      { field: "firstrank", headerName: "Semester I Rank", width: 150 },
+      { field: "secondScore", headerName: "Semester II total", width: 150 },
+      { field: "secondtrank", headerName: "Semester II Rank", width: 150 },
+      { field: "overallScore", headerName: "Total Score", width: 150 },
+      { field: "overallrank", headerName: "Rank", width: 150 },
     ],
     []
   );
@@ -76,4 +84,4 @@ function FindStudent({ teacherView }) {
   );
 }
 
-export default FindStudent;
+export default ForAll;

@@ -11,4 +11,9 @@ export class SectionAddDto {
   @IsInt()
   @IsNotEmpty()
   gradeId: number;
+
+  @ApiProperty()
+  @IsInt()
+  @IsNotEmpty()
+  teacherId: number;
 }

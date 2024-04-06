@@ -22,6 +22,10 @@ return this.callnderService.addCallander(dto)
 getAllCallanders(){
     return this.callnderService.getAllCallanders()
 }
+@Get('spec')
+getSpecCallanders(){
+    return this.callnderService.getSpecCallanders();
+}
 @UseGuards(JwtGuard, RoleGuard)
 @Roles(Role.ADMIN)  
 @Delete('remove/:id')

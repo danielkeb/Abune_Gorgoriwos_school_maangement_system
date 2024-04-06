@@ -58,6 +58,7 @@ function FindStudent({teacherView,sectionToDisplay}) {
            bottom:params.isLastVisible?0:5
          }
         )}
+        checkboxSelection
    
    sx={{
      [`& .${gridClasses.row}`]:{

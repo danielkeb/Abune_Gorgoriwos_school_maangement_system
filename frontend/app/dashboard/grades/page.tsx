@@ -15,6 +15,7 @@ const Page = () => {
   const { decodedToken } = React.useContext(AppContext);
   const [teacherView, setTeacherView] = useState([]);
   const [schoolss, setSchoolss] = useState([]);
+  const [call, setCall]= useState([]);
   // const[searchId, setSearchId]= useState();
   // const [selectedSection, setSelectedSection] = useState(); // State to store the selected section
 
@@ -25,6 +26,10 @@ const Page = () => {
           `http://localhost:3333/teachers/grade/${decodedToken?.sub}`
         );
         setSchoolss(school.data);
+       const callander= await axios.get('http://localhost:3333/callander/spec')
+       
+       setCall(callander.data);
+  
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -77,6 +82,11 @@ const Page = () => {
       (obj) => obj.id == parseInt(formik.values.selectedSection)
     );
 
+   const getAll= call.filter(c=>c.title=="Semester I End")
+   const calendarStartDate = new Date(getAll[0]?.start);
+   const currentDate = new Date();
+   calendarStartDate < currentDate
+   console.log( currentDate< calendarStartDate);
   //  console.log("Students: ", filteredResult[0].student )
   return (
     <Main>
@@ -167,8 +177,8 @@ const Page = () => {
                     Select a Semester
                   </option>
 
-                  <option value="1">Semester one</option>
-                  <option value="2">Semester Two</option>
+                  <option  disabled={calendarStartDate <= currentDate} value="1">Semester one</option>
+                  <option disabled={calendarStartDate >= currentDate} value="2">Semester Two</option>
                 </select>
               </div>
             </div>

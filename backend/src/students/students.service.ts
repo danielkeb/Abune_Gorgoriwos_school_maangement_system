@@ -144,9 +144,11 @@ export class StudentsService {
           const averageTotalScore =
             totalScores.reduce((sum, score) => sum + score, 0) /
             totalScores.length;
-
+         
           // Filter students based on the average total score
-          const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
+          const getInfo = await this.prismaService.student.findUnique({where:{user_Id:user_id}, select:{overallScore:true}})
+          const eligibleStudents=  getInfo.overallScore > 50? true:false;
+          // averageTotalScore > 50 ? studentResults : [];
 
           // Step 2: Prepare Data for Student History
           const historyData = {
@@ -183,7 +185,7 @@ export class StudentsService {
           });
 
           // Step 5: Update Student table with new gradeId and sectionId
-          if (eligibleStudents.length > 0) {
+          if (eligibleStudents) {
             await prisma.student.update({
               where: { user_Id: user_id },
               data: {
@@ -264,7 +266,7 @@ export class StudentsService {
 
   async promoteSubjects(students: PromoteStudentsDto[]) {
     for (const student of students) {
-      const user_id = student.user_id;
+      const user_id = student.user_Id;
       const gradeId = student.gradeId;
       const sectionId = student.sectionId;
       const existingSubjects = await this.prismaService.student
@@ -734,18 +736,124 @@ export class StudentsService {
     return filterdList;
   }
 
-  async getStudentsWith(school_id: number, gradeId: number, sectionId: number) {
+  async getStudentsWith(
+    school_id: number,
+    gradeId: number,
+    sectionId: number,
+    semesterId: number,
+  ) {
     const students = await this.prismaService.student.findMany({
-      where: { user: { school_Id: school_id }, gradeId:gradeId, sectionId:sectionId  },
-      select:{user_Id:true, gradeId:true, sectionId:true}
+      where: {
+        user: { school_Id: school_id },
+        gradeId: gradeId,
+        sectionId: sectionId,
+      },
+      select: { user_Id: true, gradeId: true, sectionId: true },
     });
-     await this.calculateRankForFirst(students);
+    if (semesterId == 1) {
+      await this.calculateRankForFirst(students);
+    } else if (semesterId == 2) {
+      await this.calculateRankForSecond(students);
+    } else if (semesterId == 3) {
+      await this.calculateRankForAll(students);
+    }
 
-     const tobeSent= await this.prismaService.student.findMany({
-      where: { user: { school_Id: school_id }, gradeId:gradeId, sectionId:sectionId  },
-      select:{user:{select:{frist_name:true, middle_name:true, }}, firstrank:true, firstScore:true,user_Id:true}
+    return {
+      msg: 'Rank Generated!',
+    };
+  }
+
+  async getStudentsWithForRankDisplay(
+    school_id: number,
+    gradeId: number,
+    sectionId: number,
+    semesterId: number,
+  ) {
+    var tobeSent;
+
+    if (semesterId == 1) {
+      tobeSent = await this.prismaService.student.findMany({
+        where: {
+          user: { school_Id: school_id },
+          gradeId: gradeId,
+          sectionId: sectionId,
+        },
+        select: {
+          user: { select: { frist_name: true, middle_name: true } },
+          firstrank: true,
+          firstScore: true,
+          user_Id: true,
+        },
+      });
+    } else if (semesterId == 2) {
+      tobeSent = await this.prismaService.student.findMany({
+        where: {
+          user: { school_Id: school_id },
+          gradeId: gradeId,
+          sectionId: sectionId,
+        },
+        select: {
+          user: { select: { frist_name: true, middle_name: true } },
+          secondtrank: true,
+          secondScore: true,
+          user_Id: true,
+        },
+      });
+    } else if (semesterId == 3) {
+      tobeSent = await this.prismaService.student.findMany({
+        where: {
+          user: { school_Id: school_id },
+          gradeId: gradeId,
+          sectionId: sectionId,
+        },
+        select: {
+          user: { select: { frist_name: true, middle_name: true } },
+          firstrank: true,
+          firstScore: true,
+          secondtrank: true,
+          secondScore: true,
+          overallrank: true,
+          overallScore: true,
+          user_Id: true,
+        },
+      });
+    }
+
+    return tobeSent;
+  }
+
+  async getStudentsForPromote(
+    school_id: number,
+    gradeId: number,
+    sectionId: number,
+  ) {
+    const tobeSent = await this.prismaService.student.findMany({
+      where: {
+        user: { school_Id: school_id },
+        gradeId: gradeId,
+        sectionId: sectionId,
+      },
+      select: {
+        user: { select: { frist_name: true, middle_name: true } },
+        overallrank: true,
+        overallScore: true,
+        user_Id: true,
+        gradeId:true,
+        sectionId:true
+      },
     });
+    if(tobeSent.length > 0){
+      if(tobeSent[0].overallScore!= null){
+        return tobeSent;
+      }else{
+        return "Generate Rank First!!!"
+      }
+    }else{
+      return null
+    }
+    console.log(tobeSent)
 
-    return tobeSent
+
+    
   }
 }

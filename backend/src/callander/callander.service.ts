@@ -29,4 +29,16 @@ export class CallanderService {
           msg:"Post Deleted succesfully "
         }
       }
+      async getSpecCallanders(){
+        const currentYear = new Date().getFullYear();
+        const callanders= await this.prismaService.calander.findMany({})
+        // Filter out calendars starting with the current year
+    const currentYearCalendars = callanders.filter(calendar => {
+      const calendarStartYear = new Date(calendar.start).getFullYear();
+      return calendarStartYear === currentYear;
+    });
+    
+    return currentYearCalendars;
+
+      }
 }
