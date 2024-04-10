@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -27,7 +28,11 @@ export class SectionController {
   }
   @Get('get/:id')
   searchSection(@Param('id', ParseIntPipe) id: number) {
-    return this.sectionService.getSection(id);
+    return this.sectionService.searchSection(id);
+  }
+  @Delete('delete/:id')
+  deleteSection(@Param('id', ParseIntPipe) id: number) {
+    return this.sectionService.deleteSection(id);
   }
   @Get('manage')
   manageSection() {

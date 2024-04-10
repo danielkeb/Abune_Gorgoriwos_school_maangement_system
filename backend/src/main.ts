@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cors from 'cors';
+import * as path from 'path';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,9 +15,8 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  app.useGlobalPipes(new ValidationPipe({whitelist:true}))
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.use(cors());
- 
   await app.listen(3333);
 }
 bootstrap();

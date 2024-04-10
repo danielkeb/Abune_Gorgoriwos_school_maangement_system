@@ -52,7 +52,7 @@ export class StudentsController {
     return this.studentsService.promoteStudents(dto);
   }
   @Post('promoteSubjects')
-  promoteSubjects(@Body() dto: PromoteStudentsDto[]) {
+  promoteSubjects(@Body() dto: PromoteStudentsNextGradeDto[]) {
     return this.studentsService.promoteSubjects(dto);
   }
   @Patch('updateStudent/:id')

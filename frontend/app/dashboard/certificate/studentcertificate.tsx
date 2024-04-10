@@ -107,7 +107,7 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
       <p className="text-lg font-semibold">Grade {studentData?.grade.grade} student card</p>
 
       <div className="mt-8">
-        <p>Student Name: {studentData?.first_name} {studentData?.last_name}</p>
+        <p>Student Name: {decodedToken.frist_name}</p>
       </div>
 
       <div className="mt-8">

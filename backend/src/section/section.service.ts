@@ -120,19 +120,50 @@ export class SectionService {
     }
   }
 
-  async searchSection(secId: number) {
-    const exist = await this.prismaService.section.findUnique({
-      where: {
-        id: secId,
+  // async searchSection(secId: number) {
+  //   const exist = await this.prismaService.section.findUnique({
+  //     where: {
+  //       id: secId,
+  //     },
+  //   });
+  //   return exist;
+  // }
+  async searchSection(subj: number) {
+    const searchSection = await this.prismaService.section.findUnique({
+      where: { id: subj },
+      include: {
+        gradelevel: { select: { grade: true } },
+        teacher: {
+          include: { user: { select: { frist_name: true, last_name: true } } },
+        },
       },
     });
-    return exist;
+    if (!searchSection) {
+      throw new NotFoundException('Section not found');
+    }
+    return searchSection;
   }
   async manageSection() {
     const section = await this.prismaService.section.findMany({
-      include: {
+      select: {
+        id: true,
+        name: true,
+        gradelevel: {
+          select: {
+            id: true,
+            grade: true,
+          },
+        },
         teacher: {
-          select: { user: { select: { frist_name: true, middle_name: true } } },
+          include: {
+            user: {
+              select: {
+                id: true,
+                frist_name: true,
+                last_name: true,
+              },
+            },
+          },
         },
       },
     });
@@ -143,144 +174,100 @@ export class SectionService {
       where: {
         id: sectionId,
       },
+      include: {
+        teacher: true, // Include teacher information
+      },
     });
+
     if (!exist) {
       throw new NotFoundException(`Section ${sectionId} does not exist`);
     }
-    const update = await this.prismaService.section.update({
-      where: {
-        id: sectionId,
-      },
-      data: {
-        name: dto.name,
-        gradeId: dto.gradeId,
+
+    const existingTeacherIds = exist.teacher.map((teacher) => teacher.user_Id);
+
+    if (existingTeacherIds.includes(dto.teacherId)) {
+      // If the new teacher is already assigned to the section, update the section data only
+      return this.prismaService.section.update({
+        where: {
+          id: sectionId,
+        },
+        data: {
+          name: dto.name,
+          gradeId: dto.gradeId,
+        },
+      });
+    } else {
+      // If the new teacher is not already assigned to the section, replace the existing teacher with the new one
+      const update = await this.prismaService.section.update({
+        where: {
+          id: sectionId,
+        },
+        data: {
+          name: dto.name,
+          gradeId: dto.gradeId,
+          teacher: {
+            disconnect: existingTeacherIds.map((teacherId) => ({
+              user_Id: teacherId,
+            })),
+            connect: {
+              user_Id: dto.teacherId,
+            },
+          },
+        },
+      });
+
+      // Update the new teacher's section and grade level associations
+      await this.prismaService.teacher.update({
+        where: { user_Id: dto.teacherId },
+        data: {
+          section: {
+            connect: { id: update.id },
+          },
+          gradelevel: {
+            connect: { id: update.gradeId },
+          },
+        },
+      });
+
+      return update;
+    }
+  }
+  async deleteSection(sectionId: number): Promise<void> {
+    // First, retrieve the section to get the associated teacher and grade level
+    const section = await this.prismaService.section.findUnique({
+      where: { id: sectionId },
+      include: {
+        teacher: true,
+        gradelevel: true,
       },
     });
-    await this.prismaService.teacher.update({
-      where: { user_Id: dto.teacherId },
-      data: {
-        section: {
-          connect: { id: update.id },
-        },
-        gradelevel: {
-          connect: { id: update.gradeId },
-        },
-      },
+
+    if (!section) {
+      throw new Error(`Section with ID ${sectionId} not found.`);
+    }
+
+    // Disconnect the teacher from the section if it exists
+    if (section.teacher.length > 0) {
+      const teacherIds = section.teacher.map((teacher) => teacher.user_Id);
+      await Promise.all(
+        teacherIds.map((teacherId) =>
+          this.prismaService.teacher.update({
+            where: { user_Id: teacherId },
+            data: {
+              section: {
+                disconnect: {
+                  id: sectionId,
+                },
+              },
+            },
+          }),
+        ),
+      );
+    }
+
+    // Finally, delete the section
+    await this.prismaService.section.delete({
+      where: { id: sectionId },
     });
   }
-
-  // async getStudentRanking(secid: number): Promise<{
-  //   [userId: number]: {
-  //     rankTotalScore1: number;
-  //     rankTotalScore2: number;
-  //     rankTotalSemester: number;
-  //   };
-  // }> {
-  //   try {
-  //     const std = await this.prismaService.section.findUnique({
-  //       where: {
-  //         id: secid,
-  //       },
-  //       select: {
-  //         gradeId: true,
-  //         name: true,
-  //         gradelevel: {
-  //           select: {
-  //             grade: true,
-  //             student: {
-  //               select: {
-  //                 result: true,
-  //                 careof_contact1: true,
-  //                 careof_contact2: true,
-  //                 user_Id: true,
-  //                 gradeId: true,
-  //                 sectionId: true,
-  //                 subjectTotals: {
-  //                   select: {
-  //                     totalScore1: true,
-  //                     totalScore2: true,
-  //                     averageScore: true,
-  //                   },
-  //                 },
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-
-  //     if (!std) {
-  //       throw new NotFoundException('Section not found');
-  //     }
-
-  //     const studentsWithData: StudentWithSubjectTotals[] =
-  //       std.gradelevel.student.filter((student) => {
-  //         const hasResult = student.result.length > 0;
-  //         const hasSubjectTotals =
-  //           student.subjectTotals &&
-  //           Object.keys(student.subjectTotals).length > 0;
-  //         return hasResult && hasSubjectTotals;
-  //       });
-
-  //     const studentRanks = {};
-
-  //     for (const student of studentsWithData) {
-  //       const rankTotalScore1 = this.calculateRank(
-  //         studentsWithData,
-  //         'totalScore1',
-  //         student.subjectTotals.totalScore1,
-  //       );
-  //       const rankTotalScore2 = this.calculateRank(
-  //         studentsWithData,
-  //         'totalScore2',
-  //         student.subjectTotals.totalScore2,
-  //       );
-  //       const rankTotalSemester = this.calculateRank(
-  //         studentsWithData,
-  //         'averageScore',
-  //         student.subjectTotals.averageScore,
-  //       );
-  //       studentRanks[student.user_Id] = {
-  //         rankTotalScore1,
-  //         rankTotalScore2,
-  //         rankTotalSemester,
-  //       };
-
-  //       // Update student record with ranks and wait for the result
-  //       const updatedStudent = await this.prismaService.student.update({
-  //         where: {
-  //           user_Id: student.user_Id,
-  //         },
-  //         data: {
-  //           rank_simester1: rankTotalScore1.toString(),
-  //           rank_simester2: rankTotalScore2.toString(),
-  //           rank_both_simester1: rankTotalSemester.toString(),
-  //         },
-  //       });
-
-  //       console.log(updatedStudent);
-  //     }
-
-  //     return studentRanks;
-  //   } catch (e) {
-  //     console.error('Error fetching student rankings:', e);
-  //     throw e;
-  //   }
-  // }
-  // calculateRank(
-  //   scores: StudentWithSubjectTotals[],
-  //   totalScore: string,
-  //   studentScore: number,
-  // ): number {
-  //   let rank = 1;
-  //   scores.forEach((score) => {
-  //     if (
-  //       score.subjectTotals &&
-  //       score.subjectTotals[totalScore] > studentScore
-  //     ) {
-  //       rank++;
-  //     }
-  //   });
-  //   return rank;
-  // }
 }

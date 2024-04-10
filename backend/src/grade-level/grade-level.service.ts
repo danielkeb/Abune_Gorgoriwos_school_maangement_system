@@ -53,6 +53,7 @@ export class GradeLevelService {
       },
       data: {
         grade: dto.grade,
+        classType: dto.classType,
       },
     });
     return updateGrade;
@@ -71,7 +72,18 @@ export class GradeLevelService {
   }
 
   async manageGradeLevel() {
-    const classes = await this.prismaService.gradeLevel.findMany();
+    const classes = await this.prismaService.gradeLevel.findMany({
+      include: {
+        teacher: {
+          include: {
+            user: { select: { id: true, frist_name: true, last_name: true } },
+          },
+        },
+        section: true,
+        subject: true,
+      },
+    });
+
     return classes;
   }
 }

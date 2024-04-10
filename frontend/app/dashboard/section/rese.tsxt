@@ -1,0 +1,88 @@
+
+      {showModal && selectedSection && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            {/* Background overlay */}
+            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            {/* Invisible spacing element */}
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            {/* Modal content */}
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  {/* Title */}
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">Update Section </h3>
+                    {/* Form */}
+                    <div className="mt-2 mx-auto max-w-md">
+                      {/* Section name input */}
+                      <input
+                        type="text"
+                        className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
+                        placeholder="Section"
+                        value={selectedSection.name}
+                        onChange={(e) =>
+                          setSelectedSection({
+                            ...selectedSection,
+                            name: e.target.value,
+                          })
+                        }
+                      />
+                      {/* Grade select */}
+                      <select
+                        className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                        value={selectedSection.gradeId}
+                        disabled
+                      >
+                        <option value="">{selectedSection.gradeId}</option>
+                        {grades.map((grade) => (
+                          <option key={grade.id} value={grade.id}>
+                            {grade.grade}
+                          </option>
+                        ))}
+                      </select>
+                      {/* Teacher select */}
+                      <select
+                        className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                        value={selectedTeacherId}
+                        onChange={(e) =>
+                          setSelectedSection({
+                            ...selectedSection,
+                            teacherId: parseInt(e.target.value),
+                          })
+                        }
+                      >
+                        <option value="">{selectedTeacherId}</option>
+                        {teachers.map((teacher) => (
+                          <option key={teacher.id} value={teacher.id}>
+                            {teacher.first_name} {teacher.last_name}
+                          </option>
+                        ))}
+                      </select>
+                      {/* Error message */}
+                      {error && <p className="text-red-500 mb-4">{error}</p>}
+                      {/* Buttons */}
+                      <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button
+                          onClick={handleUpdateSection}
+                          className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-2"
+                        >
+                          Update
+                        </button>
+                        <button
+                          onClick={() => setShowModal(false)}
+                          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}

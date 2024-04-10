@@ -66,6 +66,7 @@ model Teacher {
   result     Result[]
   subject    Subject[]
   gradelevel GradeLevel[]
+  courseMaterial CourseMaterial[]
   section  Section[] //@relation("TeacherSections", references: [id])
 
   @@map("teachers")
@@ -88,7 +89,6 @@ model Student {
   firstrank            Int?        
   secondtrank            Int? 
   overallrank            Int?
-
   subject Subject[]
   result  Result[]
   student_history StudentHistory[]
@@ -105,6 +105,7 @@ model GradeLevel {
     subject Subject[]
     student Student[]
     result Result[]
+    courseMaterial CourseMaterial[]
  
   //Make the teacherId optional !
   teacher Teacher[]
@@ -138,7 +139,7 @@ model Subject {
   teacherId Int?
   teacher   Teacher?   @relation(fields: [teacherId], references: [user_Id])
  
-
+ courseMaterial CourseMaterial[]
   gradeId    Int?
   gradelevel GradeLevel? @relation(fields: [gradeId], references: [id])
 }
@@ -156,15 +157,15 @@ model Result {
   midtermScore2 Float?
   finalExamScore2 Float?
   totalScore2 Float?
+  sectionId Int?
   
   teacher   Teacher   @relation(fields: [teacherId], references: [user_Id])
   teacherId Int
   studentId Int
   student   Student @relation(fields: [studentId], references: [user_Id])
-
+  
   subjectId Int
   subject   Subject @relation(fields: [subjectId], references: [id])
-  sectionId Int?
 
   gradeLevelId Int
   gradeLevel   GradeLevel @relation(fields: [gradeLevelId], references: [id])
@@ -213,3 +214,20 @@ model Calander{
   allDay Boolean
 
 }
+model CourseMaterial {
+  id          Int      @id @default(autoincrement())
+  description String
+  file        String @unique   // Assuming the file is stored as a string representing the file path
+  // Add other attributes such as file type, size, upload date, etc. as needed
+  
+  // Define the many-to-one relationship with Teacher
+  teacher     Teacher  @relation(fields: [teacherId], references: [user_Id])
+  teacherId   Int
+   // Define the many-to-one relationship with Subject
+  subject        Subject?  @relation(fields: [subjectId], references: [id])
+  subjectId      Int?
+  gradeLevel GradeLevel[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

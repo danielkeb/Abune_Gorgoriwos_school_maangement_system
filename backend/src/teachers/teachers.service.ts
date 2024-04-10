@@ -40,6 +40,7 @@ export class TeachersService {
         phone: teacher.user.phone,
         education_level: teacher.education_level,
         createdAT: teacher.user.createdAT,
+        gradeId: teacher.gradelevel.map((grade) => grade.id),
         grade: teacher.gradelevel.map((grade) => grade.grade), // Map over gradelevel to access grade
         section: teacher.gradelevel.map((grade) => grade.section), // Map over gradelevel to access section
         subject: teacher.gradelevel.map((grade) => grade.subject),

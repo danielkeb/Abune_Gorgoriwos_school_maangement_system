@@ -95,6 +95,7 @@ export class SubjectsService {
             teacher: {
               select: {
                 user_Id: true,
+                gradelevel: { select: { id: true } },
                 user: {
                   select: {
                     id: true,

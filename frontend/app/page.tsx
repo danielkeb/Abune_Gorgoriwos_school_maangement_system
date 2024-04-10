@@ -89,7 +89,6 @@ export default function DrawerAppBar(props: Props) {
         <Button style={{ backgroundColor: "green", color: "white" }}>
           Portal
         </Button>
-        <ThemeSwitch/>
       </List>
     </Box>
   );
@@ -124,15 +123,6 @@ export default function DrawerAppBar(props: Props) {
             ABGSMS
           </Typography>
 
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", sm: "block", color: "black" },
-            }}>
-            <ThemeSwitch/>
-          </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
               <Button key={item} sx={{ color: "black" }}>
