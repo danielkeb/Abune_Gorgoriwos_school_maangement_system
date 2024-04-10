@@ -13,7 +13,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FindStudent from "./findStudent";
 
-const Page = () => {
+const Promote = () => {
   const { decodedToken } = React.useContext(AppContext);
   const [teacherView, setTeacherView] = useState([]);
   const [schoolss, setSchoolss] = useState([]);
@@ -70,7 +70,7 @@ const Page = () => {
   console.log( "the info is ",formik.values.searchId,formik.values.selectedSection)
   //  console.log("Students: ", filteredResult[0].student )
   return (
-    <Main>
+    <>
       <div className="w-full  flex flex-col justify-around  items-center mt-10">
         <form
           onSubmit={formik.handleSubmit}
@@ -235,8 +235,8 @@ teacherView.length > 0 ? (
         pauseOnHover
         theme="light"
       />
-    </Main>
+    </>
   );
 };
 
-export default Page;
+export default Promote;

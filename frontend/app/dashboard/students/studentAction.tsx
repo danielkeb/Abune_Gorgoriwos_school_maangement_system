@@ -82,6 +82,9 @@ const StudentActions = ({
   }, [rowId]);
 
   return (
+    <>
+    
+
     <Box
       sx={{
         m: 1,
@@ -128,6 +131,7 @@ const StudentActions = ({
         />
       )}
     </Box>
+    </>
   );
 };
 

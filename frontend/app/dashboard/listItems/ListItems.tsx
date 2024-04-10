@@ -15,12 +15,14 @@ import CardMembershipIcon from "@mui/icons-material/CardMembership";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import RecipeReviewCard from "../main/custom";
 
 const MainListItems = () => {
   const path = usePathname();
   // console.log("the path name is :", path)
   return (
     <React.Fragment>
+       
       <Link href="/dashboard/">
         <div
           className={`${
@@ -36,7 +38,7 @@ const MainListItems = () => {
           <ListItemText primary="Dashboard" />
         </div>
       </Link>
-
+      <RecipeReviewCard />
       <Link href="/dashboard/register">
         <div
           className={`${
@@ -162,7 +164,7 @@ const MainListItems = () => {
         </div>
       </Link>
 
-      <Link href="/dashboard/students">
+      {/* <Link href="/dashboard/students">
         <div
           className={`${
             path.startsWith("/dashboard/students")
@@ -178,7 +180,7 @@ const MainListItems = () => {
           </ListItemIcon>
           <ListItemText primary="Students" />
         </div>
-      </Link>
+      </Link> */}
 
       <Link href="/dashboard/rank">
         <div
