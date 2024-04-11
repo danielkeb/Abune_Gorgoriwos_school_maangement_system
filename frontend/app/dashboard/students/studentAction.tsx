@@ -82,7 +82,7 @@ const StudentActions = ({
   }, [rowId]);
 
   return (
-    <>
+    
     
 
     <Box
@@ -131,7 +131,7 @@ const StudentActions = ({
         />
       )}
     </Box>
-    </>
+    
   );
 };
 
