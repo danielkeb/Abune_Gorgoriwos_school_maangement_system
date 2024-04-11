@@ -105,4 +105,3 @@ const NewWay = ({teacherView,gradeId,subjectId,selectedSection,semester}) => {
 
 
 export default NewWay
-

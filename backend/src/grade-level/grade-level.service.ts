@@ -2,6 +2,8 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GradeLevel } from './dto';
 
+// Enum defining class types
+
 @Injectable()
 export class GradeLevelService {
   constructor(private prismaService: PrismaService) {}
@@ -83,68 +85,15 @@ export class GradeLevelService {
 
   async getGradeLevel() {
     const gradeLevels = await this.prismaService.gradeLevel.findMany({
-      include: { section: true, subject: true },
+      include: {
+        teacher: { select: { user_Id: true } },
+        section: true,
+        subject: true,
+      },
     });
 
     return gradeLevels;
   }
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

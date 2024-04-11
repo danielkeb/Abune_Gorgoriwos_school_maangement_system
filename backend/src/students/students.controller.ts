@@ -52,7 +52,7 @@ export class StudentsController {
     return this.studentsService.promoteStudents(dto);
   }
   @Post('promoteSubjects')
-  promoteSubjects(@Body() dto: PromoteStudentsDto[]) {
+  promoteSubjects(@Body() dto: PromoteStudentsNextGradeDto[]) {
     return this.studentsService.promoteSubjects(dto);
   }
   @Patch('updateStudent/:id')
@@ -104,12 +104,15 @@ export class StudentsController {
   }
   @Get('getstu/:schoolId/:gradeId/:sectionId')
   getStudentsForAdmin(
-
     @Param('schoolId', ParseIntPipe) schoolId: number,
     @Param('gradeId', ParseIntPipe) gradeId: number,
-    @Param('sectionId', ParseIntPipe) sectionId: number
-  ){
-    return this.studentsService.getStudentsForAdmin(schoolId,gradeId,sectionId);
+    @Param('sectionId', ParseIntPipe) sectionId: number,
+  ) {
+    return this.studentsService.getStudentsForAdmin(
+      schoolId,
+      gradeId,
+      sectionId,
+    );
   }
   @Post('firstrank')
   calculateRankForFirst(@Body() dto: PromoteStudentsNextGradeDto[]) {

@@ -37,88 +37,27 @@ export class ResultService {
     };
   }
 
-  async updateMark(
-    dto: UpdateResultDto,
-    resultId: number,
-    teacherId: number,
-    gradeId: number,
-    sectionId: number,
-    subjectId: number,
-  ) {
+  async updateMark(dto: UpdateResultDto, resultId: number) {
     const marksheet = await this.prisma.result.update({
       where: { id: resultId },
-      data: {
-        test1: dto.test1,
-        assignmentScore1: dto.assignmentScore1,
-        midtermScore1: dto.midtermScore1,
-        finalExamScore1: dto.finalExamScore1,
-        totalScore1: dto.totalScore1,
-
-        test2: dto.test2,
-        assignmentScore2: dto.assignmentScore2,
-        midtermScore2: dto.midtermScore2,
-        finalExamScore2: dto.finalExamScore2,
-        totalScore2: dto.totalScore2,
-
-
-        // teacherId:dto.teacherId,
-        // gradeLevelId:dto.gradeLevelId,
-        // subjectId:dto.subjectId
-      },
+      data: { ...dto },
     });
 
     return {
       msg: 'Marksheet Updated',
-      // data: marksheet,
+      data: marksheet,
     };
   }
-  async getTeacherResult(
-    id: number,
-    gradeId: number,
-    sectionId: number,
-    subjectId: number,
-  ) {
-    const res = await this.prisma.result.findMany({
+  async deleteResult(resultId: number) {
+    const delt = await this.prisma.result.delete({
       where: {
-        teacherId: id,
-        subjectId: subjectId,
-        sectionId: sectionId,
-        gradeLevelId: gradeId,
-      },
-      include: {
-        student: {
-          select: { user: { select: { frist_name: true, last_name: true } } },
-        },
+        id: resultId,
       },
     });
-    if (res) {
-      const ready = res.map((r) => ({
-        id: r.id,
-        test1: r.test1,
-        assignmentScore1: r.assignmentScore1,
-        midtermScore1: r.midtermScore1,
-        finalExamScore1: r.finalExamScore1,
-        totalScore1: r.totalScore1,
-        test2: r.test2,
-        assignmentScore2:r.assignmentScore2 ,
-        midtermScore2: r.midtermScore2,
-        finalExamScore2: r.finalExamScore2,
-        totalScore2: r.totalScore2,
-        sectionId: r.sectionId,
-        teacherId: r.teacherId,
-        studentId: r.studentId,
-        subjectId: r.subjectId,
-        gradeLevelId:r.gradeLevelId,
-        first_name: r.student.user.frist_name,
-        last_name: r.student.user.last_name,
-      }));
-      return ready;
-    } else {
-      return {
-        status: false,
-        msg: 'Not found ',
-      };
+    if (!delt) {
+      throw new NotAcceptableException('Delete failed');
     }
+    return { msg: `user ${resultId} deleted successfully` };
   }
   async addManyResult(
     results: AddManyResultkDto[],

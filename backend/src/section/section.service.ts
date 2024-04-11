@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SectionAddDto } from './dto/sectionAdd.dto';
+import { SectionAddDto,  } from './dto/sectionAdd.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SectionUpdateAddDto } from './dto/sectionadd.update.dto';
 

@@ -1,14 +1,11 @@
-import { IsInt, IsOptional, IsString } from "class-validator";
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
-export class UpdateSubjectDto{
-    @IsString()
-    @IsOptional()
-    name?:string
+export class UpdateSubjectDto {
+  @IsString()
+  @IsOptional()
+  name?: string;
 
-
-    @IsOptional()
-    @IsInt()
-    teacherId?:number
-
-
+  @IsOptional()
+  @IsInt()
+  teacherId?: number;
 }
