@@ -9,6 +9,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { AppContext } from '@/components/context/UserContext';
+import SchoolList from '../main/schools';
 
 // Define roles
 const ROLES = {
@@ -43,6 +44,7 @@ const MainListItems: React.FC = () => {
 
       {/* Registration route accessible only to super admin */}
       {userRole && userRole === ROLES.SUPER_ADMIN && (
+        <React.Fragment>
         <Link href="/dashboard/register">
           <div className={`${path.startsWith('/dashboard/register') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
@@ -51,6 +53,10 @@ const MainListItems: React.FC = () => {
             <ListItemText primary="Registration" />
           </div>
         </Link>
+
+<SchoolList/>
+
+</React.Fragment>
       )}
 
       {/* Roles route accessible only to super admin */}
@@ -67,6 +73,7 @@ const MainListItems: React.FC = () => {
 
       {/* Grades route accessible only to admin and teacher */}
       {userRole && (userRole === ROLES.TEACHER) && (
+        <React.Fragment>
         <Link href="/dashboard/grades">
           <div className={`${path.startsWith('/dashboard/grades') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
@@ -75,7 +82,10 @@ const MainListItems: React.FC = () => {
             <ListItemText primary="Grades" />
           </div>
         </Link>
+
+</React.Fragment>
       )}
+
         {userRole && (userRole === ROLES.TEACHER) && (
         <Link href="/dashboard/courseMaterials">
           <div className={`${path.startsWith('/dashboard/courseMaterials') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
