@@ -8,7 +8,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import { AppContext } from '@/components/context/UserContext';
+import { AppContext, AppWrapper } from '@/components/context/UserContext';
 import SchoolList from '../main/schools';
 
 // Define roles
@@ -53,8 +53,8 @@ const MainListItems: React.FC = () => {
             <ListItemText primary="Registration" />
           </div>
         </Link>
-
-<SchoolList/>
+  <AppWrapper><SchoolList/></AppWrapper>
+   
 
 </React.Fragment>
       )}

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { styled, Theme } from "@mui/material/styles";
+import React, { useContext, useEffect, useState } from "react";
+import { styled } from "@mui/material/styles";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -12,15 +12,9 @@ import {
 import PeopleIcon from "@mui/icons-material/People";
 import axios from "axios";
 import BasicCard from "../Chart/totaldata";
+import { AppContext } from "@/components/context/UserContext";
 
-interface ExpandMoreProps {
-  expand: boolean;
-  "aria-expanded": boolean;
-}
-
-const ExpandMore = styled(IconButton, {
-  shouldForwardProp: (prop) => prop !== "expand",
-})<ExpandMoreProps>(({ theme, expand }) => ({
+const ExpandMore = styled(IconButton)(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
   marginLeft: "auto",
   transition: theme.transitions.create("transform", {
@@ -32,6 +26,7 @@ const SchoolList = () => {
   const [expanded, setExpanded] = useState(false);
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { school, setSchool } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,8 +50,7 @@ const SchoolList = () => {
   };
 
   const handleSchoolClick = (id) => {
-    // Handle school click
-    <BasicCard/>
+    setSchool(id);
   };
 
   return (
@@ -87,7 +81,7 @@ const SchoolList = () => {
                 onClick={() => handleSchoolClick(school.id)}
                 button // Ensure the ListItem behaves like a button
               >
-                <ListItemText primary={school.school_name} />
+                <ListItemText primary={school.school_name} className="ml-14" />
               </ListItem>
             ))}
           </List>
