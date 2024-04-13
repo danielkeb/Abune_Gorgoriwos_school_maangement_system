@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SectionAddDto {
   @ApiProperty()
@@ -14,6 +14,23 @@ export class SectionAddDto {
 
   @ApiProperty()
   @IsInt()
+  @IsOptional()
+  teacherId?: number;
+}
+
+export class SectionUpdateAddDto {
+  @ApiProperty()
+  @IsString()
   @IsNotEmpty()
-  teacherId: number;
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @IsNotEmpty()
+  gradeId: number;
+
+  @ApiProperty()
+  @IsInt()
+  @IsOptional()
+  teacherId?: number;
 }

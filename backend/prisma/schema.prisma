@@ -66,7 +66,8 @@ model Teacher {
   result     Result[]
   subject    Subject[]
   gradelevel GradeLevel[]
-  section  Section[]
+  courseMaterial CourseMaterial[]
+  section  Section[] //@relation("TeacherSections", references: [id])
 
   @@map("teachers")
 }
@@ -109,12 +110,20 @@ model GradeLevel {
     subject Subject[]
     student Student[]
     result Result[]
+    courseMaterial CourseMaterial[]
  
   //Make the teacherId optional !
   teacher Teacher[]
 
   // other fields specific to GradeLevel
 }
+// enum ClassType{
+//   nursery
+//   junior_primary
+//   senior_primary
+//   junior_secondary
+//   senior_secondary
+// }
 model Section {
   id         Int        @id @default(autoincrement())
   name       String
@@ -123,6 +132,7 @@ model Section {
 
   student Student[]
   teacher Teacher[]
+  @@map("sections")
 }
 
 model Subject {
@@ -131,10 +141,10 @@ model Subject {
   // other fields specific to Subject
   student   Student[]
   result    Result[]
-   teacherId Int?
+  teacherId Int?
   teacher   Teacher?   @relation(fields: [teacherId], references: [user_Id])
  
-
+ courseMaterial CourseMaterial[]
   gradeId    Int?
   gradelevel GradeLevel? @relation(fields: [gradeId], references: [id])
 }
@@ -154,11 +164,11 @@ model Result {
   totalScore2 Float?
   sectionId Int?
   
-  teacher   Teacher?   @relation(fields: [teacherId], references: [user_Id])
-  teacherId Int?
-    studentId Int
+  teacher   Teacher   @relation(fields: [teacherId], references: [user_Id])
+  teacherId Int
+  studentId Int
   student   Student @relation(fields: [studentId], references: [user_Id])
-
+  
   subjectId Int
   subject   Subject @relation(fields: [subjectId], references: [id])
 
@@ -209,3 +219,20 @@ model Calander{
   allDay Boolean
 
 }
+model CourseMaterial {
+  id          Int      @id @default(autoincrement())
+  description String
+  file        String @unique   // Assuming the file is stored as a string representing the file path
+  // Add other attributes such as file type, size, upload date, etc. as needed
+  
+  // Define the many-to-one relationship with Teacher
+  teacher     Teacher  @relation(fields: [teacherId], references: [user_Id])
+  teacherId   Int
+   // Define the many-to-one relationship with Subject
+  subject        Subject?  @relation(fields: [subjectId], references: [id])
+  subjectId      Int?
+  gradeLevel GradeLevel[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

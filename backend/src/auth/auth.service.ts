@@ -51,41 +51,6 @@ export class AuthService {
     return { msg: 'sign up successfully' };
   }
 
-  async associateSubjectsAndCreateResults(userId: number, gradeId: number, sectionId:number): Promise<void> {
-    // Step 1: Get subjects associated with the grade
-    const subjects = await this.prismaService.subject.findMany({
-      where: { gradeId: gradeId },
-    });
-  
-    // Step 2: Associate subjects with the student
-    await this.prismaService.student.update({
-      where: { user_Id: userId },
-      data: {
-        subject: {
-          connect: subjects.map((subject) => ({ id: subject.id })),
-        },
-      },
-    });
-  
-    // Step 3: Create result records for each associated subject
-    for (const subject of subjects) {
-      // Get the teacherId associated with the subject, or set it to null if not available
-      const teacherId = subject.teacherId || null;
-  
-      // Create a result record for the student, subject, and grade
-      await this.prismaService.result.create({
-        data: {
-          studentId: userId,
-          subjectId: subject.id,
-          gradeLevelId: gradeId,
-          sectionId:sectionId,
-          teacherId: teacherId,
-
-        },
-      });
-    }
-  }
-
   async signUpStudent(dto: DtoStudent, school_id: number) {
     const hash = await argon.hash(dto.password);
     const school = await this.prismaService.school.findUnique({
@@ -120,7 +85,7 @@ export class AuthService {
         password: hash,
       },
     });
-  
+
     if (dto.role === 'student') {
       await this.prismaService.student.create({
         data: {
@@ -135,8 +100,6 @@ export class AuthService {
         where: { user_Id: addUser.id },
         include: { user: true },
       });
-
-      await this.associateSubjectsAndCreateResults(quickSelect.user_Id, quickSelect.gradeId, quickSelect.sectionId)
       return { msg: 'student registered', data: quickSelect };
     } else if (dto.role === 'teacher') {
       const teacher = await this.prismaService.teacher.create({
@@ -145,7 +108,7 @@ export class AuthService {
           education_level: dto.education_level,
         },
       });
-     
+
       return { addUser, teacher };
     }
 
@@ -167,29 +130,33 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect email or password');
     }
 
-
-
     const passwordMatches = await argon.verify(user.password, dto.password);
     if (!passwordMatches) {
       throw new UnauthorizedException('Incorrect email or password');
     }
 
-    return this.signToken(user.id, user.role, user.email, user.frist_name, user.school_Id);
+    return this.signToken(
+      user.id,
+      user.role,
+      user.email,
+      user.frist_name,
+      user.school_Id,
+    );
   }
 
   async signToken(
     userId: number,
     role: string,
     email: string,
-    frist_name:string,
-    school_Id:number
+    frist_name: string,
+    school_Id: number,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       role,
       email,
       frist_name,
-      school_Id
+      school_Id,
     };
     const secret = this.config.get('JWT_SECRET');
 
@@ -197,7 +164,7 @@ export class AuthService {
       expiresIn: '90m',
       secret: secret,
     });
- 
+
     return {
       access_token: token,
     };

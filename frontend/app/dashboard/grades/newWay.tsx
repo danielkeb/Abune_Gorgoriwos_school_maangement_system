@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { DataGrid, GridRowsProp, GridColDef , GridToolbar, gridClasses} from '@mui/x-data-grid';
 import { grey, red } from '@mui/material/colors';
@@ -105,4 +104,3 @@ const NewWay = ({teacherView,gradeId,subjectId,selectedSection,semester}) => {
 
 
 export default NewWay
-

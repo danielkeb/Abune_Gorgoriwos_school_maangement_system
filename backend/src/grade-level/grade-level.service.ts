@@ -2,6 +2,8 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GradeLevel } from './dto';
 
+// Enum defining class types
+
 @Injectable()
 export class GradeLevelService {
   constructor(private prismaService: PrismaService) {}
@@ -51,22 +53,16 @@ export class GradeLevelService {
       },
       data: {
         grade: dto.grade,
+        classType: dto.classType,
       },
     });
     return updateGrade;
   }
 
-
-
-  async manageGradeLevel() {
-    const classes = await this.prismaService.gradeLevel.findMany();
-    return classes;
-  }
-
-
-
-
-
+  // async manageGradeLevel() {
+  //   const classes = await this.prismaService.gradeLevel.findMany();
+  //   return classes;
+  // }
 
   // async updateGradeLevel(gradeId: number, dto: GradeLevel) {
   //   // update the gradeLevel
@@ -83,68 +79,29 @@ export class GradeLevelService {
 
   async getGradeLevel() {
     const gradeLevels = await this.prismaService.gradeLevel.findMany({
-      include: { section: true, subject: true },
+      include: {
+        teacher: { select: { user_Id: true } },
+        section: true,
+        subject: true,
+      },
     });
 
     return gradeLevels;
   }
+
+  async manageGradeLevel() {
+    const classes = await this.prismaService.gradeLevel.findMany({
+      include: {
+        teacher: {
+          include: {
+            user: { select: { id: true, frist_name: true, last_name: true } },
+          },
+        },
+        section: true,
+        subject: true,
+      },
+    });
+
+    return classes;
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

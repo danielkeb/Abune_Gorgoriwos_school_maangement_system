@@ -39,10 +39,6 @@ export class AddManyResultkDto {
 
   @ApiProperty()
   @IsOptional()
-  sectionId?: number;
-
-  @ApiProperty()
-  @IsOptional()
   totalScore1?: number;
 
   @ApiProperty()

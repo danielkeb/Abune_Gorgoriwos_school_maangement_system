@@ -12,7 +12,7 @@ import {
 import { StudentsService } from './students.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { DtoAdmin, DtoStudent } from './dto';
-import { GetUser } from 'src/auth/decorator';
+//import { GetUser } from 'src/auth/decorator';
 import { RoleGuard } from '../auth/decorator/roles.guard';
 import { Role } from '../auth/decorator/enums/role.enum';
 import { Roles } from '../auth/decorator/roles.decorator';
@@ -52,7 +52,7 @@ export class StudentsController {
     return this.studentsService.promoteStudents(dto);
   }
   @Post('promoteSubjects')
-  promoteSubjects(@Body() dto: PromoteStudentsDto[]) {
+  promoteSubjects(@Body() dto: PromoteStudentsNextGradeDto[]) {
     return this.studentsService.promoteSubjects(dto);
   }
   @Patch('updateStudent/:id')
@@ -104,12 +104,15 @@ export class StudentsController {
   }
   @Get('getstu/:schoolId/:gradeId/:sectionId')
   getStudentsForAdmin(
-
     @Param('schoolId', ParseIntPipe) schoolId: number,
     @Param('gradeId', ParseIntPipe) gradeId: number,
-    @Param('sectionId', ParseIntPipe) sectionId: number
-  ){
-    return this.studentsService.getStudentsForAdmin(schoolId,gradeId,sectionId);
+    @Param('sectionId', ParseIntPipe) sectionId: number,
+  ) {
+    return this.studentsService.getStudentsForAdmin(
+      schoolId,
+      gradeId,
+      sectionId,
+    );
   }
   @Post('firstrank')
   calculateRankForFirst(@Body() dto: PromoteStudentsNextGradeDto[]) {

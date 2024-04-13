@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -36,32 +35,15 @@ export class ResultController {
     );
   }
 
-  @Get("get/:id/:gradeId/:sectionId/:subjectId")
-  getTeacherResult(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('gradeId', ParseIntPipe) gradeId: number,
-    @Param('sectionId', ParseIntPipe) sectionId: number,
-    @Param('subjectId', ParseIntPipe) subjectId: number,
-    
-    ){
-    return this.resultService.getTeacherResult( id,gradeId,sectionId,subjectId);
-  }
-
-
-  @Patch('update/:id/:teacherId/:gradeId/:sectionId/:subjectId')
+  @Patch('update/:id')
   updateMark(
     @Body() dto: UpdateResultDto,
     @Param('id', ParseIntPipe) resultId: number,
-    @Param('id', ParseIntPipe) teacherId: number,
-    @Param('gradeId', ParseIntPipe) gradeId: number,
-    @Param('sectionId', ParseIntPipe) sectionId: number,
-    @Param('subjectId', ParseIntPipe) subjectId: number,
   ) {
-    return this.resultService.updateMark(dto, resultId,teacherId,gradeId,sectionId,subjectId);
-    
+    return this.resultService.updateMark(dto, resultId);
   }
-  // @Delete('delete/:id')
-  // deleteResult(@Param('id', ParseIntPipe) id: number) {
-  //   return this.resultService.deleteResult(id);
-  // }
+  @Delete('delete/:id')
+  deleteResult(@Param('id', ParseIntPipe) id: number) {
+    return this.resultService.deleteResult(id);
+  }
 }

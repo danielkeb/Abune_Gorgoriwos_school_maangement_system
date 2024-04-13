@@ -16,5 +16,7 @@ export class GradeLevel {
   @IsOptional()
   @IsEnum(ClassType)
   classType?: ClassType;
+  //classType?: keyof typeof ClassType;
 
+  // If you want to use Prisma's ClassType instead
 }

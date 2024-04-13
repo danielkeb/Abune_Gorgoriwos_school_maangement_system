@@ -4,10 +4,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 import jwt from "jsonwebtoken";
 import { useRouter } from "next/navigation";
 
-
-
-
-
 export const AppContext = createContext({});
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {

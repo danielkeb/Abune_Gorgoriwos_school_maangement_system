@@ -1,0 +1,170 @@
+{
+    "gradeId": 1,
+    "name": "a class",
+    "gradelevel": {
+        "grade": "9",
+        "student": [
+            {
+              
+                "result": [
+                    {
+                        "id": 14,
+                     
+                        "civics": 70,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 13,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 16,
+          
+                 
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 14,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 17,
+                     
+                        "physics": 70,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 15,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 18,
+              
+                        "mathematics": 99,
+          
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 16,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 19,
+               
+           
+               
+                        "chemistiry": 71,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 17,
+                        "gradeLevelId": 1
+                    }
+                ]
+            },
+            {
+                
+                "result": [
+                    {
+                        "id": 14,
+                     
+                        "civics": 70,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 13,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 16,
+          
+                 
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 14,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 17,
+                     
+                        "physics": 70,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 15,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 18,
+              
+                        "mathematics": 99,
+          
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 16,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 19,
+               
+           
+               
+                        "chemistiry": 71,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 17,
+                        "gradeLevelId": 1
+                    }
+                ]
+            },
+            {
+                "result": [
+                    {
+                        "id": 14,
+                     
+                        "civics": 70,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 13,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 16,
+          
+                 
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 14,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 17,
+                     
+                        "physics": 70,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 15,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 18,
+              
+                        "mathematics": 99,
+          
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 16,
+                        "gradeLevelId": 1
+                    },
+                    {
+                        "id": 19,
+               
+           
+               
+                        "chemistiry": 71,
+                        "teacherId": 9,
+                        "studentId": 12,
+                        "subjectId": 17,
+                        "gradeLevelId": 1
+                    }
+                ]
+            },
+            {
+                "result": []
+            }
+        ]
+    }
+}

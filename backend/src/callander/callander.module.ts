@@ -5,8 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { AccessContorlService } from 'src/shared/access-control.service';
 
 @Module({
-  controllers: [CallanderController ],
-  providers: [CallanderService,AccessContorlService],
+  controllers: [CallanderController],
+  providers: [CallanderService, AccessContorlService],
   imports: [
     JwtModule.register({}), // Configure JwtModule
   ],

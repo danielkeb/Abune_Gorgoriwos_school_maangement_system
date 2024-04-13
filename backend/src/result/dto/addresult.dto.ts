@@ -57,10 +57,6 @@ export class AddResultkDto {
   gradeLevelId: number;
 
   @ApiProperty()
-  @IsOptional()
-  sectionId?: number;
-
-  @ApiProperty()
   @IsNotEmpty()
   @IsInt()
   teacherId: number;
