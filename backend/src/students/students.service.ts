@@ -440,6 +440,7 @@ export class StudentsService {
         last_name: student.user.last_name,
         email: student.user.email,
         phone: student.user.phone,
+        gender: student.user.gender,
         createdAT: student.user.createdAT,
         grade: student.gradelevel,
         results: student.result,

@@ -10,7 +10,7 @@ export function AppGetter({ children }: { children: React.ReactNode }) {
   const[schoolId, setSchoolId]= useState("Your school id goes here");
 
   return (
-    <ToGetContext.Provider value={{ dork, setDork }}>
+    <ToGetContext.Provider value={{ dork, setDork, schoolId, setSchoolId }}>
       {children}
     </ToGetContext.Provider>
   );
