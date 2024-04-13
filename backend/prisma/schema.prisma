@@ -90,9 +90,9 @@ model Student {
   secondtrank            Int? 
   overallrank            Int?
 
-  firstScore            Int?        
-  secondScore            Int? 
-  overallScore           Int?
+  firstScore            Float?        
+  secondScore            Float? 
+  overallScore           Float?
 
   subject Subject[]
   result  Result[]
