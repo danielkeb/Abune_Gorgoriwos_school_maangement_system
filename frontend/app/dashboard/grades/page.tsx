@@ -346,8 +346,6 @@ const Page = () => {
       />
     </Main>
   );
-=======
->>>>>>> 03a21c85cc1d3fc5ff785bd806f6fd12fce92c58
 };
 
 export default Page;
