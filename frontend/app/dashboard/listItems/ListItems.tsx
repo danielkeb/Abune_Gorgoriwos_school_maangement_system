@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -9,6 +10,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { AppContext } from '@/components/context/UserContext';
+import { useEffect, useState } from 'react';
+import RecipeReviewCard from '../main/custom';
 
 // Define roles
 const ROLES = {
@@ -21,9 +24,12 @@ const ROLES = {
 const MainListItems: React.FC = () => {
   const path = usePathname(); // Use usePathname instead of useRouter
   const { decodedToken } = React.useContext(AppContext); // Access decodedToken from context
-
+const [userRole, setUserRole]= useState('');
   // Get user role from decoded token
-  const userRole = decodedToken?.role || '';
+  useEffect(() => {
+    setUserRole(decodedToken?.role || '');
+  }, [decodedToken])
+  
 
   // Function to check if the current user has access to a certain route
   const hasAccess = (allowedRoles: string[]) =>
@@ -41,6 +47,7 @@ const MainListItems: React.FC = () => {
         </div>
       </Link>
 
+      <RecipeReviewCard/>
       {/* Registration route accessible only to super admin */}
       {userRole && userRole === ROLES.SUPER_ADMIN && (
         <Link href="/dashboard/register">
@@ -64,7 +71,7 @@ const MainListItems: React.FC = () => {
           </ListItemButton>
         </Link>
       )}
-
+   
       {/* Grades route accessible only to admin and teacher */}
       {userRole && (userRole === ROLES.TEACHER) && (
         <Link href="/dashboard/grades">

@@ -25,7 +25,7 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
-  @Post('update/:id')
+  @Patch('update/:id')
   studentUpdate(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: DtoStudent,
@@ -72,6 +72,35 @@ export class StudentsController {
   @Get('get')
   getStudents() {
     return this.studentsService.getStudents();
+  }
+  @Get('getwith/:school_id/:gradeId/:sectionId/:semesterId')
+  getStudentsWith(
+    
+    @Param('school_id', ParseIntPipe) school_id: number,
+    @Param('gradeId', ParseIntPipe) gradeId: number,
+    @Param('sectionId', ParseIntPipe) sectionId: number,
+    @Param('semesterId', ParseIntPipe) semesterId: number
+  ) {
+    return this.studentsService.getStudentsWith(school_id,gradeId,sectionId,semesterId);
+  }
+
+  @Get('getwithDisplay/:school_id/:gradeId/:sectionId/:semesterId')
+  getStudentsWithForRankDisplay(
+    
+    @Param('school_id', ParseIntPipe) school_id: number,
+    @Param('gradeId', ParseIntPipe) gradeId: number,
+    @Param('sectionId', ParseIntPipe) sectionId: number,
+    @Param('semesterId', ParseIntPipe) semesterId: number
+  ) {
+    return this.studentsService.getStudentsWithForRankDisplay(school_id,gradeId,sectionId,semesterId);
+  }
+  @Get('studentsPromote/:school_id/:gradeId/:sectionId')
+  getStudentsForPromote(
+    @Param('school_id', ParseIntPipe) school_id: number,
+    @Param('gradeId', ParseIntPipe) gradeId: number,
+    @Param('sectionId', ParseIntPipe) sectionId: number,
+  ){
+   return this.studentsService.getStudentsForPromote(school_id,gradeId,sectionId);
   }
   @Get('getstu/:schoolId/:gradeId/:sectionId')
   getStudentsForAdmin(

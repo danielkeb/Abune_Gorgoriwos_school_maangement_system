@@ -59,6 +59,24 @@ export class GradeLevelService {
     return updateGrade;
   }
 
+  // async manageGradeLevel() {
+  //   const classes = await this.prismaService.gradeLevel.findMany();
+  //   return classes;
+  // }
+
+  // async updateGradeLevel(gradeId: number, dto: GradeLevel) {
+  //   // update the gradeLevel
+  //   const updateGrade = await this.prismaService.gradeLevel.update({
+  //     where: {
+  //       id: gradeId,
+  //     },
+  //     data: {
+  //       grade: dto.grade,
+  //     },
+  //   });
+  //   return updateGrade;
+  // }
+
   async getGradeLevel() {
     const gradeLevels = await this.prismaService.gradeLevel.findMany({
       include: {

@@ -10,13 +10,14 @@ export const AppContext = createContext({});
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
   const router= useRouter()
-  const cookies = new Cookies();
+  const [dork, setDork]= useState('Goood')
   const [token, setToken] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("authToken") || null;
     }
     return null;
   });
+
 
   const [decodedToken, setDecodedToken] = useState<{
     [key: string]: any;
@@ -55,7 +56,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AppContext.Provider value={{ token, logout, setToken }}>
+    <AppContext.Provider value={{ token, logout, setToken,dork,setDork }}>
       {children}
     </AppContext.Provider>
   );

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SectionAddDto, SectionUpdateAddDto } from './dto/sectionAdd.dto';
+import { SectionAddDto,  } from './dto/sectionAdd.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { SectionUpdateAddDto } from './dto/sectionadd.update.dto';
 
 // interface StudentResult {
 //   totalScore1: number;
@@ -26,7 +27,7 @@ export class SectionService {
   constructor(private prismaService: PrismaService) {}
 
   async addSection(
-    dto: SectionAddDto,
+    dto: SectionUpdateAddDto,
   ): Promise<{ msg: string; addSection?: any }> {
     try {
       const { gradeId, name } = dto;
@@ -101,6 +102,7 @@ export class SectionService {
       };
     }
   }
+
 
   async getSection(secId: number): Promise<any[]> {
     try {

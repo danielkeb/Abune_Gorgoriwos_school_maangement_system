@@ -9,8 +9,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { SectionService } from './section.service';
-import { SectionAddDto, SectionUpdateAddDto } from './dto/sectionAdd.dto';
+import { SectionAddDto, } from './dto/sectionAdd.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { SectionUpdateAddDto } from './dto/sectionadd.update.dto';
 
 @ApiTags('section')
 @Controller('section')

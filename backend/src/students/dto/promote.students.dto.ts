@@ -1,5 +1,5 @@
 class PromoteStudentsDto {
-  user_id: number;
+  user_Id: number;
   gradeId: number;
 }
 
