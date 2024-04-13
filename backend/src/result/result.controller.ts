@@ -42,6 +42,13 @@ export class ResultController {
   ) {
     return this.resultService.updateMark(dto, resultId);
   }
+  @Post('analysis/:gradeId/:semesterId/')
+  makeAnalysis(
+    @Param('gradeId', ParseIntPipe) gradeId: number,
+    @Param('semesterId', ParseIntPipe) semesterId: number,
+  ){
+  return this.resultService.makeAnalysis(gradeId, semesterId);
+  }
   @Delete('delete/:id')
   deleteResult(@Param('id', ParseIntPipe) id: number) {
     return this.resultService.deleteResult(id);
