@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class DtoStudent {
   @IsOptional()
@@ -24,20 +24,30 @@ export class DtoAdmin {
   frist_name?: string;
 
   @IsString()
-  @IsEmail()
+  @IsString()
   last_name?: string;
+
+  @IsString()
+  @IsString()
+  middle_name?: string;
+
+  @IsOptional()
+  @IsInt()
+  sectionId?: number;
+
+  @IsOptional()
+  @IsInt()
+  gradeId?: number;
 
   @IsOptional()
   @IsString()
-  grade?: number;
+  section?: string;
 
   @IsOptional()
   @IsString()
   careof_contact1?: string;
 
-  @IsOptional()
-  @IsString()
-  careof_contact2?: string;
+
   @IsOptional()
   @IsString()
   phone?: string;
@@ -45,16 +55,13 @@ export class DtoAdmin {
   @IsString()
   @IsEmail()
   email?: string;
+  
+  @IsString()
+  @IsString()
+  address?: string;
 
   @IsOptional()
   @IsString()
-  username?: string;
-
-  @IsOptional()
-  @IsString()
-  password?: string;
-
-  @IsOptional()
-  @IsString()
-  education_level?: string;
+  date_of_birth?: string;
 }
+

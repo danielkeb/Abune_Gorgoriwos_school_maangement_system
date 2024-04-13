@@ -1,26 +1,4 @@
-// import React from "react";
-// import Students from "./studentNumberWithGenderCategory";
-// import Users from "./users";
-// import UserStatus from "./AllSchoolUsers";
-// import AspectsUser from "./trial";
-// import TotalData from "./totaldata";
-// import FemaleMale from "./femaleMale";
-// import Callendar from "./callendar";
 
-
-// const HomePage: React.FC = () => {
-//   return (
-//     <div className="container mx-auto my-auto px-4 py-10 text-xs lg:font-normal  ">
-  
-//     <Callendar/> 
- 
-  
-//   </div>
-  
-//   );
-// };
-
-// export default HomePage;
 
 
 "use client"
@@ -304,13 +282,37 @@ export default function Home() {
                           Add Event
                         </Dialog.Title>
                         <form action="submit" onSubmit={handleSubmit}>
-                          <div className="mt-2">
-                            <input type="text" name="title" className="block w-full rounded-md border-0 py-1.5 text-gray-900 
+    
+                  <div className="relative w-full mb-3">
+
+                    <select
+                      id="yourSelect"
+                      name="title"
+                     
+                      onChange={(e) => handleChange(e)}
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 
                             shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 
                             focus:ring-inset
                             sm:text-sm sm:leading-6"
-                              value={newEvent.title} onChange={(e) => handleChange(e)} placeholder="Title" />
+                      >
+                      <option value="" disabled>
+                        Select an option
+                      </option>
+                      <option value="Semester I Start">Semester I Start</option>
+                      <option value="Semester I End">Semester I End</option>
+                      <option value="Semester II Start">Semester II Start</option>
+                      <option value="Semester II End">Semester II End</option>
+                    </select>
+                    
+  
+        
+                            {/* <input type="text" name="title" className="block w-full rounded-md border-0 py-1.5 text-gray-900 
+                            shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
+                            focus:ring-2 
+                            focus:ring-inset
+                            sm:text-sm sm:leading-6"
+                              value={newEvent.title} onChange={(e) => handleChange(e)} placeholder="Title" /> */}
                           </div>
                           <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                             <button

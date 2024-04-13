@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import { AppWrapper } from '@/components/context/UserContext';
-import { Providers } from './providers';
-//import ThemeSwitch from '@/components/context/ThemeSwitch';
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { AppWrapper } from '@/components/context/UserContext'
+import { AppGetter } from './context/toget'
+
 
 // Initialize Inter font
 const inter = Inter({ subsets: ['latin'] });
@@ -24,22 +23,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* Wrap the content with Providers and AppWrapper */}
-        <Providers>
-          <AppWrapper>
-            {children}
-            {/* Render ThemeSwitch component */}
-            <div style={{
-              position: 'fixed',
-              bottom: '20px',
-              right: '20px',
-              zIndex: 9999,
-            }}>
-              {/* <ThemeSwitch /> */}
-            </div>
-          </AppWrapper>
-        </Providers>
-      </body>
+     <AppGetter>
+    
+     <AppWrapper>
+     {children}
+     </AppWrapper>
+     </AppGetter> 
+      
+        
+        </body>
     </html>
   );
 }

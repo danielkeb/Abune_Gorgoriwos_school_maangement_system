@@ -89,6 +89,11 @@ model Student {
   firstrank            Int?        
   secondtrank            Int? 
   overallrank            Int?
+
+  firstScore            Float?        
+  secondScore            Float? 
+  overallScore           Float?
+
   subject Subject[]
   result  Result[]
   student_history StudentHistory[]

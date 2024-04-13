@@ -54,7 +54,11 @@ const page = () => {
       try {
         setCheck(true);
         const response = await axios.post(
+<<<<<<< HEAD
           "http://localhost:3333/auth/user/1",
+=======
+          `http://localhost:3333/auth/user/1`,
+>>>>>>> origin/main
         {...values, gradeId:parseInt(values.gradeId), sectionId:parseInt(values.sectionId)}
         );
 

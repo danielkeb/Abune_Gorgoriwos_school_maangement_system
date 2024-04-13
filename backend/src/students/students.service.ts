@@ -19,19 +19,33 @@ export class StudentsService {
   }
 
   async updateStudentByAdmin(studentId: number, dto: DtoAdmin) {
-    const updateStudent = await this.prismaService.user.update({
+    const findeSec = await this.prismaService.section.findMany({
+      where: { gradeId: dto.gradeId, name: dto.section },
+    });
+    const updateTableUser = await this.prismaService.user.update({
       where: { id: studentId },
       data: {
-        ...dto,
+        frist_name: dto.frist_name,
+        middle_name: dto.middle_name,
+        last_name: dto.last_name,
+        email: dto.email,
+        phone: dto.phone,
+        address: dto.address,
+        date_of_birth: dto.date_of_birth,
       },
     });
-    const studentTable = await this.prismaService.teacher.update({
+
+    await this.prismaService.student.update({
       where: { user_Id: studentId },
       data: {
-        education_level: dto.education_level,
+        careof_contact1: dto.careof_contact1,
+        sectionId: findeSec[0].id ?? dto.sectionId,
       },
     });
-    return { updateStudent, studentTable };
+
+    return {
+      msg: 'Student Updated',
+    };
   }
 
   async getStudentbygrade(
@@ -92,7 +106,7 @@ export class StudentsService {
       const incompleteStudents: string[] = [];
       await this.prismaService.$transaction(async (prisma) => {
         for (const student of students) {
-          const user_id = student.user_id;
+          const user_id = student.user_Id;
           const gradeId = student.gradeId;
           const sectionId = student.sectionId;
 
@@ -144,7 +158,12 @@ export class StudentsService {
             totalScores.length;
 
           // Filter students based on the average total score
-          const eligibleStudents = averageTotalScore > 50 ? studentResults : [];
+          const getInfo = await this.prismaService.student.findUnique({
+            where: { user_Id: user_id },
+            select: { overallScore: true },
+          });
+          const eligibleStudents = getInfo.overallScore > 50 ? true : false;
+          // averageTotalScore > 50 ? studentResults : [];
 
           // Step 2: Prepare Data for Student History
           const historyData = {
@@ -181,7 +200,7 @@ export class StudentsService {
           });
 
           // Step 5: Update Student table with new gradeId and sectionId
-          if (eligibleStudents.length > 0) {
+          if (eligibleStudents) {
             await prisma.student.update({
               where: { user_Id: user_id },
               data: {
@@ -331,7 +350,7 @@ export class StudentsService {
 
   async promoteSubjects(students: PromoteStudentsNextGradeDto[]) {
     for (const student of students) {
-      const user_id = student.user_id;
+      const user_id = student.user_Id;
       const gradeId = student.gradeId;
       const sectionId = student.sectionId;
       const existingSubjects = await this.prismaService.student
@@ -508,7 +527,7 @@ export class StudentsService {
 
       // Iterate over each student in the input array
       for (const student of students) {
-        const user_id = student.user_id;
+        const user_id = student.user_Id;
 
         // Fetch student results
         const studentResults = await this.prismaService.result.findMany({
@@ -539,23 +558,41 @@ export class StudentsService {
 
       // Sort the rankedStudents array by averageTotalScore in descending order
       // If scores are equal, use user ID as a tiebreaker
+
       rankedStudents.sort((a, b) => {
         if (a.averageTotalScore !== b.averageTotalScore) {
           return b.averageTotalScore - a.averageTotalScore;
         } else {
-          return a.user_id - b.user_id;
+          return a.user_id - b.user_id; // Tiebreaker: user ID in ascending order
         }
       });
 
-      // Add ranks to the sorted array
+      // Add ranks to the sorted array, considering ties
+      let currentRank = 1;
+      let previousScore = Infinity;
+      let tieCount = 0;
       for (let i = 0; i < rankedStudents.length; i++) {
-        rankedStudents[i].rank = i + 1;
+        const student = rankedStudents[i];
+        if (student.averageTotalScore < previousScore) {
+          // If the current student has a lower score than the previous one,
+          // update the rank, reset the tie count, and update the previous score
+          currentRank += tieCount;
+          student.rank = currentRank;
+          previousScore = student.averageTotalScore;
+          tieCount = 1;
+        } else if (student.averageTotalScore === previousScore) {
+          // If the current student has the same score as the previous one,
+          // increment the tie count but don't change the rank
+          tieCount++;
+          student.rank = currentRank;
+        }
       }
       for (const rankedStudent of rankedStudents) {
         await this.prismaService.student.update({
           where: { user_Id: rankedStudent.user_id },
           data: {
             overallrank: rankedStudent.rank,
+            overallScore: rankedStudent.averageTotalScore,
           },
         });
       }
@@ -581,18 +618,18 @@ export class StudentsService {
     try {
       const incompleteStudents: string[] = [];
       const rankedStudents: {
-        user_id: number;
+        user_Id: number;
         rank: number;
         averageTotalScore: number;
       }[] = [];
 
       // Iterate over each student in the input array
       for (const student of students) {
-        const user_id = student.user_id;
+        const user_Id = student.user_Id;
 
         // Fetch student results
         const studentResults = await this.prismaService.result.findMany({
-          where: { studentId: user_id },
+          where: { studentId: user_Id },
         });
 
         // Calculate the average total score for the first semester (totalScore1)
@@ -602,44 +639,64 @@ export class StudentsService {
 
         // Check for incomplete data
         if (totalScores1.some((score) => score === 0)) {
-          const errorMessage = `Incomplete data for student with id: ${user_id}`;
+          const errorMessage = `Incomplete data for student with id: ${user_Id}`;
           console.error(errorMessage);
           incompleteStudents.push(errorMessage);
           continue;
         }
 
         // Calculate the average total score for the first semester
-
         const averageTotalScore =
           totalScores1.reduce((sum, score) => sum + score, 0) /
           totalScores1.length;
 
         // Push the student and their average score to the rankedStudents array
-        rankedStudents.push({ user_id, averageTotalScore, rank: 0 });
+        rankedStudents.push({ user_Id, averageTotalScore, rank: 0 });
       }
 
       // Sort the rankedStudents array by averageTotalScore in descending order
       // If scores are equal, use user ID as a tiebreaker
+
       rankedStudents.sort((a, b) => {
         if (a.averageTotalScore !== b.averageTotalScore) {
           return b.averageTotalScore - a.averageTotalScore;
         } else {
-          return a.user_id - b.user_id;
+          return a.user_Id - b.user_Id; // Tiebreaker: user ID in ascending order
         }
       });
 
-      // Add ranks to the sorted array
+      // Add ranks to the sorted array, considering ties
+      let currentRank = 1;
+      let previousScore = Infinity;
+      let tieCount = 0;
       for (let i = 0; i < rankedStudents.length; i++) {
-        rankedStudents[i].rank = i + 1;
+        const student = rankedStudents[i];
+        if (student.averageTotalScore < previousScore) {
+          // If the current student has a lower score than the previous one,
+          // update the rank, reset the tie count, and update the previous score
+          currentRank += tieCount;
+          student.rank = currentRank;
+          previousScore = student.averageTotalScore;
+          tieCount = 1;
+        } else if (student.averageTotalScore === previousScore) {
+          // If the current student has the same score as the previous one,
+          // increment the tie count but don't change the rank
+          tieCount++;
+          student.rank = currentRank;
+        }
       }
+
+      // Update student ranks in the database
       for (const rankedStudent of rankedStudents) {
         await this.prismaService.student.update({
-          where: { user_Id: rankedStudent.user_id },
+          where: { user_Id: rankedStudent.user_Id },
           data: {
             firstrank: rankedStudent.rank,
+            firstScore: rankedStudent.averageTotalScore,
           },
         });
       }
+
       // Return the result
       return {
         status: 'Success',
@@ -669,7 +726,7 @@ export class StudentsService {
 
       // Iterate over each student in the input array
       for (const student of students) {
-        const user_id = student.user_id;
+        const user_id = student.user_Id;
 
         // Fetch student results
         const studentResults = await this.prismaService.result.findMany({
@@ -698,26 +755,43 @@ export class StudentsService {
         // Push the student and their average score to the rankedStudents array
         rankedStudents.push({ user_id, averageTotalScore, rank: 0 });
       }
-
       // Sort the rankedStudents array by averageTotalScore in descending order
       // If scores are equal, use user ID as a tiebreaker
+
       rankedStudents.sort((a, b) => {
         if (a.averageTotalScore !== b.averageTotalScore) {
           return b.averageTotalScore - a.averageTotalScore;
         } else {
-          return a.user_id - b.user_id;
+          return a.user_id - b.user_id; // Tiebreaker: user ID in ascending order
         }
       });
 
-      // Add ranks to the sorted array
+      // Add ranks to the sorted array, considering ties
+      let currentRank = 1;
+      let previousScore = Infinity;
+      let tieCount = 0;
       for (let i = 0; i < rankedStudents.length; i++) {
-        rankedStudents[i].rank = i + 1;
+        const student = rankedStudents[i];
+        if (student.averageTotalScore < previousScore) {
+          // If the current student has a lower score than the previous one,
+          // update the rank, reset the tie count, and update the previous score
+          currentRank += tieCount;
+          student.rank = currentRank;
+          previousScore = student.averageTotalScore;
+          tieCount = 1;
+        } else if (student.averageTotalScore === previousScore) {
+          // If the current student has the same score as the previous one,
+          // increment the tie count but don't change the rank
+          tieCount++;
+          student.rank = currentRank;
+        }
       }
       for (const rankedStudent of rankedStudents) {
         await this.prismaService.student.update({
           where: { user_Id: rankedStudent.user_id },
           data: {
             secondtrank: rankedStudent.rank,
+            secondScore: rankedStudent.averageTotalScore,
           },
         });
       }
@@ -755,7 +829,15 @@ export class StudentsService {
         careof_contact1: true,
         gradeId: true,
         sectionId: true,
+        gradelevel: {
+          select: {
+            section: true,
+          },
+        },
       },
+    });
+    const section = await this.prismaService.section.findUnique({
+      where: { id: stud[0].sectionId },
     });
     const filterdList = stud.map((s) => ({
       id: s.user.id,
@@ -772,7 +854,126 @@ export class StudentsService {
       careof_contact1: s.careof_contact1,
       gradeId: s.gradeId,
       sectionId: s.sectionId,
+      section: section.name,
     }));
     return filterdList;
+  }
+
+  async getStudentsWith(
+    school_id: number,
+    gradeId: number,
+    sectionId: number,
+    semesterId: number,
+  ) {
+    const students = await this.prismaService.student.findMany({
+      where: {
+        user: { school_Id: school_id },
+        gradeId: gradeId,
+        sectionId: sectionId,
+      },
+      select: { user_Id: true, gradeId: true, sectionId: true },
+    });
+    if (semesterId == 1) {
+      await this.calculateRankForFirst(students);
+    } else if (semesterId == 2) {
+      await this.calculateRankForSecond(students);
+    } else if (semesterId == 3) {
+      await this.calculateRankForAll(students);
+    }
+
+    return {
+      msg: 'Rank Generated!',
+    };
+  }
+
+  async getStudentsWithForRankDisplay(
+    school_id: number,
+    gradeId: number,
+    sectionId: number,
+    semesterId: number,
+  ) {
+    let tobeSent;
+
+    if (semesterId == 1) {
+      tobeSent = await this.prismaService.student.findMany({
+        where: {
+          user: { school_Id: school_id },
+          gradeId: gradeId,
+          sectionId: sectionId,
+        },
+        select: {
+          user: { select: { frist_name: true, middle_name: true } },
+          firstrank: true,
+          firstScore: true,
+          user_Id: true,
+        },
+      });
+    } else if (semesterId == 2) {
+      tobeSent = await this.prismaService.student.findMany({
+        where: {
+          user: { school_Id: school_id },
+          gradeId: gradeId,
+          sectionId: sectionId,
+        },
+        select: {
+          user: { select: { frist_name: true, middle_name: true } },
+          secondtrank: true,
+          secondScore: true,
+          user_Id: true,
+        },
+      });
+    } else if (semesterId == 3) {
+      tobeSent = await this.prismaService.student.findMany({
+        where: {
+          user: { school_Id: school_id },
+          gradeId: gradeId,
+          sectionId: sectionId,
+        },
+        select: {
+          user: { select: { frist_name: true, middle_name: true } },
+          firstrank: true,
+          firstScore: true,
+          secondtrank: true,
+          secondScore: true,
+          overallrank: true,
+          overallScore: true,
+          user_Id: true,
+        },
+      });
+    }
+
+    return tobeSent;
+  }
+
+  async getStudentsForPromote(
+    school_id: number,
+    gradeId: number,
+    sectionId: number,
+  ) {
+    const tobeSent = await this.prismaService.student.findMany({
+      where: {
+        user: { school_Id: school_id },
+        gradeId: gradeId,
+        sectionId: sectionId,
+      },
+      select: {
+        user: { select: { frist_name: true, middle_name: true } },
+        overallrank: true,
+        overallScore: true,
+        user_Id: true,
+        gradeId: true,
+        sectionId: true,
+      },
+    });
+    if (tobeSent.length > 0) {
+      if (tobeSent[0].overallScore != null) {
+        return tobeSent;
+      } else {
+        return 'Generate Rank First!!!';
+      }
+    } else {
+      return null;
+    }
+    console.log(tobeSent);
   }
 }
