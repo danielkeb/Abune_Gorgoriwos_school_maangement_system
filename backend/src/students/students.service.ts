@@ -156,10 +156,13 @@ export class StudentsService {
           const averageTotalScore =
             totalScores.reduce((sum, score) => sum + score, 0) /
             totalScores.length;
-         
+
           // Filter students based on the average total score
-          const getInfo = await this.prismaService.student.findUnique({where:{user_Id:user_id}, select:{overallScore:true}})
-          const eligibleStudents=  getInfo.overallScore > 50? true:false;
+          const getInfo = await this.prismaService.student.findUnique({
+            where: { user_Id: user_id },
+            select: { overallScore: true },
+          });
+          const eligibleStudents = getInfo.overallScore > 50 ? true : false;
           // averageTotalScore > 50 ? studentResults : [];
 
           // Step 2: Prepare Data for Student History
@@ -437,6 +440,7 @@ export class StudentsService {
         last_name: student.user.last_name,
         email: student.user.email,
         phone: student.user.phone,
+        gender: student.user.gender,
         createdAT: student.user.createdAT,
         grade: student.gradelevel,
         results: student.result,
@@ -889,7 +893,7 @@ export class StudentsService {
     sectionId: number,
     semesterId: number,
   ) {
-    var tobeSent;
+    let tobeSent;
 
     if (semesterId == 1) {
       tobeSent = await this.prismaService.student.findMany({
@@ -958,22 +962,19 @@ export class StudentsService {
         overallrank: true,
         overallScore: true,
         user_Id: true,
-        gradeId:true,
-        sectionId:true
+        gradeId: true,
+        sectionId: true,
       },
     });
-    if(tobeSent.length > 0){
-      if(tobeSent[0].overallScore!= null){
+    if (tobeSent.length > 0) {
+      if (tobeSent[0].overallScore != null) {
         return tobeSent;
-      }else{
-        return "Generate Rank First!!!"
+      } else {
+        return 'Generate Rank First!!!';
       }
-    }else{
-      return null
+    } else {
+      return null;
     }
-    console.log(tobeSent)
-
-
-    
+    console.log(tobeSent);
   }
 }

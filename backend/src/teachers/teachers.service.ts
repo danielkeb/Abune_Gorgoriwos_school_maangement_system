@@ -38,6 +38,7 @@ export class TeachersService {
         last_name: teacher.user.last_name,
         email: teacher.user.email,
         phone: teacher.user.phone,
+        gender: teacher.user.gender,
         education_level: teacher.education_level,
         createdAT: teacher.user.createdAT,
         gradeId: teacher.gradelevel.map((grade) => grade.id),
