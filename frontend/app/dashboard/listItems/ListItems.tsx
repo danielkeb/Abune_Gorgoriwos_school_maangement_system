@@ -89,6 +89,7 @@ const [userRole, setUserRole]= useState('');
             <ListItemText primary="Grades" />
           </div>
         </Link>
+        
 
 </React.Fragment>
       )}
@@ -131,6 +132,7 @@ const [userRole, setUserRole]= useState('');
               <ListItemText primary="Subjects" />
             </div>
           </Link>
+          <AppWrapper><RecipeReviewCard/></AppWrapper>
         </React.Fragment>
       )}
 
@@ -146,35 +148,16 @@ const [userRole, setUserRole]= useState('');
           </div>
         </Link>
         
-        <Link href="/dashboard/readingmaterials">
-        <div className={`${path.startsWith('/dashboard/readindmaterials') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
-          <ListItemIcon>
-            <ShoppingCartIcon className={`${path.startsWith('/dashboard/readingmaterials') ? ' text-white' : ''}`} />
-          </ListItemIcon>
-          <ListItemText primary="study materials" />
-        </div>
-      </Link>
+      <Link href="/dashboard/readingmaterials">
+          <div className={`${path.startsWith('/dashboard/readingmaterials') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+            <ListItemIcon>
+              <ShoppingCartIcon className={`${path.startsWith('/dashboard/readingmaterials') ? ' text-white' : ''}`} />
+            </ListItemIcon>
+            <ListItemText primary="study materials" />
+          </div>
+        </Link>
       </React.Fragment>
       )}
-
-
-      <Link href="/dashboard/rank">
-        <div
-          className={`${
-            path.startsWith("/dashboard/rank")
-              ? "bg-green-950 hover:bg-green-950 text-white"
-              : ""
-          } flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
-          <ListItemIcon>
-            <PeopleIcon
-              className={`${
-                path.startsWith("/dashboard/rank") ? " text-white" : ""
-              }`}
-            />
-          </ListItemIcon>
-          <ListItemText primary="Rank" />
-        </div>
-      </Link>
     </React.Fragment>
   );
 };

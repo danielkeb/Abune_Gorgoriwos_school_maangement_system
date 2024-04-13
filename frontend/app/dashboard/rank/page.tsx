@@ -1,6 +1,5 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import Main from "../main/Main";
 import axios from "axios";
 import { AppContext } from "@/components/context/UserContext";
 import { SchoolSharp } from "@mui/icons-material";
