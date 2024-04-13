@@ -10,6 +10,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { AppContext, AppWrapper } from '@/components/context/UserContext';
 import SchoolList from '../main/schools';
+import RecipeReviewCard from '../main/custom';
 
 // Define roles
 const ROLES = {
@@ -41,7 +42,8 @@ const MainListItems: React.FC = () => {
           <ListItemText primary="Dashboard" />
         </div>
       </Link>
-
+   
+  
       {/* Registration route accessible only to super admin */}
       {userRole && userRole === ROLES.SUPER_ADMIN && (
         <React.Fragment>
@@ -82,6 +84,7 @@ const MainListItems: React.FC = () => {
             <ListItemText primary="Grades" />
           </div>
         </Link>
+        
 
 </React.Fragment>
       )}
@@ -124,6 +127,7 @@ const MainListItems: React.FC = () => {
               <ListItemText primary="Subjects" />
             </div>
           </Link>
+          <AppWrapper><RecipeReviewCard/></AppWrapper>
         </React.Fragment>
       )}
 
@@ -139,35 +143,16 @@ const MainListItems: React.FC = () => {
           </div>
         </Link>
         
-        <Link href="/dashboard/readingmaterials">
-        <div className={`${path.startsWith('/dashboard/readindmaterials') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
-          <ListItemIcon>
-            <ShoppingCartIcon className={`${path.startsWith('/dashboard/readingmaterials') ? ' text-white' : ''}`} />
-          </ListItemIcon>
-          <ListItemText primary="study materials" />
-        </div>
-      </Link>
+      <Link href="/dashboard/readingmaterials">
+          <div className={`${path.startsWith('/dashboard/readingmaterials') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+            <ListItemIcon>
+              <ShoppingCartIcon className={`${path.startsWith('/dashboard/readingmaterials') ? ' text-white' : ''}`} />
+            </ListItemIcon>
+            <ListItemText primary="study materials" />
+          </div>
+        </Link>
       </React.Fragment>
       )}
-
-
-      <Link href="/dashboard/rank">
-        <div
-          className={`${
-            path.startsWith("/dashboard/rank")
-              ? "bg-green-950 hover:bg-green-950 text-white"
-              : ""
-          } flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full  `}>
-          <ListItemIcon>
-            <PeopleIcon
-              className={`${
-                path.startsWith("/dashboard/rank") ? " text-white" : ""
-              }`}
-            />
-          </ListItemIcon>
-          <ListItemText primary="Rank" />
-        </div>
-      </Link>
     </React.Fragment>
   );
 };

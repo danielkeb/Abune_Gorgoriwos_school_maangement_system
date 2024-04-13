@@ -115,13 +115,17 @@ const CourseMaterials: React.FC = () => {
   return (
     <div className="w-full p-8 mt-8 text-center">
       <div className="w-full max-w-md">
-        <input
-          type="text"
-          className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+      <select
+  className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+>
+  <option value="">Select an option</option>
+  <option value="assignment">Assignment</option>
+  <option value="textbook">Textbook</option>
+  <option value="worksheet">Worksheet</option>
+</select>
+
         <select
           className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
           value={selectedGrade ? selectedGrade.id : ''}
