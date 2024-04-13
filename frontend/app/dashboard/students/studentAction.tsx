@@ -132,7 +132,7 @@ const StudentActions = ({
       )}
     </Box>
     
-  );
-};
+  )
+  }
 
 export default StudentActions;

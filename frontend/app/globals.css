@@ -48,6 +48,9 @@
     position: absolute;
     
 }
+.css-1knaqv7-MuiButtonBase-root-MuiButton-root{
+  color:green;
+}
 /* input {
   @apply px-2;
 }

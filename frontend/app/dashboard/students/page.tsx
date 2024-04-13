@@ -5,6 +5,7 @@ import Page from '../rank/page';
 import Rank from '../rank/page';
 import Promote from '../promote/page';
 import Manage from './manage';
+import Analysis from '../analysis/page';
 
 function CustomTabs() {
   const [activeTab, setActiveTab] = useState(0);
@@ -19,6 +20,8 @@ function CustomTabs() {
     componentToRender=<Promote/>
   }else if(activeTab==0){
     componentToRender=<Manage/>
+  }else if(activeTab==3){
+  componentToRender= <Analysis/>
   }
 
   return (
@@ -56,6 +59,16 @@ function CustomTabs() {
           onClick={() => handleTabClick(2)}
         >
           Promote
+        </div>
+        <div
+          className={`py-2 px-4 cursor-pointer ${
+            activeTab === 3
+              ? 'text-green-500 border-b-2 border-green-500 transition-all duration-300'
+              : 'text-gray-600'
+          }`}
+          onClick={() => handleTabClick(3)}
+        >
+          Analysis
         </div>
       </div>
     
