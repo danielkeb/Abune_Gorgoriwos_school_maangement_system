@@ -416,7 +416,20 @@ export class StudentsService {
     // Adjust the return type as per your requirement
     const allStudents = await this.prismaService.student.findMany({
       select: {
-        user: true,
+        user: {
+          // Exclude the password field
+          select: {
+            id: true,
+            frist_name: true,
+            middle_name: true,
+            last_name: true,
+            email: true,
+            phone: true,
+            gender: true,
+            createdAT: true,
+            school_Id: true,
+          },
+        },
         gradelevel: {
           include: { subject: true, section: true },
         },
