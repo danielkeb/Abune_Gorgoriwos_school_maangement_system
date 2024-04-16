@@ -1,0 +1,24 @@
+.button-primary {
+    background-color: #BEE3F8;
+    color: #185ADB;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button-primary:hover {
+    background-color: #90CDF4;
+  }
+  
+  .line {
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 4rem); /* Adjust width as needed */
+    height: 2px;
+    background-color: #185ADB;
+  }
+  

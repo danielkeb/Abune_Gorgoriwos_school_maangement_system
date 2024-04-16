@@ -1,6 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateAdminTeacherDto, UpdateTeacherDto } from './dto';
+import {
+  UpdateAdminTeacherDto,
+  UpdateTeacherDto,
+  SubjectUpdateDto,
+  SectionUpdateDto,
+} from './dto';
 
 @Injectable()
 export class TeachersService {
@@ -77,11 +82,11 @@ export class TeachersService {
       },
       data: {
         frist_name: dto.first_name,
-        // last_name: dto.last_name,
-        // middle_name: dto.middle_name,
-        // address: dto.address,
-        // username: dto.username,
-        // phone: dto.phone,
+        last_name: dto.last_name,
+        middle_name: dto.middle_name,
+        address: dto.address,
+        username: dto.username,
+        phone: dto.phone,
       },
     });
 
@@ -150,7 +155,151 @@ export class TeachersService {
 
     return teacherInfo;
   }
+  //here assign grade, section and subject to teacher
+  async updateTeacherFields(
+    teacherId: number,
+    grade_Id: number,
+    sectionId: number,
+    subjectId: number,
+  ) {
+    const teacherInfo = await this.prisma.teacher.update({
+      where: {
+        user_Id: teacherId,
+      },
 
+      data: {
+        section: {
+          connect: { id: sectionId },
+        },
+        gradelevel: {
+          connect: { id: grade_Id },
+        },
+        subject: {
+          connect: { id: subjectId },
+        },
+      },
+    });
+    return teacherInfo;
+  }
+
+  async updateTeacherSubject(teacherId: number, dto: SubjectUpdateDto) {
+    const teacher = await this.prisma.teacher.findUnique({
+      where: {
+        user_Id: teacherId,
+      },
+    });
+    if (!teacher) {
+      throw new NotFoundException(`Teacher id ${teacherId} not found`);
+    }
+    const subject = await this.prisma.subject.findUnique({
+      where: {
+        id: dto.subjectId,
+      },
+    });
+    if (!subject) {
+      throw new NotFoundException(`Subject id ${dto.subjectId} not found`);
+    }
+    const subjectUpdate = await this.prisma.teacher.update({
+      where: {
+        user_Id: teacherId,
+      },
+      data: {
+        subject: {
+          connect: { id: dto.subjectId },
+        },
+      },
+    });
+    return subjectUpdate;
+  }
+
+  async disconnectTeacherSubject(teacherId: number, dto: SubjectUpdateDto) {
+    const teacher = await this.prisma.teacher.findUnique({
+      where: {
+        user_Id: teacherId,
+      },
+    });
+    if (!teacher) {
+      throw new NotFoundException(`Teacher id ${teacherId} not found`);
+    }
+    const subject = await this.prisma.subject.findUnique({
+      where: {
+        id: dto.subjectId,
+      },
+    });
+    if (!subject) {
+      throw new NotFoundException(`Subject id ${dto.subjectId} not found`);
+    }
+    const subjectUpdate = await this.prisma.teacher.update({
+      where: {
+        user_Id: teacherId,
+      },
+      data: {
+        subject: {
+          disconnect: { id: dto.subjectId },
+        },
+      },
+    });
+    return subjectUpdate;
+  }
+  async updateTeacherSection(teacherId: number, dto: SectionUpdateDto) {
+    const teacher = await this.prisma.teacher.findUnique({
+      where: {
+        user_Id: teacherId,
+      },
+    });
+    if (!teacher) {
+      throw new NotFoundException(`Teacher id ${teacherId} not found`);
+    }
+    const subject = await this.prisma.subject.findUnique({
+      where: {
+        id: dto.sectionId,
+      },
+    });
+    if (!subject) {
+      throw new NotFoundException(`Section id ${dto.sectionId} not found`);
+    }
+    const subjectUpdate = await this.prisma.teacher.update({
+      where: {
+        user_Id: teacherId,
+      },
+      data: {
+        subject: {
+          connect: { id: dto.sectionId },
+        },
+      },
+    });
+    return subjectUpdate;
+  }
+
+  async disconnectTeacherSection(teacherId: number, dto: SectionUpdateDto) {
+    const teacher = await this.prisma.teacher.findUnique({
+      where: {
+        user_Id: teacherId,
+      },
+    });
+    if (!teacher) {
+      throw new NotFoundException(`Teacher id ${teacherId} not found`);
+    }
+    const section = await this.prisma.section.findUnique({
+      where: {
+        id: dto.sectionId,
+      },
+    });
+    if (!section) {
+      throw new NotFoundException(`Section id ${dto.sectionId} not found`);
+    }
+    const sectionUpdate = await this.prisma.teacher.update({
+      where: {
+        user_Id: teacherId,
+      },
+      data: {
+        section: {
+          disconnect: { id: dto.sectionId },
+        },
+      },
+    });
+    return sectionUpdate;
+  }
   // async getTeacherSection(
   //   schoolId: number,
   //   gradeId: number,

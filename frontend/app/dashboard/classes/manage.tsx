@@ -22,12 +22,12 @@ interface GradeLevel {
   classType: ClassType;
 }
 
-const ClassForm = () => {
+const ManageClass = () => {
   // State variables
   const [grade, setGrade] = useState('');
   const [classType, setClassType] = useState<ClassType | ''>(ClassType.nursery);
   const [classData, setClassData] = useState<GradeLevel[]>([]);
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [selectedGrade, setSelectedGrade] = useState<GradeLevel | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -37,14 +37,11 @@ const ClassForm = () => {
     setClassType(event.target.value as ClassType);
   };
 
-  // Handle create new class button click
-  const handleCreateNewClass = () => {
-    setShowCreateForm(true);
-  };
+  
 
   // Handle manage classes button click
   const handleManageClasses = async () => {
-    setShowCreateForm(false);
+    setShowUpdateForm(false);
     try {
       const response = await axios.get<GradeLevel[]>('http://localhost:3333/grade/manage');
       setClassData(response.data);
@@ -61,7 +58,7 @@ const ClassForm = () => {
       setGrade(gradeToEdit.grade);
       setClassType(gradeToEdit.classType);
       setSelectedGrade(gradeToEdit);
-      setShowCreateForm(true);
+      setShowUpdateForm(true);
     }
   };
 
@@ -76,10 +73,7 @@ const ClassForm = () => {
       if (selectedGrade) {
         await axios.patch(`http://localhost:3333/grade/update/${selectedGrade.id}`, { grade, classType });
         toast.success('Update successful');
-      } else {
-        await axios.post('http://localhost:3333/grade/add', { grade, classType });
-        toast.success('Add successful');
-      }
+      } 
       setGrade('');
       setClassType(ClassType.nursery);
       handleManageClasses();
@@ -100,20 +94,9 @@ const ClassForm = () => {
 
   return (
     <div className="w-full p-8 mt-3 text-center">
-      {/* Manage class and section buttons */}
-  <div className="w-full flex flex-wrap gap-4 mb-4 mx-auto relative hover:bg-blue-100">
-  <button className="button-primary hover:bg-blue-100" onClick={handleManageClasses}>
-    Manage Classes
-  </button>
-  <div className="line"></div>
-  <button className="button-primary" onClick={handleCreateNewClass}>
-    Create New Class
-  </button>
-</div>
-
 
       {/* Conditional rendering for create new class form */}
-      {showCreateForm && (
+      {showUpdateForm && (
   <div className="fixed z-10 inset-0 overflow-y-auto">
     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div className="fixed inset-0 transition-opacity" aria-hidden="true">
@@ -146,16 +129,16 @@ const ClassForm = () => {
                     </option>
                   ))}
                 </select>
-                {error && <p className="text-red-500 mb-4">{error}</p>}
+                {error && <p className="text-red-500 mb-4">try again</p>}
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     onClick={handleSubmit}
                     className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-2"
                   >
-                    Register
+                    Update
                   </button>
                   <button
-                    onClick={() => setShowCreateForm(false)}
+                    onClick={() => setShowUpdateForm(false)}
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
                   >
                     Cancel
@@ -218,4 +201,4 @@ const ClassForm = () => {
   );
 };
 
-export default ClassForm;
+export default ManageClass;
