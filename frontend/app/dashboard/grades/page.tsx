@@ -90,9 +90,9 @@ const Page = () => {
   //  console.log("Students: ", filteredResult[0].student )
   return (
     <Main>
-      <div className="w-full">
-        <form onSubmit={formik.handleSubmit}>
-          <div className=" flex mt-8  w-[66%]">
+      <div className="w-full flex justify-center items-center">
+        <form onSubmit={formik.handleSubmit} className="bg-white box boxshadow w-[80%] mt-5 p-5">
+          <div className=" flex mt-8   ">
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label

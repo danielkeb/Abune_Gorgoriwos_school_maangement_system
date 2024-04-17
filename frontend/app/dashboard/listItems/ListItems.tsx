@@ -9,6 +9,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import GroupsIcon from '@mui/icons-material/Groups';
 import { AppContext } from '@/components/context/UserContext';
 import { useEffect, useState } from 'react';
 import RecipeReviewCard from '../main/custom';
@@ -97,6 +98,14 @@ const [userRole, setUserRole]= useState('');
       {/* Classes, Sections, and Subjects accessible only to admin and teacher */}
       {userRole && (userRole === ROLES.ADMIN) && (
         <React.Fragment>
+               <Link href="/dashboard/teachers">
+            <div className={`${path.startsWith("/dashboard/teachers") ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+              <ListItemIcon>
+                <GroupsIcon className={`${path.startsWith("/dashboard/teachers") ? ' text-white' : ''}`} />
+              </ListItemIcon>
+              <ListItemText primary="Teachers" />
+            </div>
+          </Link>
           <Link href="/dashboard/classes">
             <div className={`${path.startsWith("/dashboard/classes") ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
               <ListItemIcon>
@@ -121,6 +130,7 @@ const [userRole, setUserRole]= useState('');
               <ListItemText primary="Subjects" />
             </div>
           </Link>
+    
         </React.Fragment>
       )}
 

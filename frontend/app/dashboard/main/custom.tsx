@@ -55,7 +55,6 @@ export default function RecipeReviewCard() {
   const [expanded, setExpanded] = React.useState(false);
   const [schoolss, setSchoolss] = useState([]);
   const router = useRouter();
-  console.log("i always think ",  dork)
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
