@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   UpdateAdminTeacherDto,
   UpdateTeacherDto,
   SubjectUpdateDto,
-  SectionUpdateDto,
+  ConnectUpdateDto,
 } from './dto';
 
 @Injectable()
@@ -156,175 +160,290 @@ export class TeachersService {
     return teacherInfo;
   }
   //here assign grade, section and subject to teacher
-  async updateTeacherFields(
-    teacherId: number,
-    grade_Id: number,
-    sectionId: number,
-    subjectId: number,
-  ) {
-    const teacherInfo = await this.prisma.teacher.update({
+  async updateTeacherFields(teacherId: number, dto: ConnectUpdateDto) {
+    if (!dto || !dto.sectionId || !dto.grade_Id || !dto.subjectId) {
+      throw new BadRequestException(
+        'Invalid request data. Required properties are missing.',
+      );
+    }
+    const teacherInfo = await this.prisma.teacher.findUnique({
       where: {
         user_Id: teacherId,
       },
-
-      data: {
-        section: {
-          connect: { id: sectionId },
-        },
-        gradelevel: {
-          connect: { id: grade_Id },
-        },
-        subject: {
-          connect: { id: subjectId },
-        },
+      include: {
+        section: true,
+        gradelevel: true,
+        subject: true,
       },
     });
-    return teacherInfo;
+
+    if (!teacherInfo) {
+      throw new NotFoundException(`Teacher with id ${teacherId} not found`);
+    }
+
+    const isTeacherConnectedToSection = teacherInfo.section.some(
+      (sec) => sec.id === dto.sectionId,
+    );
+    const isTeacherConnectedToGrade = teacherInfo.gradelevel.some(
+      (grade) => grade.id === dto.grade_Id,
+    );
+    const isTeacherConnectedToSubject = teacherInfo.subject.some(
+      (sub) => sub.id === dto.subjectId,
+    );
+
+    if (!isTeacherConnectedToSection) {
+      await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
+        },
+        data: {
+          section: {
+            connect: { id: dto.sectionId },
+          },
+        },
+      });
+    }
+
+    if (!isTeacherConnectedToGrade) {
+      await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
+        },
+        data: {
+          gradelevel: {
+            connect: { id: dto.grade_Id },
+          },
+        },
+      });
+    }
+
+    if (!isTeacherConnectedToSubject) {
+      await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
+        },
+        data: {
+          subject: {
+            connect: { id: dto.subjectId },
+          },
+        },
+      });
+    }
+
+    // Fetch updated teacher info after connections are made
+    const updatedTeacherInfo = await this.prisma.teacher.findUnique({
+      where: {
+        user_Id: teacherId,
+      },
+      include: {
+        section: true,
+        gradelevel: true,
+        subject: true,
+      },
+    });
+
+    return updatedTeacherInfo;
   }
 
-  async updateTeacherSubject(teacherId: number, dto: SubjectUpdateDto) {
+  async disconnectTeacherAll(teacherId: number, dto: ConnectUpdateDto) {
+    if (!dto || !dto.sectionId || !dto.grade_Id || !dto.subjectId) {
+      throw new BadRequestException(
+        'Invalid request data. Required properties are missing.',
+      );
+    }
+
+    const teacherInfo = await this.prisma.teacher.findUnique({
+      where: {
+        user_Id: teacherId,
+      },
+      include: {
+        section: true,
+        gradelevel: true,
+        subject: true,
+      },
+    });
+
+    if (!teacherInfo) {
+      throw new NotFoundException(`Teacher with id ${teacherId} not found`);
+    }
+
+    if (teacherInfo.section.some((sec) => sec.id === dto.sectionId)) {
+      await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
+        },
+        data: {
+          section: {
+            disconnect: { id: dto.sectionId },
+          },
+        },
+      });
+    }
+
+    if (teacherInfo.gradelevel.some((grade) => grade.id === dto.grade_Id)) {
+      await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
+        },
+        data: {
+          gradelevel: {
+            disconnect: { id: dto.grade_Id },
+          },
+        },
+      });
+    }
+
+    if (teacherInfo.subject.some((sub) => sub.id === dto.subjectId)) {
+      await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
+        },
+        data: {
+          subject: {
+            disconnect: { id: dto.subjectId },
+          },
+        },
+      });
+    }
+
+    // // Fetch updated teacher info after disconnections are made
+    // const updatedTeacherInfo = await this.prisma.teacher.findUnique({
+    //   where: {
+    //     user_Id: teacherId,
+    //   },
+    //   include: {
+    //     section: true,
+    //     gradelevel: true,
+    //     subject: true,
+    //   },
+    // });
+
+    return { sucess: true };
+  }
+
+  async UpdateTeacherConnect(teacherId: number, dto: SubjectUpdateDto) {
     const teacher = await this.prisma.teacher.findUnique({
       where: {
         user_Id: teacherId,
       },
+      include: {
+        subject: true,
+        section: true,
+      },
     });
+
     if (!teacher) {
       throw new NotFoundException(`Teacher id ${teacherId} not found`);
     }
-    const subject = await this.prisma.subject.findUnique({
-      where: {
-        id: dto.subjectId,
-      },
-    });
-    if (!subject) {
-      throw new NotFoundException(`Subject id ${dto.subjectId} not found`);
-    }
-    const subjectUpdate = await this.prisma.teacher.update({
-      where: {
-        user_Id: teacherId,
-      },
-      data: {
-        subject: {
-          connect: { id: dto.subjectId },
+
+    const isTeacherConnectedToSubject = teacher.subject.some(
+      (sub) => sub.id === dto.subjectId,
+    );
+
+    const isTeacherConnectedToSection = teacher.section.some(
+      (sec) => sec.id === dto.sectionId,
+    );
+
+    if (!isTeacherConnectedToSubject) {
+      const subjectUpdate = await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
         },
-      },
-    });
-    return subjectUpdate;
+        data: {
+          subject: {
+            connect: { id: dto.subjectId },
+          },
+        },
+      });
+      if (!subjectUpdate) {
+        throw new Error(
+          `Failed to connect subject ${dto.subjectId} to teacher ${teacherId}`,
+        );
+      }
+    }
+    console.log(dto.sectionId);
+
+    if (dto.sectionId && !isTeacherConnectedToSection) {
+      const subjectUpdate = await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
+        },
+        data: {
+          section: {
+            connect: { id: dto.sectionId },
+          },
+        },
+      });
+      if (!subjectUpdate) {
+        throw new Error(
+          `Failed to connect section ${dto.sectionId} to teacher ${teacherId}`,
+        );
+      }
+    }
+
+    return { success: true };
   }
 
-  async disconnectTeacherSubject(teacherId: number, dto: SubjectUpdateDto) {
+  async disconnectTeacher(teacherId: number, dto: SubjectUpdateDto) {
     const teacher = await this.prisma.teacher.findUnique({
       where: {
         user_Id: teacherId,
       },
+      include: {
+        subject: true,
+        section: true,
+      },
     });
+
     if (!teacher) {
       throw new NotFoundException(`Teacher id ${teacherId} not found`);
     }
-    const subject = await this.prisma.subject.findUnique({
-      where: {
-        id: dto.subjectId,
-      },
-    });
-    if (!subject) {
-      throw new NotFoundException(`Subject id ${dto.subjectId} not found`);
-    }
-    const subjectUpdate = await this.prisma.teacher.update({
-      where: {
-        user_Id: teacherId,
-      },
-      data: {
-        subject: {
-          disconnect: { id: dto.subjectId },
-        },
-      },
-    });
-    return subjectUpdate;
-  }
-  async updateTeacherSection(teacherId: number, dto: SectionUpdateDto) {
-    const teacher = await this.prisma.teacher.findUnique({
-      where: {
-        user_Id: teacherId,
-      },
-    });
-    if (!teacher) {
-      throw new NotFoundException(`Teacher id ${teacherId} not found`);
-    }
-    const subject = await this.prisma.subject.findUnique({
-      where: {
-        id: dto.sectionId,
-      },
-    });
-    if (!subject) {
-      throw new NotFoundException(`Section id ${dto.sectionId} not found`);
-    }
-    const subjectUpdate = await this.prisma.teacher.update({
-      where: {
-        user_Id: teacherId,
-      },
-      data: {
-        subject: {
-          connect: { id: dto.sectionId },
-        },
-      },
-    });
-    return subjectUpdate;
-  }
 
-  async disconnectTeacherSection(teacherId: number, dto: SectionUpdateDto) {
-    const teacher = await this.prisma.teacher.findUnique({
-      where: {
-        user_Id: teacherId,
-      },
-    });
-    if (!teacher) {
-      throw new NotFoundException(`Teacher id ${teacherId} not found`);
-    }
-    const section = await this.prisma.section.findUnique({
-      where: {
-        id: dto.sectionId,
-      },
-    });
-    if (!section) {
-      throw new NotFoundException(`Section id ${dto.sectionId} not found`);
-    }
-    const sectionUpdate = await this.prisma.teacher.update({
-      where: {
-        user_Id: teacherId,
-      },
-      data: {
-        section: {
-          disconnect: { id: dto.sectionId },
+    const isTeacherConnectedToSubject = teacher.subject.some(
+      (sub) => sub.id === dto.subjectId,
+    );
+
+    const isTeacherConnectedToSection = teacher.section.some(
+      (sec) => sec.id === dto.sectionId,
+    );
+
+    if (isTeacherConnectedToSubject) {
+      const subjectUpdate = await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
         },
-      },
-    });
-    return sectionUpdate;
+        data: {
+          subject: {
+            disconnect: { id: dto.subjectId },
+          },
+        },
+      });
+      if (!subjectUpdate) {
+        throw new Error(
+          `Failed to disconnect subject ${dto.subjectId} from teacher ${teacherId}`,
+        );
+      }
+    }
+    console.log(dto.sectionId);
+
+    if (dto.sectionId && isTeacherConnectedToSection) {
+      const subjectUpdate = await this.prisma.teacher.update({
+        where: {
+          user_Id: teacherId,
+        },
+        data: {
+          section: {
+            disconnect: { id: dto.sectionId },
+          },
+        },
+      });
+      if (!subjectUpdate) {
+        throw new Error(
+          `Failed to disconnect section ${dto.sectionId} from teacher ${teacherId}`,
+        );
+      }
+    }
+
+    return { success: true };
   }
-  // async getTeacherSection(
-  //   schoolId: number,
-  //   gradeId: number,
-  //   subjectId: number,
-  // ){
-  //   const students = await this.prisma.student.findMany({
-  //     where :{
-  //       user:{
-  //         school_Id:schoolId
-  //       },
-  //       gradeId:gradeId,
-  //       subject: {
-  //         some: {
-  //           id: subjectId,
-  //         },
-  //       },
-  //     }
-  //   })
-  //   for (const student of students) {
-  //     const result= await this.prisma.result.findMany({
-  //       where:{
-
-  //       }
-  //     })
-  //   }
-
-  // }
 }

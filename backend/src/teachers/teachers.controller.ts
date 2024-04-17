@@ -13,7 +13,7 @@ import {
   UpdateAdminTeacherDto,
   UpdateTeacherDto,
   SubjectUpdateDto,
-  SectionUpdateDto,
+  ConnectUpdateDto,
 } from './dto';
 import { TeachersService } from './teachers.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -53,49 +53,34 @@ export class TeachersController {
   getTeachersStudent(@Param('id', ParseIntPipe) id: number) {
     return this.teacherService.getTeachersGrade(id);
   }
-  @Patch('update/:id/:gradeId/:sectionId/:subjectId')
+  @Patch('connnect/all/:id')
   updateTeacherFields(
     @Param('id', ParseIntPipe) id: number,
-    @Param('gradeId', ParseIntPipe) gradeId: number,
-    @Param('sectionId', ParseIntPipe) sectionId: number,
-    @Param('subjectId', ParseIntPipe) subjectId: number,
+    @Body() dto: ConnectUpdateDto,
   ) {
-    return this.teacherService.updateTeacherFields(
-      id,
-      gradeId,
-      sectionId,
-      subjectId,
-    );
+    return this.teacherService.updateTeacherFields(id, dto);
+  }
+
+  @Patch('disconnect/all/:id')
+  disconnectTeacherAll(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ConnectUpdateDto,
+  ) {
+    return this.teacherService.disconnectTeacherAll(id, dto);
   }
   @Patch('add/subject/:teacherId')
-  updateTeacherSubject(
+  UpdateTeacherConnect(
     @Param('teacherId', ParseIntPipe) teacherId: number,
     @Body() dto: SubjectUpdateDto,
   ) {
-    return this.teacherService.updateTeacherSubject(teacherId, dto);
+    return this.teacherService.UpdateTeacherConnect(teacherId, dto);
   }
 
-  @Patch('remove/subject/:teacherId')
-  disconnectTeacherSubject(
+  @Patch('remove/section/subject/:teacherId')
+  disconnectTeacher(
     @Param('teacherId', ParseIntPipe) teacherId: number,
     @Body() dto: SubjectUpdateDto,
   ) {
-    return this.teacherService.disconnectTeacherSubject(teacherId, dto);
-  }
-
-  @Patch('add/section/:teacherId')
-  updateTeacherSection(
-    @Param('teacherId', ParseIntPipe) teacherId: number,
-    @Body() dto: SectionUpdateDto,
-  ) {
-    return this.teacherService.updateTeacherSection(teacherId, dto);
-  }
-
-  @Patch('remove/section/:teacherId')
-  disconnectTeacherSection(
-    @Param('teacherId', ParseIntPipe) teacherId: number,
-    @Body() dto: SectionUpdateDto,
-  ) {
-    return this.teacherService.disconnectTeacherSection(teacherId, dto);
+    return this.teacherService.disconnectTeacher(teacherId, dto);
   }
 }

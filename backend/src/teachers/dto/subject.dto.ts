@@ -6,10 +6,25 @@ export class SubjectUpdateDto {
   @IsInt()
   @IsOptional()
   subjectId?: number;
-}
-export class SectionUpdateDto {
+
   @ApiProperty()
   @IsInt()
   @IsOptional()
   sectionId?: number;
+}
+export class ConnectUpdateDto {
+  @ApiProperty()
+  @IsInt()
+  @IsOptional()
+  sectionId?: number;
+
+  @ApiProperty()
+  @IsInt()
+  @IsOptional()
+  subjectId?: number;
+
+  @ApiProperty()
+  @IsInt()
+  @IsOptional()
+  grade_Id?: number;
 }
