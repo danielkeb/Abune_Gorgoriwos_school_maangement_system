@@ -211,6 +211,17 @@ export class AuthService {
       where: {
         role: role,
       },
+      select: {
+        id: true,
+        frist_name: true,
+        middle_name: true,
+        last_name: true,
+        email: true,
+        phone: true,
+        gender: true,
+        createdAT: true,
+        school_Id: true,
+      },
     });
     return allUsers;
   }

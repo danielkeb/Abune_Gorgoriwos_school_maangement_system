@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SendIcon from '@mui/icons-material/Send';
-import { IconButton } from '@mui/material';
+import { IconButton, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 interface Teacher {
@@ -49,6 +49,8 @@ const SubjectComponent = () => {
   const [filterTeacher, setFilterTeacher] = useState('');
   const [filterSubject, setFilterSubject] = useState('');
   const [filterGrade, setFilterGrade] = useState('');
+  const [page, setPage] = useState(0);
+  
 
   useEffect(() => {
     fetchGrades();
@@ -189,14 +191,14 @@ const SubjectComponent = () => {
     }
   };
 
-  // Pagination Logic
-  const indexOfLastRow = currentPage * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = classData.slice(indexOfFirstRow, indexOfLastRow);
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
 
-  // Update Pagination Data
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   return (
     <div className="w-full p-8 mt-8 text-center">
       {/* {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>} */}
@@ -216,7 +218,18 @@ const SubjectComponent = () => {
       </div>
       {/* Create new subject form */}
       {showCreateForm && (
-        <div className="w-full max-w-md">
+      <div className="fixed z-10 inset-0 overflow-y-auto">
+    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+        <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+      <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div className="sm:flex sm:items-start">
+            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">create Subject</h3>
+              <div className="mt-2 mx-auto max-w-md">
           <input
             type="text"
             className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
@@ -263,27 +276,30 @@ const SubjectComponent = () => {
           )}
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
-            className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md w-full"
+            className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md"
             onClick={handleSubmit}
           >
             <SendIcon sx={{ marginRight: 1 }} /> {/* Adjusting margin for icon alignment */}
             Submit
           </button>
+          <button
+                    onClick={() => setShowCreateForm(false)}
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
+                  >
+                    Cancel
+                  </button>
         </div>
-      )}
-      {/* Table with Paginated and Filtered Data */}
-      {!showCreateForm && (
-        <div className="mt-8 w-full">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <label className="mr-2">Rows per page:</label>
-              <select value={rowsPerPage} onChange={(e) => setRowsPerPage(parseInt(e.target.value))}>
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={15}>15</option>
-              </select>
+        </div>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+      )}
+      {/* Table with Paginated and Filtered Data */}
+      
+        <div className="mt-8 w-full">
+          
           <table className="min-w-full bg-white border border-gray-300">
             <thead>
               <tr>
@@ -295,8 +311,8 @@ const SubjectComponent = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRows.map((subject) => (
-                <tr key={subject.id}>
+              {classData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((subject,index) => (
+                <tr key={subject.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
                   <td className="py-2 px-4 border-b">{subject.id}</td>
                   <td className="py-2 px-4 border-b">{subject.name}</td>
                   <td className="py-2 px-4 border-b">{subject.gradelevel?.grade}</td>
@@ -322,8 +338,17 @@ const SubjectComponent = () => {
               ))}
             </tbody>
           </table>
+          <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={classData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
         </div>
-      )}
+      
    
       {/* Existing code... */}
       {showModal && selectedSubject && (

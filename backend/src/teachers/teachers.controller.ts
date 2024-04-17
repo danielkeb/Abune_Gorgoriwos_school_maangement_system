@@ -9,7 +9,12 @@ import {
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator';
 //import { JwtGuard } from 'src/auth/guard/jwt.guard';
-import { UpdateAdminTeacherDto, UpdateTeacherDto } from './dto';
+import {
+  UpdateAdminTeacherDto,
+  UpdateTeacherDto,
+  SubjectUpdateDto,
+  ConnectUpdateDto,
+} from './dto';
 import { TeachersService } from './teachers.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -48,13 +53,34 @@ export class TeachersController {
   getTeachersStudent(@Param('id', ParseIntPipe) id: number) {
     return this.teacherService.getTeachersGrade(id);
   }
-  // @Get('by/:schoolId/:gradeId/:subjectId')
-  // getTeacherSection(
-  //   @Param('schoolId', ParseIntPipe) schoolId: number,
-  //   @Param('gradeId', ParseIntPipe) gradeId: number,
-  //   // @Param('sectionId', ParseIntPipe) sectionId: number,
-  //   @Param('subjectId', ParseIntPipe) subjectId: number,
-  // ){
-  //   return this.teacherService.getTeacherSection(schoolId,gradeId, subjectId);
-  // }
+  @Patch('connnect/all/:id')
+  updateTeacherFields(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ConnectUpdateDto,
+  ) {
+    return this.teacherService.updateTeacherFields(id, dto);
+  }
+
+  @Patch('disconnect/all/:id')
+  disconnectTeacherAll(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ConnectUpdateDto,
+  ) {
+    return this.teacherService.disconnectTeacherAll(id, dto);
+  }
+  @Patch('add/subject/:teacherId')
+  UpdateTeacherConnect(
+    @Param('teacherId', ParseIntPipe) teacherId: number,
+    @Body() dto: SubjectUpdateDto,
+  ) {
+    return this.teacherService.UpdateTeacherConnect(teacherId, dto);
+  }
+
+  @Patch('remove/section/subject/:teacherId')
+  disconnectTeacher(
+    @Param('teacherId', ParseIntPipe) teacherId: number,
+    @Body() dto: SubjectUpdateDto,
+  ) {
+    return this.teacherService.disconnectTeacher(teacherId, dto);
+  }
 }
