@@ -14,17 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 function AnalysisView({ analysis }) {
   const [pageSize, setPageSize] = useState(5);
 
-//   const row = teacherView.map((teach) => ({
-//     first_name: teach.user.frist_name,
-//     middle_name: teach.user.middle_name,
-//     user_Id: teach.user_Id,
-//     overallrank: teach.overallrank,
-//     overallScore: teach.overallScore,
-//     firstrank: teach.firstrank,
-//     firstScore: teach.firstScore,
-//     secondtrank: teach.secondtrank,
-//     secondScore: teach.secondScore,
-//   }));
+
 
   const columns = useMemo(
     () => [

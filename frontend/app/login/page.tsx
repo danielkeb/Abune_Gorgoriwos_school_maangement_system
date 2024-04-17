@@ -195,8 +195,7 @@ export default function Login() {
             </Box>
           </Box>
         </Grid>
-      </Grid>
-      <ToastContainer
+        <ToastContainer
         position="bottom-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -208,6 +207,8 @@ export default function Login() {
         pauseOnHover
         theme="light"
       />
+      </Grid>
+
 </>
   );
 }
