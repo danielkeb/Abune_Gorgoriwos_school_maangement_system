@@ -301,7 +301,7 @@ const Main: React.FC<MainProps> = ({children})=> {
           </List>
         </Drawer>
         <Box
-          component="main"
+          component="main"t
           sx={{
             backgroundColor: (theme) =>
               theme.palette.mode === 'light'

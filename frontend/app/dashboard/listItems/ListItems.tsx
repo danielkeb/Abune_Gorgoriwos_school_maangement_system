@@ -39,7 +39,8 @@ const [userRole, setUserRole]= useState('');
   return (
     <React.Fragment>
       {/* Dashboard */}
-      <Link href="/dashboard">
+      {decodedToken!= null &&(
+        <Link href="/dashboard">
         <div className={`${path === '/dashboard' ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
           <ListItemIcon>
             <DashboardIcon className={`${path === '/dashboard' ? ' text-white' : ''}`} />
@@ -47,8 +48,7 @@ const [userRole, setUserRole]= useState('');
           <ListItemText primary="Dashboard" />
         </div>
       </Link>
-
-      <RecipeReviewCard/>
+      )}
       {/* Registration route accessible only to super admin */}
       {userRole && userRole === ROLES.SUPER_ADMIN && (
         <React.Fragment>
@@ -66,17 +66,7 @@ const [userRole, setUserRole]= useState('');
 </React.Fragment>
       )}
 
-      {/* Roles route accessible only to super admin */}
-      {userRole && userRole === ROLES.SUPER_ADMIN && (
-        <Link href="/dashboard/roles">
-          <ListItemButton>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Roles" />
-          </ListItemButton>
-        </Link>
-      )}
+      
    
       {/* Grades route accessible only to admin and teacher */}
       {userRole && (userRole === ROLES.TEACHER) && (

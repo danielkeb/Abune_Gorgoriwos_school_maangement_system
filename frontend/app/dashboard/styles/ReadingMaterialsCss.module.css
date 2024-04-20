@@ -38,5 +38,19 @@
     position: absolute;
     bottom: 20px;
     right: 30px;
+    margin-top: 3px;
+    margin-right: 3px;
     
   }
+ /* ReadingMaterialsCss.module.css */
+.materialLink {
+    color: #007bff; /* Set link color */
+    text-decoration: none; /* Remove default underline */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: color 0.3s; /* Smooth color transition */
+  }
+  
+  .materialLink:hover {
+    color: #0056b3; /* Change link color on hover */
+  }
+  

@@ -15,7 +15,6 @@ export default function BasicCard() {
         const studentsResponse = await axios.get('http://localhost:3333/auth/role/student');
         const adminsResponse = await axios.get('http://localhost:3333/auth/role/admin');
         const schoolsResponse = await axios.get('http://localhost:3333/schools/get');
-        //const inactiveResponse = await axios.get('http://localhost:3333/auth/role/inactive');
 
         if (teachersResponse.status === 200 && studentsResponse.status === 200 && adminsResponse.status === 200 && schoolsResponse.status === 200) {
           const teachersCount = teachersResponse.data.length;

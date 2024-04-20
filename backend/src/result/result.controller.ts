@@ -46,8 +46,8 @@ export class ResultController {
   makeAnalysis(
     @Param('gradeId', ParseIntPipe) gradeId: number,
     @Param('semesterId', ParseIntPipe) semesterId: number,
-  ){
-  return this.resultService.makeAnalysis(gradeId, semesterId);
+  ) {
+    return this.resultService.makeAnalysis(gradeId, semesterId);
   }
   @Delete('delete/:id')
   deleteResult(@Param('id', ParseIntPipe) id: number) {

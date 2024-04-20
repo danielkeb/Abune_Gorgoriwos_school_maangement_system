@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { IconButton, TablePagination } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
@@ -37,7 +37,19 @@ const ManageClass = () => {
     setClassType(event.target.value as ClassType);
   };
 
-  
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (popupRef.current && !popupRef.current.contains(target)) {
+        setshowUpdateForm(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Handle manage classes button click
   const handleManageClasses = async () => {
@@ -94,8 +106,6 @@ const ManageClass = () => {
 
   return (
     <div className="w-full p-8 mt-3 text-center">
-
-      {/* Conditional rendering for create new class form */}
       {showUpdateForm && (
   <div className="fixed z-10 inset-0 overflow-y-auto">
     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -154,10 +164,7 @@ const ManageClass = () => {
 )}
 
 
-      {/* Conditional rendering for manage classes information */}
-     
         <div className="mt-8 w-full">
-          {/* Table content */}
           <table className="min-w-full bg-white border border-gray-300">
             <thead>
               <tr>
