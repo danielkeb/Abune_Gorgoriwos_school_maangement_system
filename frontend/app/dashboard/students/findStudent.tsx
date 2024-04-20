@@ -43,8 +43,8 @@ function FindStudent({teacherView,sectionToDisplay}) {
 
 
   return (
-    <div className='w-[80%] ml-4'>
-    <div style={{ height: 400, width: '100%' }}>
+    <div className='w-[80%] p-4  boxshadow bg-white'>
+    <div style={{  width: '100%' }}>
    <DataGrid rows={teacherView} getRowId={row=>row.id} columns={columns}  
          initialState={{
            

@@ -33,7 +33,7 @@ const Promote = () => {
 
     fetchData();
   }, [decodedToken]);
-
+ 
   const formik = useFormik({
     initialValues: {
       searchId: "",
@@ -47,7 +47,14 @@ const Promote = () => {
           const res = await axios.get(
             `http://localhost:3333/students/studentsPromote/${decodedToken?.school_Id}/${formik.values.searchId}/${formik.values.selectedSection}`
           );
-          setTeacherView(res.data);
+          
+          if(res.data!=='Generate Rank First!!!'){
+            setTeacherView(res.data);
+            // ;
+            // return;
+            }else{
+              toast.error('Generate Rank First!!!')
+            }
         } else {
           toast.error("Please Select all fields!");
         }
@@ -74,14 +81,11 @@ const Promote = () => {
       <div className="w-full  flex flex-col justify-around  items-center mt-10">
         <form
           onSubmit={formik.handleSubmit}
-          className="w-full  flex justify-center items-center ">
+          className=" boxshadow w-[80%] bg-white p-6   flex justify-center items-center ">
+            
           <div className=" px-4">
-            <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="grid-password">
-                Select Grade Level
-              </label>
+            <div className="relative w-full ">
+
               <select
                 id="yourSelect"
                 name="searchId"
@@ -101,12 +105,8 @@ const Promote = () => {
           </div>
 
           <div className=" px-4">
-            <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="grid-password">
-                Select Section
-              </label>
+            <div className="relative w-full ">
+
               <select
                 id="yourSelect1"
                 name="selectedSection"
@@ -125,12 +125,8 @@ const Promote = () => {
           </div>
 
           <div className=" px-4">
-            <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="grid-password">
-                Promote to Grade
-              </label>
+            <div className="relative w-full ">
+
               <select
                 id="yourSelect2"
                 name="searchId2"
@@ -150,12 +146,8 @@ const Promote = () => {
           </div>
 
           <div className=" px-4">
-            <div className="relative w-full mb-3">
-              <label
-                className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="grid-password">
-                Promote to section
-              </label>
+            <div className="relative w-full ">
+    
               <select
                 id="yourSelect2"
                 name="selectedSection2"
@@ -176,7 +168,7 @@ const Promote = () => {
           <button
           
             type="submit"
-            className=" mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            className="  bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             // Handle submission of all results here
           >
             Manage Promotion

@@ -99,7 +99,7 @@ const Analysis = () => {
         
         <form
           onSubmit={formik.handleSubmit}
-          className=" boxshadow flex flex-col  justify-center items-center shadow-md w-[70%] p-4">
+          className=" boxshadow bg-white  flex flex-col  justify-center items-center shadow-md w-[80%] p-6">
           <div className="w-full  flex md:flex-row flex-col  items-center justify-center gap-2  ">
 
 
@@ -126,7 +126,7 @@ const Analysis = () => {
 
             <button
               type="submit"
-              className="  mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              className="   bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               // Handle submission of all results here
             >
              Analysis
@@ -138,7 +138,7 @@ const Analysis = () => {
        <br/>
         {componentToRender}
          <br/>
-        <div className=" px-4  md:w-[10%] w-full">
+        <div className=" px-4  md:w-[10%]  w-full">
               <div className="relative w-full ">
 
                 <select
@@ -146,7 +146,7 @@ const Analysis = () => {
                   name="semester"
                   value={selectedView}
                   onChange={()=>handleViewChange(event)}
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
+                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400 boxshadow">
                   <option value="" disabled>
                     Select a View
                   </option>

@@ -34,8 +34,8 @@ function FindStudent({ teacherView }) {
   );
 
   return (
-    <div className="flex justify-center items-center  mt-5 w-full  ">
-      <div className=" w-[60%]">
+    <div className="  w-full  flex justify-center items-center  mt-5   ">
+      <div className=" w-[80%] boxshadow bg-white  p-4">
         {
           <DataGrid
             rows={row}
