@@ -73,6 +73,7 @@ export class StudentsController {
   getStudents() {
     return this.studentsService.getStudents();
   }
+
   @Get('getwith/:school_id/:gradeId/:sectionId/:semesterId')
   getStudentsWith(
     @Param('school_id', ParseIntPipe) school_id: number,

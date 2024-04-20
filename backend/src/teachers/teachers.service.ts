@@ -61,22 +61,53 @@ export class TeachersService {
     return teachersWithMergedUser;
   }
   async getTeacherById(id: number) {
-    const teacher = await this.prisma.teacher.findUnique({
+    const allTeachers = await this.prisma.teacher.findMany({
       where: { user_Id: id },
-      select: { gradelevel: { include: { subject: true, section: true } } },
+      include: {
+        user: true,
+        gradelevel: {
+          include: { subject: true, section: true }, // Include the 'section' field here
+        },
+      },
     });
-    console.log(teacher);
-    const flatTeacher = teacher.gradelevel.map((teach) => {
+
+    const teachersWithMergedUser = allTeachers.map((teacher) => {
       return {
-        id: teach.id,
-        Grade: teach.grade,
-        sections: teach.section.map((sec) => sec.name),
-        subjects: teach.subject,
+        id: teacher.user.id,
+        frist_name: teacher.user.frist_name,
+        middle_name: teacher.user.middle_name,
+        last_name: teacher.user.last_name,
+        gender:teacher.user.gender,
+        address:teacher.user.address,
+        email: teacher.user.email,
+        date_of_birth:teacher.user.date_of_birth,
+        phone: teacher.user.phone,
+        education_level: teacher.education_level,
+        gradeId: teacher.gradelevel.map((grade) => grade.id),
+        grade: teacher.gradelevel.map((grade) => grade.grade), // Map over gradelevel to access grade
+        section: teacher.gradelevel.map((grade) => grade.section), // Map over gradelevel to access section
+        subject: teacher.gradelevel.map((grade) => grade.subject),
+        school_Id: teacher.user.school_Id, // Add school_Id to the return object
       };
     });
-    console.log('hello', flatTeacher);
-    // return teacher;
-    return flatTeacher;
+
+    return teachersWithMergedUser;
+  //   const teacher = await this.prisma.teacher.findUnique({
+  //     where: { user_Id: id },
+  //     select: { gradelevel: { include: { subject: true, section: true } } },
+  //   });
+  //   console.log(teacher);
+  //   const flatTeacher = teacher.gradelevel.map((teach) => {
+  //     return {
+  //       id: teach.id,
+  //       Grade: teach.grade,
+  //       sections: teach.section.map((sec) => sec.name),
+  //       subjects: teach.subject,
+  //     };
+  //   });
+  //  // console.log('hello', flatTeacher);
+  //   // return teacher;
+  //   return flatTeacher;
   }
 
   async updateAdminTeacher(dto: UpdateAdminTeacherDto, userId: number) {
