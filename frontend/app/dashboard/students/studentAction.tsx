@@ -83,8 +83,7 @@ const StudentActions = ({
 
   return (
     
-    
-
+    <div>
     <Box
       sx={{
         m: 1,
@@ -131,6 +130,8 @@ const StudentActions = ({
         />
       )}
     </Box>
+    </div>
+
     
   )
   }

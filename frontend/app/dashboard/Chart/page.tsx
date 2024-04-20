@@ -14,6 +14,10 @@ import axios from "axios";
 import { AppContext } from "@/components/context/UserContext";
 import BasicCard from "./totaldata";
 import CardAdmin from "./cardAdmin";
+import BasicPie from "./dumChart";
+import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
+import Divider from "@mui/material/Divider";
+import BasicArea from "./newChart";
 
 interface Event {
   title: string;
@@ -149,35 +153,56 @@ export default function Home() {
 
   return (
     <>
-      <div className="w-full h-full  flex flex-col mt-[100px] ">
+      <div className="w-full h-full  flex flex-col  mt-[100px] ">
         <CardAdmin />
 
-        <div className=" container mx-auto my-auto px-4 py-10 text-sm lg:font-normal  ">
-          <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView={"dayGridMonth"}
-            events={[
-              // Add your events here
-              { title: "Final Exam", date: "2024-02-15", color: "red" }, // Set color for Event 1
-              { title: "Easter Holiday", date: "2024-02-16", color: "blue" }, // Set color for Event 2
-            ]}
-            headerToolbar={{
-              start: "",
-              center: "title",
-              end: "prev,next",
-            }}
-            height={"100vh"}
-            events={allEvents as EventSourceInput}
-            nowIndicator={true}
-            editable={true}
-            droppable={true}
-            selectable={true}
-            selectMirror={true}
-            dateClick={handleDateClick}
-            drop={(data) => addEvent(data)}
-            eventClick={(data) => handleDeleteModal(data)}
-          />
-        </div>
+        <div className=" mt-[-10px] w-full flex flex-col md:flex-row gap-6 container mx-auto my-auto px-4 py-10 text-sm lg:font-normal">
+  <div className="w-full md:w-1/2 h-96 md:h-auto boxshadow p-4">
+
+    <FullCalendar
+      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+      initialView={"dayGridMonth"}
+      events={[
+        // Add your events here
+        { title: "Final Exam", date: "2024-02-15", color: "red" }, // Set color for Event 1
+        { title: "Easter Holiday", date: "2024-02-16", color: "blue" }, // Set color for Event 2
+      ]}
+      headerToolbar={{
+        start: "",
+        center: "title",
+        end: "prev,next",
+      }}
+
+      events={allEvents as EventSourceInput}
+      nowIndicator={true}
+      editable={true}
+      droppable={true}
+      selectable={true}
+      selectMirror={true}
+      dateClick={handleDateClick}
+      drop={(data) => addEvent(data)}
+      eventClick={(data) => handleDeleteModal(data)}
+    />
+  </div>
+  <div className="w-full md:w-1/2 flex flex-col gap-6">
+    <div className="flex justify-center boxshadow h-48 md:h-auto">
+      <BasicPie />
+    </div>
+    <div className="boxshadow flex-1  flex flex-col justify-center items-center p-4">
+      <BasicArea/>
+      {/* <h2 className="text-lg mb-6">Recent Activities</h2>
+      
+      <p><PanoramaFishEyeIcon sx={{ color: 'red', fontSize: '15px' }} /> <span className="text-gray-500">April 15 2023</span></p>
+      <p className="mt-1 mb-2 ml-8"> End of First Semester</p>
+      <p><PanoramaFishEyeIcon sx={{ color: 'green', fontSize: '15px' }} /> <span className="text-gray-500">April 15 2023</span></p>
+      <p className="mt-1 mb-2  ml-8"> End of Second Semester</p>
+      <p><PanoramaFishEyeIcon sx={{ color: 'purple', fontSize: '15px' }} /> <span className="text-gray-500">April 15 2023</span></p>
+      <p className="mt-1 mb-2 ml-8"> Start of final exam</p>
+      <p><PanoramaFishEyeIcon sx={{ color: 'red', fontSize: '15px' }} /> <span className="text-gray-500">April 15 2023</span></p>
+      <p className="mt-1 mb-2  ml-8">End of First Semester</p> */}
+    </div>
+  </div>
+</div>
 
         <Transition.Root show={showDeleteModal} as={Fragment}>
           <Dialog

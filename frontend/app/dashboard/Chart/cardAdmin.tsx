@@ -68,13 +68,13 @@ const CardAdmin = () => {
 
 
            
-          <div className="flex md:flex-row flex-col w-full items-center justify-evenly  md:gap-2 gap-4">
+          <div className="flex md:flex-row flex-col w-full items-center justify-center  md:gap-4 gap-4">
             {featuresList.map((feature) => {
               return (
-                <div className="shadow-md p-8">
+                <div className="shadow-md p-6">
                 <div className="">
                     <div className="flex flex-col">
-                        <div className="flex space-x-8 w-56">
+                        <div className="flex space-x-8 w-80">
                             <div className="">
                                 <div className="uppercase text-sm text-gray-400">
                                     {feature?.title}

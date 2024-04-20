@@ -74,12 +74,12 @@ const Manage = () => {
   return (
    
       <>
-      <div className="w-full  flex flex-col justify-around  items-center mt-10">
+      <div className="w-full  flex flex-col justify-around  items-center mt-6">
 
 
 
 
-   <form onSubmit={formik.handleSubmit} className=" boxshadow p-4 w-[70%]    flex md:flex-row flex-col  items-center justify-center gap-2  ">
+   <form onSubmit={formik.handleSubmit} className=" boxshadow  w-[80%] p-6  bg-white   flex md:flex-row flex-col  items-center justify-center gap-2  ">
   
 
 

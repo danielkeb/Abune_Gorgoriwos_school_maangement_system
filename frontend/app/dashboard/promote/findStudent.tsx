@@ -29,11 +29,14 @@ interface Props {
   searchId2: number;
   selectedSection2: number;
 }
-function ForAll({ teacherView, searchId2, selectedSection2 }: Props) {
+function ForAll({ teacherView, searchId2, selectedSection2 }) {
+
+  console.log('this is the teacherView',teacherView)
   const [pageSize, setPageSize] = useState(5);
   const [check, setCheck] = useState(false);
   const [check2, setCheck2] = useState(false);
-  const row = teacherView.map((teach) => ({
+
+  const row = teacherView?.map((teach) => ({
     first_name: teach.user.frist_name,
     middle_name: teach.user.middle_name,
     user_Id: teach.user_Id,
@@ -115,7 +118,7 @@ function ForAll({ teacherView, searchId2, selectedSection2 }: Props) {
 
   return (
     <div className="flex justify-center items-center  mt-5 w-full  ">
-      <div className=" w-[60%]">
+      <div className=" bg-white boxshadow p-4  w-[80%]">
         {
           <DataGrid
             rows={row}
