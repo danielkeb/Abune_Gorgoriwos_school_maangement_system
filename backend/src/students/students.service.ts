@@ -367,7 +367,7 @@ export class StudentsService {
           data: { subject: { disconnect: subjectIdsToRemove } },
         });
       }
-      await this.associateSubjects(user_id, gradeId);
+      //await this.associateSubjects(user_id, gradeId);
       await this.associateSubjectsAndCreateResults(user_id, gradeId, sectionId);
     }
     return {
