@@ -51,6 +51,43 @@ export class AuthService {
     return { msg: 'sign up successfully' };
   }
 
+  async associateSubjectsAndCreateResults(
+    userId: number,
+    gradeId: number,
+    sectionId: number,
+  ): Promise<void> {
+    // Step 1: Get subjects associated with the grade
+    const subjects = await this.prismaService.subject.findMany({
+      where: { gradeId: gradeId },
+    });
+
+    // Step 2: Associate subjects with the student
+    await this.prismaService.student.update({
+      where: { user_Id: userId },
+      data: {
+        subject: {
+          connect: subjects.map((subject) => ({ id: subject.id })),
+        },
+      },
+    });
+    // Step 3: Create result records for each associated subject
+    for (const subject of subjects) {
+      // Get the teacherId associated with the subject, or set it to null if not available
+      const teacherId = subject.teacherId;
+
+      // Create a result record for the student, subject, and grade
+      await this.prismaService.result.create({
+        data: {
+          studentId: userId,
+          subjectId: subject.id,
+          gradeLevelId: gradeId,
+          sectionId: sectionId,
+          teacherId: teacherId,
+        },
+      });
+    }
+  }
+
   async signUpStudent(dto: DtoStudent, school_id: number) {
     const hash = await argon.hash(dto.password);
     const school = await this.prismaService.school.findUnique({
@@ -100,6 +137,7 @@ export class AuthService {
         where: { user_Id: addUser.id },
         include: { user: true },
       });
+      await this.associateSubjectsAndCreateResults(quickSelect.user_Id, quickSelect.gradeId, quickSelect.sectionId);
       return { msg: 'student registered', data: quickSelect };
     } else if (dto.role === 'teacher') {
       const teacher = await this.prismaService.teacher.create({
@@ -210,6 +248,17 @@ export class AuthService {
     const allUsers = await this.prismaService.user.findMany({
       where: {
         role: role,
+      },
+      select: {
+        id: true,
+        frist_name: true,
+        middle_name: true,
+        last_name: true,
+        email: true,
+        phone: true,
+        gender: true,
+        createdAT: true,
+        school_Id: true,
       },
     });
     return allUsers;

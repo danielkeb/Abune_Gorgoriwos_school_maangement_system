@@ -450,7 +450,7 @@ const page = () => {
    
           </div>
 
-           <Table/>
+           
           </div>
           <ToastContainer
         position="bottom-right"

@@ -22,7 +22,7 @@ export class UpdateAdminTeacherDto {
   @IsOptional()
   first_name?: string;
 
-@ApiProperty()
+  @ApiProperty()
   @IsString()
   @IsOptional()
   last_name?: string;
