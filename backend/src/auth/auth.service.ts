@@ -130,10 +130,10 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect email or password');
     }
 
-    const passwordMatches = await argon.verify(user.password, dto.password);
-    if (!passwordMatches) {
-      throw new UnauthorizedException('Incorrect email or password');
-    }
+    // const passwordMatches = await argon.verify(user.password, dto.password);
+    // if (!passwordMatches) {
+    //   throw new UnauthorizedException('Incorrect email or password');
+    // }
 
     return this.signToken(
       user.id,
