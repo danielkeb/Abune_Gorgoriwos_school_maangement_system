@@ -42,6 +42,16 @@ export class SchoolsService {
 
     return getSchool;
   }
+
+  async getStudentSex(id:number){
+    const getMale= await this.prisamService.user.findMany({where:{school_Id:id, role:'student', gender:'male'}})
+    const getFemale= await this.prisamService.user.findMany({where:{school_Id:id, role:'student', gender:'female'}})
+
+    return{
+      male:getMale.length,
+      female:getFemale.length
+    }
+  }
   async getSchoolById(id: number) {
     const singleSchool = await this.prisamService.school.findUnique({
       where: { id },

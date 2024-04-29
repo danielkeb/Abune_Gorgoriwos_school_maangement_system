@@ -170,18 +170,19 @@ const Main: React.FC<MainProps> = ({children})=> {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open} style={{backgroundColor:'white'}}>
+        <AppBar position="absolute" open={open} sx={{backgroundColor:'white'}} className='boxshadow' >
           <Toolbar
             sx={{
-              pr: '24px', // keep right padding when drawer closed
+              pr: '24px',
+               // keep right padding when drawer closed
             }}
           >
             <IconButton
               edge="start"
-              color="inherit"
+           
               aria-label="open drawer"
               onClick={toggleDrawer}
               sx={{
@@ -195,7 +196,7 @@ const Main: React.FC<MainProps> = ({children})=> {
             <Typography
               component="h1"
               variant="h6"
-              color="inherit"
+            
               noWrap
               sx={{ flexGrow: 1, color:'black' }}
             >
@@ -314,7 +315,7 @@ const Main: React.FC<MainProps> = ({children})=> {
           {children}
         </Box>
       </Box>
-    </ThemeProvider>
+</>
   );
 }
 export default Main;

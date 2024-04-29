@@ -71,7 +71,7 @@ const CardAdmin = () => {
           <div className="flex md:flex-row flex-col w-full items-center justify-center  md:gap-4 gap-4">
             {featuresList.map((feature) => {
               return (
-                <div className="shadow-md p-6">
+                <div className="boxshadow p-6 bg-gradient-to-r from-green-400 to-sky-500">
                 <div className="">
                     <div className="flex flex-col">
                         <div className="flex space-x-8 w-80">

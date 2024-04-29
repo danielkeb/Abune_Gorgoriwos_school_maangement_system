@@ -99,7 +99,7 @@ export default function DrawerAppBar(props: Props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar className="bg-white lg:pl-8 lg:pr-8 ">
+      <AppBar sx={{backgroundColor:"white"}} className=" lg:pl-8 lg:pr-8 ">
         <Toolbar>
           <Box className="w-full flex  justify-between  items-center text-black  sm:hidden md:hidden">
             <b>AGSMS</b>
@@ -184,7 +184,7 @@ export default function DrawerAppBar(props: Props) {
             </div>
             <img
               src="/pi1.png"
-              className="md:w-[50%] w-full  right-animation animate-bounce"
+              className="md:w-[50%] w-full  "
               alt=""
             />
           </div>

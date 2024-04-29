@@ -68,7 +68,10 @@ export class StudentsController {
   getStudent(@Param('id', ParseIntPipe) id: number) {
     return this.studentsService.getStudent(id);
   }
-
+  @Get('getStudRes/:id')
+  getStudentResult(@Param('id', ParseIntPipe) id: number){
+   return this.studentsService.getStudentResult(id)
+  }
   @Get('get')
   getStudents() {
     return this.studentsService.getStudents();

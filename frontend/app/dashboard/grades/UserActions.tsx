@@ -95,11 +95,9 @@ const UsersActions = ({
   }, [rowId]);
 
   return (
-    <Box
-      sx={{
-        m: 1,
-        position: "relative",
-      }}>
+    <div
+    className="m-1 relative "
+  >
       {success ? (
         <Fab
           color="primary"
@@ -140,7 +138,7 @@ const UsersActions = ({
           }}
         />
       )}
-    </Box>
+    </div>
   );
 };
 

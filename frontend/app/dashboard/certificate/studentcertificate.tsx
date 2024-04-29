@@ -91,89 +91,110 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
   const downloadCertificate = () => {
     const certificate = document.getElementById('certificate');
     if (certificate) {
-      html2canvas(certificate, { windowWidth: 1200, windowHeight: 1500, scale: 2 }).then(canvas => {
+      html2canvas(certificate, { scale: 3 }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
-        pdf.addImage(imgData, 'PNG', 0, 0, 210, 297); // A4 size: 210mm × 297mm
+        const imgWidth = 210; // A4 size: 210mm × 297mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
         const fullName = `${studentData?.first_name} ${studentData?.last_name}`;
         pdf.save(`${fullName}_certificate.pdf`);
       });
     }
   };
+  
 
   return (
-    <div id="certificate" className="p-8 text-center">
-      <h2 className="text-2xl font-bold">{studentData?.school_name} school </h2>
-      <p className="text-lg font-semibold">Grade {studentData?.grade.grade} student card</p>
+    <div className='flex flex-col justify-start items-center h-full '>
+
+
+
+
+    <div className='boxshadow w-[95%] lg:w-[80%]  bg-white mt-4 lg:mt-8'>
+
+
+    <div id="certificate" className="p-8 text-center ">
+      <h2 className="text-xl font-bold">Debrebrhan {studentData?.school_name} School Branch Digital Certificate </h2>
+      <p className="text-lg font-semibold"> Bereket Zewde | Grade 1| A</p>
 
       <div className="mt-8">
-        <p>Student Name: {decodedToken.frist_name}</p>
+        {/* <p>Student Name: {decodedToken.frist_name}</p> */}
       </div>
 
-      <div className="mt-8">
-        <table className="w-full border-collapse border border-gray-400 mx-auto" style={{ width: '70%' }}>
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-400 py-2 px-4" colSpan={3}>First Semester</th>
-              <th className="border border-gray-400 py-2 px-4" colSpan={2}>Second Semester</th>
-            </tr>
-          </thead>
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-400 py-2 px-4">Number</th>
-              <th className="border border-gray-400 py-2 px-4">Subject</th>
-              <th className="border border-gray-400 py-2 px-4">Result</th>
-              <th className="border border-gray-400 py-2 px-4">Semester Two Result</th>
-              <th className="border border-gray-400 py-2 px-4">Average Score (Semester Two)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {studentData?.grade.subject.map((subject, index) => (
-              <tr key={index} className="text-center">
-                <td className="border border-gray-400 py-2 px-4">{index + 1}</td>
-                <td className="border border-gray-400 py-2 px-4">{subject.name}</td>
-                {studentData?.results.map((result, resultIndex) => {
-                  if (result.subjectId === subject.id) {
-                    return (
-                      <td key={resultIndex} className="border border-gray-400 py-2 px-4">{result.totalScore1}</td>
-                    );
-                  }
-                  return null;
-                })}
-                {studentData?.results.map((result, resultIndex) => {
-                  if (result.subjectId === subject.id) {
-                    return (
-                      <td key={resultIndex} className="border border-gray-400 py-2 px-4">{result.totalScore2}</td>
-                    );
-                  }
-                  return null;
-                })}
-                <td className="border border-gray-400 py-2 px-4">{secondSemesterSubjectAverages[index]}</td>
-              </tr>
-            ))}
-            <tr>
-              <td className="border border-gray-400 py-2 px-4">Total Score</td>
-              <td className="border border-gray-400 py-2 px-4" colSpan={2}>{firstSemesterTotal}</td>
-              <td className="border border-gray-400 py-2 px-4">{secondSemesterTotal}</td>
-              <td className="border border-gray-400 py-2 px-4">{secondSemesterTotalAverage}</td>
-            </tr>
-            <tr>
-              <td className="border border-gray-400 py-2 px-4">Rank</td>
-              <td className="border border-gray-400 py-2 px-4" colSpan ={2}>{studentData?.firstrank}</td>
-  <td className="border border-gray-400 py-2 px-4">{studentData?.secondtrank}</td>
-  <td className="border border-gray-400 py-2 px-4">{studentData?.overallrank}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="mt-8 overflow-x-auto">
+  <table className="w-full border-collapse border border-gray-400 mx-auto md:w-[80%] lg:w-[70%]">
+    <thead>
+      <tr className="bg-gray-200">
+        <th className="border border-gray-400 py-2 px-4" colSpan={3}>First Semester</th>
+        <th className="border border-gray-400 py-2 px-4" colSpan={2}>Second Semester</th>
+      </tr>
+    </thead>
+    <thead>
+      <tr className="bg-gray-200">
+        <th className="border border-gray-400 py-2 px-4">Number</th>
+        <th className="border border-gray-400 py-2 px-4">Subject</th>
+        <th className="border border-gray-400 py-2 px-4">Result</th>
+        <th className="border border-gray-400 py-2 px-4">Semester Two Result</th>
+        <th className="border border-gray-400 py-2 px-4">Average Score (Semester Two)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {studentData?.grade.subject.map((subject, index) => (
+        <tr key={index} className="text-center">
+          <td className="border border-gray-400 py-2 px-4">{index + 1}</td>
+          <td className="border border-gray-400 py-2 px-4">{subject.name}</td>
+          {studentData?.results.map((result, resultIndex) => {
+            if (result.subjectId === subject.id) {
+              return (
+                <td key={resultIndex} className="border border-gray-400 py-2 px-4">{result.totalScore1}</td>
+              );
+            }
+            return null;
+          })}
+          {studentData?.results.map((result, resultIndex) => {
+            if (result.subjectId === subject.id) {
+              return (
+                <td key={resultIndex} className="border border-gray-400 py-2 px-4">{result.totalScore2}</td>
+              );
+            }
+            return null;
+          })}
+          <td className="border border-gray-400 py-2 px-4">{secondSemesterSubjectAverages[index]}</td>
+        </tr>
+      ))}
+      <tr>
+        <td className="border border-gray-400 py-2 px-4">Total Score</td>
+        <td className="border border-gray-400 py-2 px-4" colSpan={2}>{firstSemesterTotal}</td>
+        <td className="border border-gray-400 py-2 px-4">{secondSemesterTotal}</td>
+        <td className="border border-gray-400 py-2 px-4">{secondSemesterTotalAverage}</td>
+      </tr>
+      <tr>
+        <td className="border border-gray-400 py-2 px-4">Rank</td>
+        <td className="border border-gray-400 py-2 px-4" colSpan={2}>{studentData?.firstrank}</td>
+        <td className="border border-gray-400 py-2 px-4">{studentData?.secondtrank}</td>
+        <td className="border border-gray-400 py-2 px-4">{studentData?.overallrank}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+      <div className=" flex justify-center items-center text-center mt-8">
+        <p>Mr Zerihun K</p>
+        <img src="/dgitalSig.png" width={100} />
       </div>
 
-      <div className="text-center mt-8">
-        <p>Teacher's Digital Signature: hgrkgkrehgker</p>
-      </div>
 
-      <button onClick={downloadCertificate} className="bg-green-950 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
-        Download PDF
-      </button>
+    </div>
+
+    </div>
+    <button
+  onClick={downloadCertificate}
+  className="bg-green-950 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 hidden sm:inline-block"
+>
+  Download as PDF
+</button>
+
     </div>
   );
 };

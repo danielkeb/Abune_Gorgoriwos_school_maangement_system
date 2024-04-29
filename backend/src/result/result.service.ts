@@ -183,6 +183,14 @@ export class ResultService {
     }
     return { msg: `user ${resultId} deleted successfully` };
   }
+  async getStudentHistory(id:number){
+  const history= await this.prisma.studentHistory.findFirst({where:{studentId:id}})
+  if(history){
+    return history
+  }else{
+    throw new NotFoundException('No history found')
+  }
+}
 
   async updateMark(
     dto: UpdateResultDto,
