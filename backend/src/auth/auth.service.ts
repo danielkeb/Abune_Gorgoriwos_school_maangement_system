@@ -13,7 +13,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 //import { Response } from 'express';
 //import * as nodemailer from 'nodemailer';
-import { EmailService } from 'src/email/email.service';
+import { EmailService } from '../email/email.service';
+import { ShortcodeEmailService } from '../email/mobileversion.email.service';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,7 @@ export class AuthService {
     private config: ConfigService,
     private jwt: JwtService,
     private emailService: EmailService,
+    private shortCodeService: ShortcodeEmailService,
   ) {}
   async signUpSuperAdmin(dto: DtoAdmin) {
     const hash = await argon.hash(dto.password);
@@ -205,6 +207,32 @@ export class AuthService {
     //     pass: 'p w p a t e w w i a t b m j k ap w p a t e w w i a t b m j k a'
     //   }
     // });
+  }
+
+  async forgetPasswordShortCode(dto: any) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (!user) {
+      throw new ForbiddenException('Incorrect email address!');
+    }
+    const coco = user.id;
+    const hide = this.config.get('JWT_SECRET');
+
+    const token = await this.jwt.signAsync(
+      { coco },
+      {
+        expiresIn: '1d',
+        secret: hide,
+      },
+    );
+
+    this.shortCodeService.sendSecurityAlert(user.email, token, user.id);
+    return {
+      msg: 'Password reset link sent to your Email',
+    };
   }
   async getUsers(role: string) {
     const allUsers = await this.prismaService.user.findMany({

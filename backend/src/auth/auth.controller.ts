@@ -66,6 +66,11 @@ export class AuthController {
   async forgetPassword(@Body() dto: any) {
     return this.authService.forgetPassword(dto);
   }
+  @Post('forget/shortcode')
+  async forgetPasswordShortCode(@Body() dto: any) {
+    return this.authService.forgetPasswordShortCode(dto);
+  }
+
   @Post('reset/pass/:id/:token')
   async resetPassword(
     @Body() dto: any,
