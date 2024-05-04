@@ -7,7 +7,7 @@ import * as crypto from 'crypto'; // Import crypto module for hashing
 export class ShortcodeEmailService {
   constructor(private config: ConfigService) {}
 
-  sendSecurityAlert(email: string, userId: string) {
+  sendSecurityAlert(email: string, id: string) {
     return new Promise((resolve, reject) => {
       const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -39,7 +39,7 @@ export class ShortcodeEmailService {
 
           // Hash the shortcode
           const hashedShortcode = crypto
-            .createHmac('sha256', userId) // Assuming userId is your secret key
+            .createHmac('sha256', id) // Assuming userId is your secret key
             .update(shortcode)
             .digest('hex');
 
@@ -52,11 +52,11 @@ export class ShortcodeEmailService {
   verifyShortcode(
     enteredShortcode: string,
     hashedShortcode: string,
-    userId: string,
+    id: string,
   ) {
     // Verify shortcode
     const enteredHashedShortcode = crypto
-      .createHmac('sha256', userId)
+      .createHmac('sha256', id)
       .update(enteredShortcode)
       .digest('hex');
 

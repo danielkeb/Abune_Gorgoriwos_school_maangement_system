@@ -229,9 +229,9 @@ export class AuthService {
       },
     );
 
-    this.shortCodeService.sendSecurityAlert(user.email, token, user.id);
+    this.shortCodeService.sendSecurityAlert(user.email, token);
     return {
-      msg: 'Password reset link sent to your Email',
+      msg: 'Password reset shortcode sent to your Email',
     };
   }
   async getUsers(role: string) {
@@ -295,4 +295,6 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
+
+  
 }
