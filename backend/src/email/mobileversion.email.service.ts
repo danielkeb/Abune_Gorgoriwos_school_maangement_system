@@ -1,65 +1,144 @@
-﻿import { Injectable } from '@nestjs/common';
+﻿import {
+  Injectable,
+  Logger,
+  NotAcceptableException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
-import * as crypto from 'crypto'; // Import crypto module for hashing
-
+import { PrismaService } from '../prisma/prisma.service';
+import * as argon from 'argon2';
 @Injectable()
 export class ShortcodeEmailService {
-  constructor(private config: ConfigService) {}
+  private readonly logger = new Logger(ShortcodeEmailService.name);
+  constructor(
+    private config: ConfigService,
+    private prismaService: PrismaService,
+  ) {}
 
-  sendSecurityAlert(email: string, id: string) {
-    return new Promise((resolve, reject) => {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: this.config.get('EMAIL_ADDRESS'),
-          pass: this.config.get('APP_PASSWORD'),
+  async sendSecurityAlert(email: string, userId: number) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: this.config.get('EMAIL_ADDRESS'),
+        pass: this.config.get('APP_PASSWORD'),
+      },
+    });
+
+    const shortcode = Math.floor(100000 + Math.random() * 900000).toString();
+    await this.addVerifyCode(shortcode, userId);
+
+    const mailConfigs = {
+      from: this.config.get('EMAIL_ADDRESS'),
+      to: email,
+      subject: 'Password reset shortcode',
+      text: `Your password reset shortcode is: ${shortcode}`,
+    };
+
+    try {
+      const info = await transporter.sendMail(mailConfigs);
+      console.log('Email sent: ' + info.response);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw error;
+    }
+  }
+
+  async addVerifyCode(shortcode: string, userId: number) {
+    const expirationTime = new Date();
+    expirationTime.setMinutes(expirationTime.getMinutes() + 3); // Set expiration time to 5 minutes from now
+
+    try {
+      await this.prismaService.reset.create({
+        data: {
+          userId: userId,
+          shortcode: shortcode,
+          expiresAt: expirationTime,
         },
       });
 
-      // Generate a random shortcode (example: 123456)
-      const shortcode = Math.floor(100000 + Math.random() * 900000).toString();
+      // Log the addition of the verification code
+      this.logger.log(`Verification code added for user ${userId}`);
 
-      const mailConfigs = {
-        from: this.config.get('EMAIL_ADDRESS'),
-        to: email,
-        subject: 'Password reset shortcode',
-        text: `Your password reset shortcode is: ${shortcode}`,
-      };
+      // Schedule a job to delete expired entries
+      this.scheduleExpirationCheck();
+    } catch (error) {
+      console.error('Error saving shortcode to database:', error);
+      throw error;
+    }
+  }
 
-      transporter.sendMail(mailConfigs, function (error, info) {
-        if (error) {
-          console.log(error);
-          reject(error);
-        } else {
-          console.log('Email sent: ' + info.response);
+  private scheduleExpirationCheck() {
+    // Schedule a job to run every minute to check for expired entries and delete them
+    setInterval(async () => {
+      try {
+        const currentTime = new Date();
+        const expiredEntries = await this.prismaService.reset.findMany({
+          where: {
+            expiresAt: {
+              lte: currentTime, // Find entries with expiration time less than or equal to current time
+            },
+          },
+        });
 
-          // Hash the shortcode
-          const hashedShortcode = crypto
-            .createHmac('sha256', id) // Assuming userId is your secret key
-            .update(shortcode)
-            .digest('hex');
+        // Delete expired entries from the database
+        await Promise.all(
+          expiredEntries.map(async (entry) => {
+            await this.prismaService.reset.delete({
+              where: {
+                id: entry.id,
+              },
+            });
+            this.logger.log(`Expired verification code deleted: ${entry.id}`);
+          }),
+        );
+      } catch (error) {
+        console.error('Error deleting expired entries:', error);
+      }
+    }, 60000); // Run the job every minute (60000 milliseconds)
+  }
 
-          resolve({ hashedShortcode, shortcode });
-        }
+  async verifyCode(userId: number, dto: VerifyCodeDto) {
+    try {
+      const code = await this.prismaService.reset.findFirst({
+        where: {
+          userId: userId,
+          shortcode: dto.shortcode,
+        },
       });
-    });
+
+      if (!code) {
+        throw new NotAcceptableException('Invalid or expired short code');
+      }
+
+      return code;
+    } catch (error) {
+      console.error('Error verifying short code:', error);
+      throw new Error('An error occurred while verifying the short code');
+    }
   }
 
-  verifyShortcode(
-    enteredShortcode: string,
-    hashedShortcode: string,
-    id: string,
-  ) {
-    // Verify shortcode
-    const enteredHashedShortcode = crypto
-      .createHmac('sha256', id)
-      .update(enteredShortcode)
-      .digest('hex');
-
-    return enteredHashedShortcode === hashedShortcode;
+  async resetPassword(userId: number, dto: any) {
+    try {
+      const hash = await argon.hash(dto.password);
+      await this.prismaService.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          password: hash,
+        },
+      });
+      return { msg: 'Password reseted !' };
+    } catch {
+      throw new UnauthorizedException();
+    }
   }
+}
+
+interface VerifyCodeDto {
+  shortcode: string;
 }

@@ -135,6 +135,14 @@ model Section {
   @@map("sections")
 }
 
+model Reset {
+  id Int @id @default(autoincrement())
+  userId Int
+  shortcode String
+  createdAT    DateTime   @default(now())
+  expiresAt    DateTime 
+}
+
 model Subject {
   id        Int       @id @default(autoincrement())
   name      String

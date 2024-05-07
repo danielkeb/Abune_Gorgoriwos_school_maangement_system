@@ -218,21 +218,10 @@ export class AuthService {
     if (!user) {
       throw new ForbiddenException('Incorrect email address!');
     }
-    const coco = user.id;
-    const hide = this.config.get('JWT_SECRET');
+    const userId = user.id;
 
-    const token = await this.jwt.signAsync(
-      { coco },
-      {
-        expiresIn: '1d',
-        secret: hide,
-      },
-    );
-
-    this.shortCodeService.sendSecurityAlert(user.email, token);
-    return {
-      msg: 'Password reset shortcode sent to your Email',
-    };
+    this.shortCodeService.sendSecurityAlert(user.email, userId);
+    return userId;
   }
   async getUsers(role: string) {
     const allUsers = await this.prismaService.user.findMany({
@@ -295,6 +284,4 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
-
-  
 }
