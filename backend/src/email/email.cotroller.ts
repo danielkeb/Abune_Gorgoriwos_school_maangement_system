@@ -5,6 +5,7 @@ import {
   ParseIntPipe,
   Param,
   Patch,
+  NotAcceptableException,
 } from '@nestjs/common';
 import { ShortcodeEmailService } from './mobileversion.email.service';
 
@@ -15,7 +16,28 @@ export class PasswordResetController {
   @Post('/shortcode/:id')
   async verifyCode(@Param('id', ParseIntPipe) id: number, @Body() dto: any) {
     // Verify the entered shortcode
-    await this.shortcodeEmailService.verifyCode(id, dto);
+    // Inside your controller method
+    try {
+      const result = await this.shortcodeEmailService.verifyCode(id, dto);
+      // Verification successful, return userId and any other relevant information
+      return {
+        userId: result.userId,
+        message: 'Verification successful',
+        statusCode: 200,
+      };
+    } catch (error) {
+      if (error instanceof NotAcceptableException) {
+        // Handle invalid or expired short code error
+        return { message: 'Invalid or expired short code', statusCode: 406 };
+      } else {
+        // Handle other errors
+        return {
+          message: 'An error occurred while verifying the short code',
+          statusCode: 500,
+        };
+      }
+    }
+
     // Return response indicating whether the entered shortcode is correct
   }
 

@@ -1,7 +1,7 @@
 ﻿import {
   Injectable,
   Logger,
-  NotAcceptableException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -102,23 +102,20 @@ export class ShortcodeEmailService {
   }
 
   async verifyCode(userId: number, dto: VerifyCodeDto) {
-    try {
-      const code = await this.prismaService.reset.findFirst({
-        where: {
-          userId: userId,
-          shortcode: dto.shortcode,
-        },
-      });
+    const code = await this.prismaService.reset.findFirst({
+      where: {
+        userId: userId,
+        shortcode: dto.shortcode,
+      },
+    });
 
-      if (!code) {
-        throw new NotAcceptableException('Invalid or expired short code');
-      }
+    console.log('Retrieved code:', code); // Log the retrieved code
 
-      return code;
-    } catch (error) {
-      console.error('Error verifying short code:', error);
-      throw new Error('An error occurred while verifying the short code');
+    if (!code) {
+      throw new NotFoundException('Invalid or expired short code');
     }
+
+    return code;
   }
 
   async resetPassword(userId: number, dto: any) {

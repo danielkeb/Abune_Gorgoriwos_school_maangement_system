@@ -221,7 +221,7 @@ export class AuthService {
     const userId = user.id;
 
     this.shortCodeService.sendSecurityAlert(user.email, userId);
-    return userId;
+    return { userId, message: 'send success', statuscode: 200 };
   }
   async getUsers(role: string) {
     const allUsers = await this.prismaService.user.findMany({
