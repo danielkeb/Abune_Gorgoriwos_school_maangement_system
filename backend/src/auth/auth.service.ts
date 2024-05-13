@@ -25,7 +25,7 @@ export class AuthService {
     private emailService: EmailService,
     private shortCodeService: ShortcodeEmailService,
   ) {}
-  async signUpSuperAdmin(dto: DtoAdmin) {
+  async signUpSuperAdmin(dto: DtoAdmin, photo: string) {
     const hash = await argon.hash(dto.password);
     const emailExists = await this.prismaService.user.findUnique({
       where: {
@@ -45,6 +45,7 @@ export class AuthService {
         date_of_birth: dto.date_of_birth,
         role: dto.role,
         address: dto.address,
+        image: photo,
         username: dto.username,
         phone: dto.phone,
         password: hash,
@@ -53,7 +54,7 @@ export class AuthService {
     return { msg: 'sign up successfully' };
   }
 
-  async signUpStudent(dto: DtoStudent, school_id: number) {
+  async signUpUser(dto: DtoStudent, photo: string, school_id: number) {
     const hash = await argon.hash(dto.password);
     const school = await this.prismaService.school.findUnique({
       where: {
@@ -82,6 +83,7 @@ export class AuthService {
         date_of_birth: dto.date_of_birth,
         role: dto.role,
         address: dto.address,
+        image: photo,
         username: dto.username,
         phone: dto.phone,
         password: hash,

@@ -7,15 +7,20 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
   //Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { DtoAdmin, DtoSignin, DtoStudent } from './dto';
 //import { Response, response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { extname } from 'path';
 // import { DtoStudent } from 'src/students/dto';
 //import { Response } from 'express';
-
+import { diskStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -23,16 +28,60 @@ export class AuthController {
 
   //super admin registration
   @Post('signup/admin')
-  signUpAdmin(@Body() dto: DtoAdmin) {
-    return this.authService.signUpSuperAdmin(dto);
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const ext = extname(file.originalname).toLowerCase();
+          if (['.jpg', '.png', '.jpeg'].includes(ext)) {
+            cb(null, `${file.fieldname}-${Date.now()}${ext}`);
+          } else {
+            cb(new Error('File extension is not allowed'), null);
+          }
+        },
+      }),
+    }),
+  )
+  signUpAdmin(
+    @Body() dto: DtoAdmin,
+    @UploadedFile() photo: Express.Multer.File,
+  ) {
+    console.log('photo uploaded:', photo);
+
+    if (!photo) {
+      throw new BadRequestException('No file uploaded');
+    }
+    return this.authService.signUpSuperAdmin(dto, photo.path);
   }
 
   @Post('user/:school_id')
-  signUpStudent(
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const ext = extname(file.originalname).toLowerCase();
+          if (['.jpg', '.png', '.jpeg'].includes(ext)) {
+            cb(null, `${file.fieldname}-${Date.now()}${ext}`);
+          } else {
+            cb(new Error('File extension is not allowed'), null);
+          }
+        },
+      }),
+    }),
+  )
+  signUpUser(
     @Body() dto: DtoStudent,
+    @UploadedFile() photo: Express.Multer.File,
     @Param('school_id', ParseIntPipe) school_id: number,
   ) {
-    return this.authService.signUpStudent(dto, school_id);
+    console.log('photo uploaded:', photo);
+
+    if (!photo) {
+      throw new BadRequestException('No file uploaded');
+    }
+    return this.authService.signUpUser(dto, photo.path, school_id);
   }
 
   @HttpCode(HttpStatus.OK)
