@@ -168,7 +168,7 @@ export class StudentsService {
           // Filter students based on the average total score
           const getInfo = await this.prismaService.student.findUnique({
             where: { user_Id: user_id },
-            select: { overallScore: true,firstScore:true,secondScore:true,firstrank:true,secondtrank:true,overallrank:true },
+            select: {gradeId:true,sectionId:true, overallScore: true,firstScore:true,secondScore:true,firstrank:true,secondtrank:true,overallrank:true },
           });
           const eligibleStudents = getInfo.overallScore > 50 ? true : false;
           // averageTotalScore > 50 ? studentResults : [];
@@ -176,8 +176,8 @@ export class StudentsService {
           // Step 2: Prepare Data for Student History
           const historyData = {
             studentId: user_id,
-            gradeId: gradeId,
-            sectionId: sectionId,
+            gradeId: getInfo.gradeId,
+            sectionId: getInfo.sectionId,
             totalScore1: getInfo.firstScore,
             totalScore2: getInfo.secondScore,
             overallScore: getInfo.overallScore,
@@ -259,7 +259,12 @@ export class StudentsService {
       };
     }
   }
-
+ async getStudentHistory(id:number){
+  const history= await this.prismaService.studentHistory.findMany({where:{studentId:id}})
+ 
+   return history
+ 
+ }
   // async associateSubjectsAndCreateResults(
   // async promoteStudents(students: PromoteStudentsNextGradeDto[]) {
   //   for (const student of students) {

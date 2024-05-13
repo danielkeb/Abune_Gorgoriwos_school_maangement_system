@@ -165,9 +165,13 @@ export default function Home() {
   return (
     <>
       <div className="w-full h-full  flex flex-col  mt-[100px] ">
+        
         <CardAdmin />
-
+        
+ 
+         
         <div className=" mt-[-10px] w-full flex flex-col md:flex-row gap-6 container mx-auto my-auto px-4 py-10 text-sm lg:font-normal">
+
   <div className="w-full md:w-1/2 h-96 md:h-auto boxshadow p-4">
 
     <FullCalendar

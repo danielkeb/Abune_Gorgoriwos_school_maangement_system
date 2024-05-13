@@ -142,6 +142,10 @@ export class StudentsController {
   calculateRankForAll(@Body() dto: PromoteStudentsNextGradeDto[]) {
     return this.studentsService.calculateRankForAll(dto);
   }
+  @Get('student_history/:id')
+  getStudentHistory(@Param('id', ParseIntPipe) id: number) {
+    return this.studentsService.getStudentHistory(id);
+  }
   // @Get('section/:id')
   // getSectionRank(@Param('id', ParseIntPipe) sectionName: string) {
   //   return this.studentsService.calculateSectionRank(sectionName);

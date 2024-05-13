@@ -1,11 +1,31 @@
 'use client'
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import StudentCertificate from "./studentcertificate";
 import SectionRank from "./backup";
 import Main from "../main/Main";
 import MadeWithLove from "./madeWithLove";
+import axios from "axios";
+import { AppContext } from "@/components/context/UserContext";
 
 const HomePage= () => {
+  const[history, setHistory]=useState([])
+  const{decodedToken,token, logout}= useContext(AppContext);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3333/students/student_history/${decodedToken?.sub}`,
+
+        );
+    
+        const data =  response.data
+        //console.log('data ',data);
+        setHistory(data);
+      } catch (error) {
+        console.error('Error fetching student data:', error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <Main>
 <div className=" mt-5 w-full md:w-[80%] flex flex-col md:flex-row md:justify-end md:mt-5">
@@ -20,8 +40,16 @@ const HomePage= () => {
         <option value="" disabled>
           Select an option
         </option>
-        <option value="Grade 1">Grade 1</option>
-        <option value="Grade 2">Grade 2</option>
+
+
+
+        {history.map(
+                        (his) => (
+                          <option key={his?.id} value={his?.id}>
+                            Grade {his?.gradeId}
+                          </option>
+                        )
+                      )}
       </select>
     </div>
   </div>

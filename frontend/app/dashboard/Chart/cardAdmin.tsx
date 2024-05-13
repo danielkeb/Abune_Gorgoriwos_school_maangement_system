@@ -64,11 +64,11 @@ const CardAdmin = () => {
         },
       ];
   return (
-    <div className=''>
+    <div className=' '>
 
 
            
-          <div className="flex md:flex-row flex-col w-full items-center justify-center  md:gap-4 gap-4">
+          <div className="  flex md:flex-row flex-col w-full items-center justify-center  md:gap-4 gap-4">
             {featuresList.map((feature) => {
               return (
                 <div className="boxshadow p-6 bg-gradient-to-r from-green-400 to-sky-500">
