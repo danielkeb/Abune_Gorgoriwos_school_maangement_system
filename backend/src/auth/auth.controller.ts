@@ -43,16 +43,21 @@ export class AuthController {
       }),
     }),
   )
-  signUpAdmin(
+  async signUpAdmin(
     @Body() dto: DtoAdmin,
     @UploadedFile() photo: Express.Multer.File,
   ) {
-    console.log('photo uploaded:', photo);
+    console.log('dto:', dto);
+    console.log('photo:', photo);
 
-    if (!photo) {
-      throw new BadRequestException('No file uploaded');
+    try {
+      return this.authService.signUpSuperAdmin(dto, photo.path);
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException(
+        'An error occurred while signing up the admin',
+      );
     }
-    return this.authService.signUpSuperAdmin(dto, photo.path);
   }
 
   @Post('user/:school_id')
@@ -81,7 +86,7 @@ export class AuthController {
     if (!photo) {
       throw new BadRequestException('No file uploaded');
     }
-    return this.authService.signUpUser(dto, photo.path, school_id);
+    return this.authService.signUpUser(dto, photo?.path, school_id);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -93,24 +98,7 @@ export class AuthController {
   signIn(@Body() dto: DtoSignin) {
     return this.authService.signIn(dto);
   }
-  // @Post('signin')
-  // async signIn(
-  //   @Body() dto: DtoSignin,
-  //   //@Res() response: Response,
-  // ): Promise<any> {
-  //   const token = await this.authService.signIn(dto);
-  //   return token;
-  // Set the token as a cookie in the response
-  // response.cookie('token', token, {
-  //   httpOnly: true,
-  //   secure: true,
-  //   sameSite: 'lax',
-  //   expires: new Date(Date.now() + 100000), // Adjust the expiration time as needed
-  // });
 
-  // Send a response indicating successful sign-in (if desired)
-  //response.status(200).json({ message: 'Sign-in successful' });
-  // }
   @Post('forget')
   async forgetPassword(@Body() dto: any) {
     return this.authService.forgetPassword(dto);
