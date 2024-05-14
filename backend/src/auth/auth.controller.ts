@@ -33,9 +33,9 @@ export class AuthController {
       storage: diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
-          const ext = extname(file.originalname).toLowerCase();
+          const ext = extname(file?.originalname).toLowerCase();
           if (['.jpg', '.png', '.jpeg'].includes(ext)) {
-            cb(null, `${file.fieldname}-${Date.now()}${ext}`);
+            cb(null, `${file?.fieldname}-${Date.now()}${ext}`);
           } else {
             cb(new Error('File extension is not allowed'), null);
           }
@@ -45,13 +45,16 @@ export class AuthController {
   )
   async signUpAdmin(
     @Body() dto: DtoAdmin,
-    @UploadedFile() photo: Express.Multer.File,
+    @UploadedFile() photo?: Express.Multer.File,
   ) {
     console.log('dto:', dto);
     console.log('photo:', photo);
-
+    let photoPath = null;
+    if (photo) {
+      photoPath = photo.path;
+    }
     try {
-      return this.authService.signUpSuperAdmin(dto, photo.path);
+      return this.authService.signUpSuperAdmin(dto, photoPath);
     } catch (error) {
       console.error(error);
       throw new BadRequestException(
@@ -66,9 +69,9 @@ export class AuthController {
       storage: diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
-          const ext = extname(file.originalname).toLowerCase();
+          const ext = extname(file?.originalname).toLowerCase();
           if (['.jpg', '.png', '.jpeg'].includes(ext)) {
-            cb(null, `${file.fieldname}-${Date.now()}${ext}`);
+            cb(null, `${file?.fieldname}-${Date.now()}${ext}`);
           } else {
             cb(new Error('File extension is not allowed'), null);
           }
@@ -83,10 +86,12 @@ export class AuthController {
   ) {
     console.log('photo uploaded:', photo);
 
-    if (!photo) {
-      throw new BadRequestException('No file uploaded');
+    let photoPath = null;
+    if (photo) {
+      photoPath = photo.path;
     }
-    return this.authService.signUpUser(dto, photo?.path, school_id);
+
+    return this.authService.signUpUser(dto, photoPath, school_id);
   }
 
   @HttpCode(HttpStatus.OK)

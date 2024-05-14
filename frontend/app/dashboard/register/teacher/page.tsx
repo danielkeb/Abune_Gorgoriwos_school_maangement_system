@@ -12,6 +12,7 @@ import { AppContext } from "@/components/context/UserContext";
 
 const page = () => {
   const [check, setCheck] = useState(false);
+  
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -21,20 +22,31 @@ const page = () => {
       role: "teacher",
       address: "",
       username: "",
+      image: null,
       phone: "",
       password: "1234",
       gender: "",
       date_of_birth: "",
       education_level: "",
     },
+  
     onSubmit: async (values) => {
 
       try {
         setCheck(true);
         console.log("final values =", formik.values)
+        const formData = new FormData();
+        Object.keys(values.image).forEach(key => {
+          formData.append(key, values.image as any);
+        });
         const response = await axios.post(
           "http://localhost:3333/auth/user/1",
-          formik.values
+          formik.values,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
 
         toast.success("New Teacher Registerd ");
@@ -301,7 +313,15 @@ const page = () => {
                         />
                       </svg>
                     </label>
-                    <input type="file" id="photo" className="hidden" />
+                    <input
+                    type="file"
+                    id="photo"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.currentTarget.files?.[0];
+                      formik.setFieldValue("image", file || null);
+                    }}
+                  />
                   </div>
                 </div>
               </div>
