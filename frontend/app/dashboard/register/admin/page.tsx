@@ -34,6 +34,7 @@ const page = () => {
       role: "admin",
       address: "",
       username: "",
+      image: null,
       phone: "",
       password: "1234",
       gender: "",
@@ -43,11 +44,20 @@ const page = () => {
     onSubmit: async (values) => {
       try {
         setCheck(true);
+        const formData = new FormData();
+        Object.keys(values.image).forEach(key => {
+          formData.append(key, values.image as any);
+        });
         const response = await axios.post(
-          `http://localhost:3333/auth/user/${parseInt(
+          `http://localhost:3333/auth/signUp/user/${parseInt(
             formik.values.school_name
           )}`,
-          formik.values
+          formik.values,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
 
         toast.success("Admin Registerd ");
@@ -227,7 +237,7 @@ const page = () => {
                       Address
                     </label>
                     <input
-                      type="text"
+                      type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="04 kebele"
                       name="address"
@@ -267,15 +277,14 @@ const page = () => {
                     </label>
                     <select
                       id="yourSelect"
-                      name="school_name"
+                      name="gender"
                       value={formik.values.school_name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option value="" disabled >
+                      <option value="" disabled>
                         Select a school
                       </option>
-        
                       {schoolss.map(
                         (school: {
                           school_name: string;
@@ -321,7 +330,12 @@ const page = () => {
                         />
                       </svg>
                     </label>
-                    <input type="file" id="photo" className="hidden" />
+                    <input type="file" id="photo" className="hidden" 
+                     onChange={(event) => {
+                      const file = event.currentTarget.files?.[0];
+                      formik.setFieldValue("image", file || null);
+                    }}
+                    />
                   </div>
                 </div>
               </div>

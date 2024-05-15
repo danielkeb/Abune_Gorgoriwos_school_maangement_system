@@ -15,7 +15,7 @@ const AdmissionRateLineChart = () => {
 
         const admissionData = students.map(student => {
           const year = new Date(student.createdAT).getFullYear();
-          return { year: year, male: student.gender === 'male' ? 1 : 0, female: student.gender === 'female' ? 1 : 0 };
+          return { year: year, male: student.gender === 'Male' ? 1 : 0, female: student.gender === 'Female' ? 1 : 0 };
         });
 
         const reducedData = admissionData.reduce((acc, curr) => {
