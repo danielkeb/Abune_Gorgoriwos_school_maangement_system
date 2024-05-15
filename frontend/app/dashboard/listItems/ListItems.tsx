@@ -61,7 +61,7 @@ const [userRole, setUserRole]= useState('');
             <ListItemText primary="Registration" />
           </div>
         </Link>
-  {/* <AppWrapper><SchoolList/></AppWrapper> */}
+  <AppWrapper><SchoolList/></AppWrapper>
    
 
 </React.Fragment>

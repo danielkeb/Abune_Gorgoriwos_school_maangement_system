@@ -280,12 +280,11 @@ const Main: React.FC<MainProps> = ({children})=> {
            
           </Toolbar>
         </AppBar>
-        <Drawer  sx={{backgroundColor:'red'}} variant="permanent" open={open}>
+        <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
               display: 'flex',
               alignItems: 'center',
-              
               justifyContent: 'flex-end',
               px: [1],
             }}
@@ -295,7 +294,7 @@ const Main: React.FC<MainProps> = ({children})=> {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav" >
+          <List component="nav">
             <MainListItems/>
             <Divider sx={{ my: 1 }} />
             {/* {secondaryListItems} */}
@@ -304,10 +303,13 @@ const Main: React.FC<MainProps> = ({children})=> {
         <Box
           component="main"t
           sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'light'
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
             flexGrow: 1,
             height: '100vh',
             overflow: 'auto',
-            backgroundColor:'#f2f3f4'
           }}
         >
           <Toolbar />
