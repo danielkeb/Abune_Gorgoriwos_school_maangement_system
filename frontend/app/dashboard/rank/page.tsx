@@ -131,7 +131,7 @@ const Rank = () => {
       <div className="w-full  flex flex-col justify-around  items-center mt-10">
         <form
           onSubmit={formik.handleSubmit}
-          className=" boxshadow flex flex-col  justify-center items-center shadow-md w-[70%] p-4">
+          className=" boxshadow p-6  bg-white  flex flex-col  justify-center items-center shadow-md w-[80%] ">
           <div className="w-full  flex md:flex-row flex-col  items-center justify-center gap-2  ">
             <div className=" px-4 md:w-[40%] w-full">
               <div className="relative w-full ">
@@ -176,7 +176,7 @@ const Rank = () => {
 
             <button
               type="submit"
-              className="  mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              className="   bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               // Handle submission of all results here
             >
               Display Rank

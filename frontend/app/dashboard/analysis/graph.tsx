@@ -24,12 +24,19 @@ const series = [
   { data: above60Data, label: 'Greater than 60 (%)', color:'#59a14f' }
 ];
   return (
-    
+    <div className='flex  justify-center items-center bg-white   w-full '>
+
+
+    <div className=" bg-white flex  justify-center items-center  boxshadow w-[80%] p-4">
+
+
     <BarChart
       xAxis={[{ scaleType: 'band', data: subjects }]}
       series={series}
       width={650}
       height={350}
     />
+        </div>
+        </div>
   );
 }

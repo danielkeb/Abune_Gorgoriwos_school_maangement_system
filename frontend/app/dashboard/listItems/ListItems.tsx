@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import RecipeReviewCard from '../main/custom';
 import SchoolList from '../main/schools';
 
+
 // Define roles
 const ROLES = {
   STUDENT: 'student',
@@ -60,7 +61,7 @@ const [userRole, setUserRole]= useState('');
             <ListItemText primary="Registration" />
           </div>
         </Link>
-  <AppWrapper><SchoolList/></AppWrapper>
+  {/* <AppWrapper><SchoolList/></AppWrapper> */}
    
 
 </React.Fragment>

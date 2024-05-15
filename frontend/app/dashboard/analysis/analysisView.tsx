@@ -29,8 +29,8 @@ function AnalysisView({ analysis }) {
   );
 
   return (
-    <div className="flex justify-center items-center  mt-5 w-full  ">
-      <div className=" w-[60%]">
+    <div className="flex  justify-center items-center bg-white   w-full  ">
+      <div className=" boxshadow w-[80%] p-4 bg-white ">
         {
           <DataGrid
             rows={analysis}

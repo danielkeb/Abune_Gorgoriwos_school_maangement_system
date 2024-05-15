@@ -90,8 +90,11 @@ const Page = () => {
   //  console.log("Students: ", filteredResult[0].student )
   return (
     <Main>
-      <div className="w-full flex justify-center items-center">
-        <form onSubmit={formik.handleSubmit} className="bg-white box boxshadow w-[80%] mt-5 p-5">
+      <div className="w-full ">
+        <div className="w-full flex  justify-center items-center" >
+
+   
+        <form onSubmit={formik.handleSubmit} className=" bg-white box boxshadow w-[80%] justify-center mt-5  p-4">
           <div className=" flex mt-8   ">
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
@@ -195,6 +198,9 @@ const Page = () => {
             </div>
           </div>
         </form>
+        </div>
+        <div className="w-full flex  justify-center items-center">
+     
         {
           // filteredResult && filteredResult[0]?.student && <DisplayTable filteredResult={filteredResult } gradeId={parseInt(formik.values.searchId)} subjectId={parseInt(formik.values.subject)} selectedSection={parseInt(formik.values.selectedSection)}  />
           teacherView.length > 0 && (
@@ -207,6 +213,7 @@ const Page = () => {
             />
           )
         }
+           </div>
       </div>
 
       <ToastContainer
