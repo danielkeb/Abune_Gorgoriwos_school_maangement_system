@@ -11,7 +11,9 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { AppContext, AppWrapper } from '@/components/context/UserContext';
 import { useEffect, useState } from 'react';
+import GradingIcon from '@mui/icons-material/Grading';
 import RecipeReviewCard from '../main/custom';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SchoolList from '../main/schools';
 
 
@@ -49,7 +51,7 @@ const [userRole, setUserRole]= useState('');
         </div>
       </Link>
 
-      <RecipeReviewCard/>
+      
       {/* Registration route accessible only to super admin */}
       {userRole && userRole === ROLES.SUPER_ADMIN && (
         <React.Fragment>
@@ -61,9 +63,9 @@ const [userRole, setUserRole]= useState('');
             <ListItemText primary="Registration" />
           </div>
         </Link>
- 
-   
 
+   
+        <RecipeReviewCard/>
 </React.Fragment>
       )}
 
@@ -85,7 +87,7 @@ const [userRole, setUserRole]= useState('');
         <Link href="/dashboard/grades">
           <div className={`${path.startsWith('/dashboard/grades') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
-              {/* <GradingIcon className={`${path.startsWith('/dashboard/grades') ? ' text-white' : ''}`} /> */}
+              <GradingIcon className={`${path.startsWith('/dashboard/grades') ? ' text-white' : ''}`} />
             </ListItemIcon>
             <ListItemText primary="Grades" />
           </div>
@@ -99,7 +101,7 @@ const [userRole, setUserRole]= useState('');
         <Link href="/dashboard/courseMaterials">
           <div className={`${path.startsWith('/dashboard/courseMaterials') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
-              {/* <PictureAsPdfIcon className={`${path.startsWith('/dashboard/courseMaterials') ? ' text-white' : ''}`}  /> */}
+              <PictureAsPdfIcon className={`${path.startsWith('/dashboard/courseMaterials') ? ' text-white' : ''}`}  />
             </ListItemIcon>
             <ListItemText primary="Materials" />
           </div>
