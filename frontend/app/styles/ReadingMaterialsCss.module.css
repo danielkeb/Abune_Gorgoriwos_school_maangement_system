@@ -1,0 +1,51 @@
+.bookIcon {
+  width: 40px; /* Adjust width */
+  height: 40px; /* Adjust height */
+  margin-right: 10px; /* Add right margin for spacing */
+}
+
+.container {
+  width: 40rem; /* Set container width */
+  height: auto; /* Set container height to auto */
+  border: 1px solid brown; /* Set border */
+}
+
+.pdfContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.closeButton {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  margin-top: 3px;
+  margin-right: 3px;
+  
+}
+
+.pdfViewer {
+  width: 100%;
+  height: 95%; /* Adjust height */
+  border: none;
+}
+
+.materialLink {
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin-left: 50px; /* Adjust left margin */
+}
+
+.materialLink:hover {
+  color: #0056b3;
+}

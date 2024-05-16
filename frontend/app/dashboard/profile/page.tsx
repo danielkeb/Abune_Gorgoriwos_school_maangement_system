@@ -1,432 +1,101 @@
-'use client'
+import Head from 'next/head';
+import Image from 'next/image';
+import Main from '../main/Main';
 
-// import React, { Fragment, useState } from 'react';
-// import { Dialog, Transition } from '@headlessui/react';
+function StudentProfileSettings() {
+  return (
+    //   <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
+  // <Head>
+  //   <title className='text-black'>Student Profile Settings</title>
+  // </Head>
 
-// export default function Home() {
-//   const [isOpen, setIsOpen] = useState(false);
+// this is the profile
+ <Main>
 
-//   function openDialog() {
-//     setIsOpen(true);
-//   }
-
-//   function closeDialog() {
-//     setIsOpen(false);
-//   }
-
-//   return (
-//     <>
-//       <div className="flex justify-center items-center h-screen">
-//         <button
-//           onClick={openDialog}
-//           className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-//         >
-//           Click Me
-//         </button>
-//       </div>
-
-//       <Transition.Root show={isOpen} as={Fragment}>
-//         <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={closeDialog}>
-//           <div className="flex items-center justify-center min-h-screen">
-//             <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-
-//             <Transition.Child
-//               as={Fragment}
-//               enter="ease-out duration-300"
-//               enterFrom="opacity-0 scale-95"
-//               enterTo="opacity-100 scale-100"
-//               leave="ease-in duration-200"
-//               leaveFrom="opacity-100 scale-100"
-//               leaveTo="opacity-0 scale-95"
-//             >
-              
-//               <div className="bg-white rounded-lg p-6 max-w-md mx-auto z-10">
-//                 <Dialog.Title className="text-lg font-semibold mb-2">Popup Message</Dialog.Title>
-//                 <p className="mb-4">This is a popup message.</p>
-//                 <button
-//                   onClick={closeDialog}
-//                   className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-//                 >
-//                   Close
-//                 </button>
-//               </div>
-//             </Transition.Child>
-//           </div>
-//         </Dialog>
-//       </Transition.Root>
-
+<div className="flex flex-row bg-white justify-center">
+    <div className="w-2/3 bg-gray-100 p-4 shadow-2xl ">
       
-//     </>
-//   );
-// }
-import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+      <div className="flex">
+      <Image
+        src="/avatar.jpeg"
+        alt="Profile Picture"
+        width={100}
+        height={10}
+        className="rounded-full"
+      />
+      <div className="flex flex-col">
+      <h3 className="text-black  py-0 px-5 rounded mt-4">jhon doe</h3>
+      <a className="text-black  py-0 px-5 rounded mt-4">
+        Change Profile Picture
+      </a></div></div>
 
-export default function Example() {
-  return (
-    <div className="fixed top-16 w-56 text-right">
-      <Menu as="div" className="relative inline-block text-left">
-        <div>
-          <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-            Options
-            <ChevronDownIcon
-              className="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
-              aria-hidden="true"
-            />
-          </Menu.Button>
+      <div className="flex flex-col mb-4">
+        <label className="text-gray-700" htmlFor="displayName">
+          Display Name
+        </label>
+        <div className='w-full p-2 pl-10 text-sm bg-gray-300 text-gray-700'>jhon Doe</div>
+       
+      </div>
+
+      <div className="flex flex-col mb-4">
+        <label className="text-gray-700" htmlFor="guardianEmail">
+          Guardian Email
+        </label>
+        <div className='w-full p-2 pl-10 text-sm bg-gray-300 text-gray-700'>jhon..doe@example.com</div>
+        
+      </div>
+
+      <div className="flex flex-col mb-4">
+        <label className="text-gray-700" htmlFor="guardianPhone">
+          Guardian Phone
+        </label>
+        <div className='w-full p-2 pl-10 text-sm bg-gray-300 text-gray-700'>+2514658906787</div>
+       
+      </div>
+
+      <div className=" flex flex-col mb-4">
+        <div className="date">
+        <label className="text-gray-700" htmlFor="guardianPhone">
+         Date of birth
+        </label>
+        <div className='w-full p-2 pl-10 text-sm bg-gray-300 text-gray-700'>01/01/2001</div>
         </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
-            <div className="px-1 py-1 ">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <EditActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <EditInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Edit
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <DuplicateActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <DuplicateInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Duplicate
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-            <div className="px-1 py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <ArchiveActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <ArchiveInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Archive
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <MoveActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <MoveInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Move
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-            <div className="px-1 py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <DeleteActiveIcon
-                        className="mr-2 h-5 w-5 text-violet-400"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <DeleteInactiveIcon
-                        className="mr-2 h-5 w-5 text-violet-400"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Delete
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
+        <div className="nationality">
+         <label className="text-gray-700" htmlFor="guardianPhone">
+        Nationality
+        </label>
+        <div className='w-full p-2 pl-10 text-sm bg-gray-300 text-gray-700'>Ethiopian</div>
+       </div>
+      </div>
+
+      <div className="flex flex-col mb-4">
+        <label className="text-gray-700" htmlFor="guardianPhone">
+          Home address
+        </label>
+        <div className='w-full p-2 pl-10 text-sm bg-gray-300 text-gray-700'>123main st, debre birhan, Ethiopia</div>
+       
+      </div>
+      <div className="flex flex-col mb-4">
+        <label className="text-gray-700" htmlFor="guardianPhone">
+          Emergency contact
+        </label>
+        <div className='w-full p-2 pl-10 text-sm bg-gray-300 text-gray-700'>+251976587609</div>
+      </div>
+     
+      
+
+     
     </div>
-  )
+
+    
+         
+   
+    
+  </div>
+ </Main>
+  
+// </div>
+);
 }
 
-function EditInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function EditActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function DuplicateInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function DuplicateActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function ArchiveInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="8"
-        width="10"
-        height="8"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <rect
-        x="4"
-        y="4"
-        width="12"
-        height="4"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function ArchiveActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="8"
-        width="10"
-        height="8"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <rect
-        x="4"
-        y="4"
-        width="12"
-        height="4"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function MoveInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function MoveActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#C4B5FD" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function DeleteInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function DeleteActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
-    </svg>
-  )
-}
+export default StudentProfileSettings;

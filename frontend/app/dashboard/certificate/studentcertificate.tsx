@@ -198,11 +198,14 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
   Download as PDF
 </button>
 
-    </div>:<div className="flex flex-col justify-center items-center gap-3 lg:mt-16">
-  <img src="/no data no bg.png"  className="w-[250px]" />
-   <p className="text-xl">No Certificate to Display</p>
-   <p className="text-center">try again later<br/> No rank generated yet!</p>
+    </div>:<div className="  flex flex-col justify-center items-center lg:mt-16">
+  <div className=" boxshadow relative w-64 h-64 sm:w-48 sm:h-48 md:w-56 md:h-56 bg-white rounded-full flex justify-center items-center">
+    <img src="/no data no bg.png" className="w-[70%] h-[70%] object-contain" />
+  </div>
+  <p className="text-xl text-b mt-2 text-red-700"><b>No Certificate to Display!</b></p>
+  <p className="text-center">Try again later, No rank generated yet!</p>
 </div>
+
 
 }
 
