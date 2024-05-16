@@ -12,12 +12,12 @@ import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import { EventSourceInput } from "@fullcalendar/core/index.js";
 import axios from "axios";
 import { AppContext } from "@/components/context/UserContext";
-import BasicCard from "./totaldata";
 import CardAdmin from "./cardAdmin";
 import BasicPie from "./dumChart";
-import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
+
 import Divider from "@mui/material/Divider";
-import BasicArea from "./newChart";
+import Activity from "./activity";
+import Profile from "./profile";
 
 interface Event {
   title: string;
@@ -27,12 +27,21 @@ interface Event {
 }
 
 export default function Home() {
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+
+          console.log("here is the id", decodedToken?.sub)
         const response = await axios.get("http://localhost:3333/callander/all");
-        console.log(response);
+    
+     
+
+       
         setAllEvents(response.data);
+
+      
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -40,7 +49,10 @@ export default function Home() {
 
     fetchData();
   }, []);
+
   const { decodedToken, token, logout } = useContext(AppContext);
+
+  const[gender, setGender]=useState({})
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -53,8 +65,13 @@ export default function Home() {
     id: 0,
   });
 
-  console.log("Events", allEvents);
-
+  console.log("Events", gender);
+  let contentTobeRenderd;
+  if(decodedToken?.role=="admin"){
+    contentTobeRenderd=<CardAdmin />
+  }else{
+    contentTobeRenderd= <div className=" w-[90%]  flex justify-start "><h5 className="text-xl">Welcom Back {decodedToken?.frist_name} 👋</h5> </div>
+  }
   function handleDateClick(arg: { date: Date; allDay: boolean }) {
     if (decodedToken.role == "admin") {
       setNewEvent({
@@ -153,10 +170,14 @@ export default function Home() {
 
   return (
     <>
-      <div className="w-full h-full  flex flex-col  mt-[100px] ">
-        <CardAdmin />
+      <div className="w-full h-full  flex flex-col  justify-center  items-center mt-[100px] ">
+       <CardAdmin/>
 
+        
+ 
+         
         <div className=" mt-[-10px] w-full flex flex-col md:flex-row gap-6 container mx-auto my-auto px-4 py-10 text-sm lg:font-normal">
+
   <div className="w-full md:w-1/2 h-96 md:h-auto boxshadow p-4">
 
     <FullCalendar
@@ -186,20 +207,15 @@ export default function Home() {
   </div>
   <div className="w-full md:w-1/2 flex flex-col gap-6">
     <div className="flex justify-center boxshadow h-48 md:h-auto">
-      <BasicPie />
-    </div>
-    <div className="boxshadow flex-1  flex flex-col justify-center items-center p-4">
-      <BasicArea/>
-      {/* <h2 className="text-lg mb-6">Recent Activities</h2>
+      {
+        decodedToken?.role=="admin"?<BasicPie />:<Profile/>
+      }
       
-      <p><PanoramaFishEyeIcon sx={{ color: 'red', fontSize: '15px' }} /> <span className="text-gray-500">April 15 2023</span></p>
-      <p className="mt-1 mb-2 ml-8"> End of First Semester</p>
-      <p><PanoramaFishEyeIcon sx={{ color: 'green', fontSize: '15px' }} /> <span className="text-gray-500">April 15 2023</span></p>
-      <p className="mt-1 mb-2  ml-8"> End of Second Semester</p>
-      <p><PanoramaFishEyeIcon sx={{ color: 'purple', fontSize: '15px' }} /> <span className="text-gray-500">April 15 2023</span></p>
-      <p className="mt-1 mb-2 ml-8"> Start of final exam</p>
-      <p><PanoramaFishEyeIcon sx={{ color: 'red', fontSize: '15px' }} /> <span className="text-gray-500">April 15 2023</span></p>
-      <p className="mt-1 mb-2  ml-8">End of First Semester</p> */}
+    </div>
+    <div className="boxshadow flex-1  flex flex-col  items-center p-4">
+    <h1 className=" text-lg lg:text-2xl mb-4  ">Upcoming Events</h1>
+   
+      <Activity/>
     </div>
   </div>
 </div>

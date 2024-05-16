@@ -42,8 +42,8 @@ function ForAll({ teacherView }) {
   );
 
   return (
-    <div className="flex justify-center items-center  mt-5 w-full  ">
-      <div className=" w-[60%]">
+    <div className="flex justify-center items-center  mt-5 w-[80%] boxshadow bg-white ">
+      <div className=" w-full p-6">
         {
           <DataGrid
             rows={row}

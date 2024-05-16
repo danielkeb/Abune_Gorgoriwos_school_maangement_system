@@ -57,6 +57,10 @@ export class SchoolsController {
   schoolsGet() {
     return this.schoolService.schoolsGet();
   }
+  @Get('getsex/:id')
+  getStudentSex(@Param('id', ParseIntPipe) id: number){
+    return this.schoolService.getStudentSex(id);
+  }
   @Get('get/:id')
   getSchoolById(@Param('id', ParseIntPipe) id: number) {
     return this.schoolService.getSchoolById(id);

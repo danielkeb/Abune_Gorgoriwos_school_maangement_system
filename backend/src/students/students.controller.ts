@@ -68,7 +68,10 @@ export class StudentsController {
   getStudent(@Param('id', ParseIntPipe) id: number) {
     return this.studentsService.getStudent(id);
   }
-
+  @Get('getStudRes/:id')
+  getStudentResult(@Param('id', ParseIntPipe) id: number){
+   return this.studentsService.getStudentResult(id)
+  }
   @Get('get')
   getStudents() {
     return this.studentsService.getStudents();
@@ -138,6 +141,10 @@ export class StudentsController {
   @Post('allrank')
   calculateRankForAll(@Body() dto: PromoteStudentsNextGradeDto[]) {
     return this.studentsService.calculateRankForAll(dto);
+  }
+  @Get('student_history/:id')
+  getStudentHistory(@Param('id', ParseIntPipe) id: number) {
+    return this.studentsService.getStudentHistory(id);
   }
   // @Get('section/:id')
   // getSectionRank(@Param('id', ParseIntPipe) sectionName: string) {

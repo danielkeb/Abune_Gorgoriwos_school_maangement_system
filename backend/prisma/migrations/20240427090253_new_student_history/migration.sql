@@ -51,15 +51,9 @@ CREATE TABLE "students" (
     "firstrank" INTEGER,
     "secondtrank" INTEGER,
     "overallrank" INTEGER,
-<<<<<<<< HEAD:backend/prisma/migrations/20240413071420_newdanny/migration.sql
-    "firstScore" INTEGER,
-    "secondScore" INTEGER,
-    "overallScore" INTEGER,
-========
     "firstScore" DOUBLE PRECISION,
     "secondScore" DOUBLE PRECISION,
     "overallScore" DOUBLE PRECISION,
->>>>>>>> 327dc910c7ca68d20e24f1061a6ac1f3b0a832e5:backend/prisma/migrations/20240413063708_all_in_one/migration.sql
 
     CONSTRAINT "students_pkey" PRIMARY KEY ("user_Id")
 );
@@ -141,7 +135,12 @@ CREATE TABLE "StudentHistory" (
     "studentId" INTEGER NOT NULL,
     "gradeId" INTEGER NOT NULL,
     "sectionId" INTEGER NOT NULL,
-    "totalScore" INTEGER NOT NULL,
+    "totalScore1" INTEGER NOT NULL,
+    "totalScore2" INTEGER NOT NULL,
+    "overallScore" INTEGER NOT NULL,
+    "firstRank" INTEGER NOT NULL,
+    "secondRank" INTEGER NOT NULL,
+    "overallRank" INTEGER NOT NULL,
     "subjectScores" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

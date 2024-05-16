@@ -34,8 +34,8 @@ function ForSemesterTwo({ teacherView }) {
   );
 
   return (
-    <div className="flex justify-center items-center  mt-5 w-full  ">
-      <div className=" w-[60%]">
+    <div className=" boxshadow bg-white w-[80%] flex justify-center items-center  mt-5   ">
+      <div className=" w-full p-6">
         {
           <DataGrid
             rows={row}

@@ -70,6 +70,10 @@ export class ResultController {
   ){
   return this.resultService.makeAnalysis(gradeId, semesterId);
   }
+  @Get("studentHistory/:id")
+  getStudentHistory( @Param('id', ParseIntPipe) id: number,){
+    return this.resultService.getStudentHistory(id);
+  }
   @Delete('delete/:id')
   deleteResult(@Param('id', ParseIntPipe) id: number) {
     return this.resultService.deleteResult(id);

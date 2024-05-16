@@ -83,4 +83,8 @@ export class AuthController {
   getAdmin() {
     return this.authService.getAdmin();
   }
+  @Get('user/:id')
+  getUser( @Param('id', ParseIntPipe) id: number){
+    return this.authService.getUser(id)
+  }
 }

@@ -10,26 +10,20 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-
 import MainListItems from '../listItems/ListItems';
-import Chart from '../Chart/Chart';
-import Deposits from '../deposits/Deposits';
-import Orders from '../orders/Orders';
-import { AccountCircle } from '@mui/icons-material';
 import { Avatar, Button, Hidden, Menu, MenuItem, Popover, lighten } from '@mui/material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { AppContext } from '@/components/context/UserContext';
+import { useLayoutEffect } from 'react';
+import { redirect } from 'next/navigation';
 
 function Copyright(props: any) {
+
+
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
@@ -149,6 +143,13 @@ const Main: React.FC<MainProps> = ({children})=> {
     
   const{decodedToken,token, logout}= React.useContext(AppContext);
 
+  useLayoutEffect(() => {
+   
+    if(!decodedToken){
+      redirect("/login")
+    }
+  }, [])
+
   // console.log("The decoded token is 0",decodedToken)
   const user = {
     name: decodedToken?.frist_name,
@@ -170,18 +171,19 @@ const Main: React.FC<MainProps> = ({children})=> {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open} style={{backgroundColor:'white'}}>
+        <AppBar position="absolute" open={open} sx={{backgroundColor:'white'}} className='boxshadow' >
           <Toolbar
             sx={{
-              pr: '24px', // keep right padding when drawer closed
+              pr: '24px',
+               // keep right padding when drawer closed
             }}
           >
             <IconButton
               edge="start"
-              color="inherit"
+           
               aria-label="open drawer"
               onClick={toggleDrawer}
               sx={{
@@ -195,7 +197,7 @@ const Main: React.FC<MainProps> = ({children})=> {
             <Typography
               component="h1"
               variant="h6"
-              color="inherit"
+            
               noWrap
               sx={{ flexGrow: 1, color:'black' }}
             >
@@ -314,7 +316,7 @@ const Main: React.FC<MainProps> = ({children})=> {
           {children}
         </Box>
       </Box>
-    </ThemeProvider>
+</>
   );
 }
 export default Main;
