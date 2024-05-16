@@ -105,7 +105,10 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
   
 
   return (
-    <div className='flex flex-col justify-start items-center h-full '>
+    <div className=''>
+
+   {
+    studentData?.firstrank?    <div className='flex flex-col justify-start items-center h-full '>
 
 
 
@@ -194,6 +197,14 @@ const Certificate: React.FC<CertificateProps> = ({ id }) => {
 >
   Download as PDF
 </button>
+
+    </div>:<div className="flex flex-col justify-center items-center gap-3 lg:mt-16">
+  <img src="/no data no bg.png"  className="w-[250px]" />
+   <p className="text-xl">No Certificate to Display</p>
+   <p className="text-center">try again later<br/> No rank generated yet!</p>
+</div>
+
+}
 
     </div>
   );

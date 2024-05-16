@@ -113,8 +113,15 @@ const CourseMaterials: React.FC = () => {
   };
 
   return (
-    <div className="w-full p-8 mt-8 text-center">
-      <div className="w-full max-w-md">
+    <div className="boxshadow flex flex-col w-[70%] justify-center items-center p-16 mt-8 text-center ">
+                <div className='text-lg w-full flex justify-start mb-6'>
+                <h6 className="text-blueGray-400 text-sm   font-bold uppercase">
+                Add Your course materials here
+              </h6>
+        </div>
+      <div className="w-full max-w-md ">
+
+     
       <select
   className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
   value={description}
@@ -168,11 +175,11 @@ const CourseMaterials: React.FC = () => {
         />
         {/* {errorMsg && <p className="text-red-500 mb-4">{errorMsg}</p>} */}
         <button
-          className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md w-full"
+          className="w-[50%] bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
           onClick={handleSubmit}
         >
-          <SendIcon sx={{ marginRight: 1 }} />
-          Submit
+          
+          Upload
         </button>
       </div>
       <ToastContainer position='bottom-right' />

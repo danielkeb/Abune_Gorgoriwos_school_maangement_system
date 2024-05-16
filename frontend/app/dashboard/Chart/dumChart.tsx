@@ -29,7 +29,7 @@ export default function BasicPie() {
         {
           data: [
             { id: 0, value:gender?.male, label: 'Male S' ,color:'#228B22' },
-            { id: 1, value:gender?.female, label: 'Female S',  },
+            { id: 1, value:gender?.female, label: 'Female S',   },
           
           ],
         },

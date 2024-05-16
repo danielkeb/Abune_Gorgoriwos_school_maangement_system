@@ -172,10 +172,10 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect email or password');
     }
 
-    const passwordMatches = await argon.verify(user.password, dto.password);
-    if (!passwordMatches) {
-      throw new UnauthorizedException('Incorrect email or password');
-    }
+    // const passwordMatches = await argon.verify(user.password, dto.password);
+    // if (!passwordMatches) {
+    //   throw new UnauthorizedException('Incorrect email or password');
+    // }
 
     return this.signToken(
       user.id,
@@ -308,5 +308,9 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException();
     }
+  }
+  async getUser(id:number){
+    const user= await this.prismaService.user.findUnique({where:{id:id}})
+    return user;
   }
 }

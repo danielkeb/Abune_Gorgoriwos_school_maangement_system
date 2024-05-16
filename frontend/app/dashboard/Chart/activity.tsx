@@ -22,7 +22,7 @@ const Activity = () => {
     const upcomingEvents = events
   .filter((e) => new Date(e.start) > new Date())
   .sort((a, b) => new Date(a.start) - new Date(b.start));
-  
+  console.log("upcoming events", upcomingEvents)
   // Function to format the date string
   const formatDate = (dateString:any) => {
     const date = new Date(dateString);
@@ -41,7 +41,7 @@ const Activity = () => {
       
   
   return (
-<div className=" w-full lg:w-[80%]  p-6 border-solid border-2 border-gray-200 flex  flex-col  justify-start items-start ">
+<div className=" w-full lg:w-[80%]  p-6 border-solid border-2 border-gray-200 flex  flex-col  justify-start items-start text-lg ">
      {upcomingEvents.map((e) => (
         <div key={e.id}>
           <p><PanoramaFishEyeIcon sx={{ color: isWithinWeek(e.start) ? 'red' : 'green', fontSize: '15px' }} /> <span className="text-gray-500">{formatDate(e?.start)}</span></p>

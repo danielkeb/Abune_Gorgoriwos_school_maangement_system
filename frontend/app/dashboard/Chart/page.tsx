@@ -17,6 +17,7 @@ import BasicPie from "./dumChart";
 
 import Divider from "@mui/material/Divider";
 import Activity from "./activity";
+import Profile from "./profile";
 
 interface Event {
   title: string;
@@ -65,7 +66,12 @@ export default function Home() {
   });
 
   console.log("Events", gender);
-
+  let contentTobeRenderd;
+  if(decodedToken?.role=="admin"){
+    contentTobeRenderd=<CardAdmin />
+  }else{
+    contentTobeRenderd= <div className=" w-[90%]  flex justify-start "><h5 className="text-xl">Welcom Back {decodedToken?.frist_name} 👋</h5> </div>
+  }
   function handleDateClick(arg: { date: Date; allDay: boolean }) {
     if (decodedToken.role == "admin") {
       setNewEvent({
@@ -164,9 +170,9 @@ export default function Home() {
 
   return (
     <>
-      <div className="w-full h-full  flex flex-col  mt-[100px] ">
-        
-        <CardAdmin />
+      <div className="w-full h-full  flex flex-col  justify-center  items-center mt-[100px] ">
+       <CardAdmin/>
+
         
  
          
@@ -201,7 +207,10 @@ export default function Home() {
   </div>
   <div className="w-full md:w-1/2 flex flex-col gap-6">
     <div className="flex justify-center boxshadow h-48 md:h-auto">
-      <BasicPie />
+      {
+        decodedToken?.role=="admin"?<BasicPie />:<Profile/>
+      }
+      
     </div>
     <div className="boxshadow flex-1  flex flex-col  items-center p-4">
     <h1 className=" text-lg lg:text-2xl mb-4  ">Upcoming Events</h1>
