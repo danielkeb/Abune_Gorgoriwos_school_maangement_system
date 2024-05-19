@@ -26,7 +26,7 @@ import { Roles } from '../auth/decorator/roles.decorator';
 import { Role } from '../auth/decorator/enums/role.enum';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { diskStorage } from 'multer';
-import path, { extname } from 'path';
+import { extname } from 'path';
 
 @Controller('coursematerial')
 export class CoursematerialController {

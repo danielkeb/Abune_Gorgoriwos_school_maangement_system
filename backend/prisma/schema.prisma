@@ -39,12 +39,12 @@ model User {
   email         String    @unique
   role          String
   address       String?
+  image         String?
   phone         String
   password      String
   gender        String
   date_of_birth String
   loggedInAt    DateTime?
-
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
 
@@ -136,6 +136,14 @@ model Section {
   teacher Teacher[]
 
   @@map("sections")
+}
+
+model Reset {
+  id Int @id @default(autoincrement())
+  userId Int
+  shortcode String
+  createdAT    DateTime   @default(now())
+  expiresAt    DateTime 
 }
 
 model Subject {

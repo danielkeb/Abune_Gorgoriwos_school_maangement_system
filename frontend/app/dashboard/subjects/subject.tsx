@@ -51,6 +51,18 @@ const SubjectComponent = () => {
   const [filterGrade, setFilterGrade] = useState('');
   const [page, setPage] = useState(0);
   
+  const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
+
+  // ... (other useEffect hooks)
+
+  useEffect(() => {
+    if (gradeId !== null) {
+      const filtered = teachers.filter((teacher) => teacher.gradeId.includes(gradeId));
+      setFilteredTeachers(filtered);
+    } else {
+      setFilteredTeachers([]);
+    }
+  }, [gradeId, teachers]);
 
   useEffect(() => {
     fetchGrades();
@@ -251,29 +263,21 @@ const SubjectComponent = () => {
               </option>
             ))}
           </select>
-  {gradeId !== null && (
-        <select
-              className="w-full p-3 border border-gray-300 rounded-md mb-4"
-              value={teacherId || ''}
-              onChange={handleChange}
-              name="teacherId"
-            >
-             {teachers.map((teacher) => {
-    // Check if the teacher is assigned to the selected grade level
-    const isTeacherAssignedToGrade = teacher.gradeId.includes(gradeId);
-
-    // If the teacher is assigned to the selected grade level, display them in the dropdown list
-    if (isTeacherAssignedToGrade) {
-      return (
-        <option key={teacher.id} value={teacher.id}>
-          {teacher.first_name} {teacher.last_name}
-        </option>
-      );
-    }
-    return null; // Skip this teacher if not assigned to the selected grade level
-  })}
-            </select>
-          )}
+          {gradeId !== null && (
+              <select
+                className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                value={teacherId || ''}
+                onChange={handleChange}
+                name="teacherId"
+              >
+                <option value="">Select Teacher</option>
+                {filteredTeachers.map((teacher) => (
+                  <option key={teacher.id} value={teacher.id}>
+                    {teacher.first_name} {teacher.last_name}
+                  </option>
+                ))}
+              </select>
+            )}
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <button
             className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md"
@@ -388,32 +392,37 @@ const SubjectComponent = () => {
                     </option>
                      ))}
                 </select>
-                <select
-  className="w-full p-3 border border-gray-300 rounded-md mb-4"
-  value={selectedSubject.teacherId}
-  onChange={(e) =>
-    setSelectedSubject({
-      ...selectedSubject,
-      teacherId: parseInt(e.target.value),
-    })
-  }
->
-  <option value="">Select Teacher</option>
-  {teachers.map((teacher) => {
-    // Check if the teacher is assigned to the selected grade level
-    const isTeacherAssignedToGrade = teacher.gradeId.includes(selectedSubject.gradeId);
-
-    // If the teacher is assigned to the selected grade level, display them in the dropdown list
-    if (isTeacherAssignedToGrade) {
-      return (
-        <option key={teacher.id} value={teacher.id}>
-          {teacher.first_name} {teacher.last_name}
-        </option>
-      )
+                {selectedSubject.gradeId && teachers.length > 0 && (
+  <select
+    className="w-full p-3 border border-gray-300 rounded-md mb-4"
+    value={selectedSubject.teacherId || ''}
+    onChange={(e) =>
+      setSelectedSubject({
+        ...selectedSubject,
+        teacherId: parseInt(e.target.value),
+      })
     }
-    return null; // Skip this teacher if not assigned to the selected grade level
-  })}
-</select>
+  >
+    <option value="">Select Teacher</option>
+    {teachers.map((teacher) => {
+      // Check if the teacher is assigned to the selected grade level
+      const isTeacherAssignedToGrade = teacher.gradeId.includes(selectedSubject.gradeId);
+
+      // If the teacher is assigned to the selected grade level, display them in the dropdown list
+      if (isTeacherAssignedToGrade) {
+        return (
+          <option key={teacher.id} value={teacher.id}>
+            {teacher.first_name} {teacher.last_name}
+          </option>
+        );
+      }
+      return null; // Skip this teacher if not assigned to the selected grade level
+    })}
+  </select>
+)}
+
+
+
 
 
                

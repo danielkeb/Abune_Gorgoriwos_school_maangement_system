@@ -50,10 +50,11 @@ const A: React.FC = () => {
   const currentSchool = schools.find(school => school.id === schoolId);
   if (!currentSchool) return null;
 
-  const maleStudents = getNumberOfStudentsGender(schoolId, 'male');
-  const femaleStudents = getNumberOfStudentsGender(schoolId, 'female');
-  const maleTeachers = getNumberOfTeachersGender(schoolId, 'male');
-  const femaleTeachers = getNumberOfTeachersGender(schoolId, 'female');
+  const maleStudents = getNumberOfStudentsGender(schoolId, 'Male');
+  const femaleStudents = getNumberOfStudentsGender(schoolId, 'Female');
+  const maleTeachers = getNumberOfTeachersGender(schoolId, 'Male');
+  const femaleTeachers = getNumberOfTeachersGender(schoolId, 'Female');
+ 
   
   return (
     <div className="flex md:flex-row flex-col w-full items-center justify-evenly gap-4">

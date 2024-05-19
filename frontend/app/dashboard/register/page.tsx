@@ -41,6 +41,7 @@ const page = () => {
       role: "student",
       address: "",
       username: "",
+      image: null,
       phone: "",
       password: "1234",
       gender: "",
@@ -53,9 +54,19 @@ const page = () => {
     onSubmit: async (values) => {
       try {
         setCheck(true);
+        const formData = new FormData();
+        Object.keys(values.image).forEach(key => {
+          formData.append(key, values.image as any);
+        });
         const response = await axios.post(
           `http://localhost:3333/auth/user/1`,
-        {...values, gradeId:parseInt(values.gradeId), sectionId:parseInt(values.sectionId)}
+        {...values, gradeId:parseInt(values.gradeId), sectionId:parseInt(values.sectionId),},
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      
         );
 
         toast.success("New Student Registerd ");
@@ -488,13 +499,18 @@ const page = () => {
                         />
                       </svg>
                     </label>
-                    <input type="file" id="photo" className="hidden" />
+                    <input type="file" id="photo" className="hidden"
+                     onChange={(event) => {
+                      const file = event.currentTarget.files?.[0];
+                      formik.setFieldValue("image", file || null);
+                    }}
+                    />
                   </div>
                 </div>
               </div>
               <br />
               <button className="bg-green-950  border-0 text-white w-full p-3  rounded-md">
-                Submit
+             submit
               </button>
             </form>
             <ToastContainer
