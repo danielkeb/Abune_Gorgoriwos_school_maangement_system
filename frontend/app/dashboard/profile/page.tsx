@@ -88,9 +88,7 @@ function StudentProfileSettings() {
   return (
     <Main>
       <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
-        <Head>
-          <title className="text-black">Student Profile Settings</title>
-        </Head>
+    
         
         <div className="flex flex-col lg:flex-row justify-center mt-6 gap-6">
           <div className="w-full lg:w-1/3 bg-gray-100 max-h-[300px] p-4 boxshadow">
