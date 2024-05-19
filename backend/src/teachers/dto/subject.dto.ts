@@ -26,5 +26,5 @@ export class ConnectUpdateDto {
   @ApiProperty()
   @IsInt()
   @IsOptional()
-  grade_Id?: number;
+  gradeId?: number;
 }

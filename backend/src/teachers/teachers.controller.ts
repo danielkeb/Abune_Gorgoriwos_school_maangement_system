@@ -49,7 +49,7 @@ export class TeachersController {
     return this.teacherService.getTeachersGrade(id);
   }
 
-  @Get('graderte/:id646')
+  @Get('graderte/:id')
   getTeachersStudent(@Param('id', ParseIntPipe) id: number) {
     return this.teacherService.getTeachersGrade(id);
   }

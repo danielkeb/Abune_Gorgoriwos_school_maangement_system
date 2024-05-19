@@ -120,7 +120,9 @@ export class TeachersService {
         last_name: dto.last_name,
         middle_name: dto.middle_name,
         address: dto.address,
-        username: dto.username,
+        email: dto.email,
+        date_of_birth:dto.date_of_birth,
+        gender:dto.gender,
         phone: dto.phone,
       },
     });
@@ -192,7 +194,7 @@ export class TeachersService {
   }
   //here assign grade, section and subject to teacher
   async updateTeacherFields(teacherId: number, dto: ConnectUpdateDto) {
-    if (!dto || !dto.sectionId || !dto.grade_Id || !dto.subjectId) {
+    if (!dto || !dto.sectionId || !dto.gradeId || !dto.subjectId) {
       throw new BadRequestException(
         'Invalid request data. Required properties are missing.',
       );
@@ -216,7 +218,7 @@ export class TeachersService {
       (sec) => sec.id === dto.sectionId,
     );
     const isTeacherConnectedToGrade = teacherInfo.gradelevel.some(
-      (grade) => grade.id === dto.grade_Id,
+      (grade) => grade.id === dto.gradeId,
     );
     const isTeacherConnectedToSubject = teacherInfo.subject.some(
       (sub) => sub.id === dto.subjectId,
@@ -242,7 +244,7 @@ export class TeachersService {
         },
         data: {
           gradelevel: {
-            connect: { id: dto.grade_Id },
+            connect: { id: dto.gradeId },
           },
         },
       });
@@ -277,7 +279,7 @@ export class TeachersService {
   }
 
   async disconnectTeacherAll(teacherId: number, dto: ConnectUpdateDto) {
-    if (!dto || !dto.sectionId || !dto.grade_Id || !dto.subjectId) {
+    if (!dto || !dto.sectionId || !dto.gradeId || !dto.subjectId) {
       throw new BadRequestException(
         'Invalid request data. Required properties are missing.',
       );
@@ -311,14 +313,14 @@ export class TeachersService {
       });
     }
 
-    if (teacherInfo.gradelevel.some((grade) => grade.id === dto.grade_Id)) {
+    if (teacherInfo.gradelevel.some((grade) => grade.id === dto.gradeId)) {
       await this.prisma.teacher.update({
         where: {
           user_Id: teacherId,
         },
         data: {
           gradelevel: {
-            disconnect: { id: dto.grade_Id },
+            disconnect: { id: dto.gradeId },
           },
         },
       });

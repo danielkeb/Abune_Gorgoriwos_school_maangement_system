@@ -174,7 +174,7 @@ const Main: React.FC<MainProps> = ({children})=> {
     <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open} sx={{backgroundColor:'white'}} className='boxshadow' >
+        <AppBar position="absolute" open={open} sx={{backgroundColor:'white'}} className="shadow-none border-b border-gray-300"  >
           <Toolbar
             sx={{
               pr: '24px',
@@ -251,7 +251,7 @@ const Main: React.FC<MainProps> = ({children})=> {
           </NextLink> */}
 
           <Link
-            href="/management/profile"
+            href="/dashboard/profile"
             style={{ textDecoration: 'none', color: 'black' }}
           >
             <MenuItem sx={{ px: 3 }}>Profile</MenuItem>
@@ -264,12 +264,7 @@ const Main: React.FC<MainProps> = ({children})=> {
             </ListItem>
           </NextLink> */}
 
-          <Link
-            href="/management/profile/settings"
-            style={{ textDecoration: 'none', color: 'black' }}
-          >
-            <MenuItem sx={{ px: 3 }}>Account Setting</MenuItem>
-          </Link>
+
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
