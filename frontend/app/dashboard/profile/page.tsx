@@ -1,432 +1,266 @@
-'use client'
+"use client"
+import Head from 'next/head';
+import Image from 'next/image';
+import Main from '../main/Main';
+import React, { Fragment, useContext, useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import { Dialog, Transition } from "@headlessui/react";
+import { AppContext } from '@/components/context/UserContext';
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+function StudentProfileSettings() {
 
-// import React, { Fragment, useState } from 'react';
-// import { Dialog, Transition } from '@headlessui/react';
+  const { decodedToken } = useContext(AppContext);
+  const [call, setCall]= useState({});
+  const [isClient, setIsClient] = useState(false);
+  const [check, setCheck] = useState(false);
+  // const[searchId, setSearchId]= useState();
+  // const [selectedSection, setSelectedSection] = useState(); // State to store the selected section
 
-// export default function Home() {
-//   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const school = await axios.get(
+          `http://localhost:3333/auth/user_detail/${decodedToken?.sub}/${decodedToken?.role}`
+        );
+        setCall(school.data);
 
-//   function openDialog() {
-//     setIsOpen(true);
-//   }
+  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-//   function closeDialog() {
-//     setIsOpen(false);
-//   }
+    fetchData();
+  }, [decodedToken]);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  const [isOpen, setIsOpen] = useState(false);
+  const formik = useFormik({
+    initialValues: {
+     
+      username: "",
+      password: "",
+    },
+    onSubmit: async (values) => {
+      try {
+        setCheck(true);
+        const response = await axios.patch(
+          `http://localhost:3333/auth/user_update/${decodedToken?.sub}`,
+          formik.values
+        );
+        setCall(prevCall => ({
+          ...prevCall,
+          user: {
+            ...prevCall.user,
+            username: values.username // Update the username
+          }
+        }));
 
-//   return (
-//     <>
-//       <div className="flex justify-center items-center h-screen">
-//         <button
-//           onClick={openDialog}
-//           className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-//         >
-//           Click Me
-//         </button>
-//       </div>
+        toast.success("profile Updated");
+        // router.push('/head')
+      } catch (error:any) {
+        toast.error(error?.response?.data.message);
+      }
+      setCheck(false);
+    },
 
-//       <Transition.Root show={isOpen} as={Fragment}>
-//         <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={closeDialog}>
-//           <div className="flex items-center justify-center min-h-screen">
-//             <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+  });
+  function openDialog() {
 
-//             <Transition.Child
-//               as={Fragment}
-//               enter="ease-out duration-300"
-//               enterFrom="opacity-0 scale-95"
-//               enterTo="opacity-100 scale-100"
-//               leave="ease-in duration-200"
-//               leaveFrom="opacity-100 scale-100"
-//               leaveTo="opacity-0 scale-95"
-//             >
+    
+    setIsOpen(true);
+  }
+
+
+
+  function closeDialog() {
+    setIsOpen(false);
+  }
+  if (!isClient) {
+    // While waiting for client-side rendering, return null or a loading spinner
+    return null;
+  }
+  console.log("here is the call",call)
+  return (
+    <Main>
+      <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
+        <Head>
+          <title className="text-black">Student Profile Settings</title>
+        </Head>
+        
+        <div className="flex flex-col lg:flex-row justify-center mt-6 gap-6">
+          <div className="w-full lg:w-1/3 bg-gray-100 max-h-[300px] p-4 boxshadow">
+            <div className="flex flex-col items-center">
+              <Image
+                src="/avater-removebg-preview (1).png"
+                alt="Profile Picture"
+                width={100}
+                height={100}
+                className="rounded-ful w-[200px] mt-[-10px]"
+              />
+              <h3 className="text-black py-2 text-lg rounded mt-[-30px] "><b>{call?.user?.frist_name} {call?.user?.middle_name} {call?.user?.last_name} </b></h3>
               
-//               <div className="bg-white rounded-lg p-6 max-w-md mx-auto z-10">
-//                 <Dialog.Title className="text-lg font-semibold mb-2">Popup Message</Dialog.Title>
-//                 <p className="mb-4">This is a popup message.</p>
-//                 <button
-//                   onClick={closeDialog}
-//                   className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-//                 >
-//                   Close
-//                 </button>
-//               </div>
-//             </Transition.Child>
-//           </div>
-//         </Dialog>
-//       </Transition.Root>
+              <button onClick={() => openDialog()} className="text-white bg-blue-600 p-2 rounded ">
+                Change Profile
+              </button>
+            </div>
+          </div>
 
-      
-//     </>
-//   );
-// }
-import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+          <div className="w-full lg:w-2/3 bg-gray-100 p-4 boxshadow">
+            <div className="flex flex-col mb-4">
+              <label className="text-gray-700" htmlFor="displayName">
+               <b>Display Name</b> 
+              </label>
+              <div className="w-full p-2 pl-10 text-sm border-b-2 text-gray-700">{call?.user?.username}</div>
+            </div>
+            {
+                decodedToken?.role=="student" && <div className="flex flex-col mb-4">
+                <label className="text-gray-700" htmlFor="displayName">
+                 <b>Grade Level</b> 
+                </label>
+                <div className="w-full p-2 pl-10 text-sm border-b-2 text-gray-700">{call?.gradelevel?.grade} {call?.section?.name}</div>
+              </div>
+              }
+              <div className="flex flex-col mb-4">
+              <label className="text-gray-700" htmlFor="guardianEmail">
+               <b> Gender</b> 
+              </label>
+              <div className="w-full p-2 pl-10 text-sm border-b-2   text-gray-700">{call?.user?.gender}</div>
+            </div>
 
-export default function Example() {
-  return (
-    <div className="fixed top-16 w-56 text-right">
-      <Menu as="div" className="relative inline-block text-left">
-        <div>
-          <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-            Options
-            <ChevronDownIcon
-              className="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
-              aria-hidden="true"
-            />
-          </Menu.Button>
+            <div className="flex flex-col mb-4">
+              <label className="text-gray-700" htmlFor="guardianEmail">
+               <b> Email</b> 
+              </label>
+              <div className="w-full p-2 pl-10 text-sm border-b-2   text-gray-700">{call?.user?.email}</div>
+            </div>
+
+            <div className="flex flex-col mb-4">
+              <label className="text-gray-700" htmlFor="guardianPhone">
+               <b> Phone</b> 
+              </label>
+              <div className="w-full p-2 pl-10 text-sm border-b-2 text-gray-700">{call?.user?.phone}</div>
+            </div>
+
+            <div className="flex flex-col mb-4">
+              <label className="text-gray-700" htmlFor="dateOfBirth">
+                <b>Date of Birth</b>
+              </label>
+              <div className="w-full p-2 pl-10 text-sm border-b-2 text-gray-700">{call?.user?.date_of_birth}</div>
+            </div>
+
+            <div className="flex flex-col mb-4">
+              <label className="text-gray-700" htmlFor="nationality">
+               <b> Nationality</b>
+              </label>
+              <div className="w-full p-2 pl-10 text-sm border-b-2 text-gray-700">Ethiopian</div>
+            </div>
+
+            <div className="flex flex-col mb-4">
+              <label className="text-gray-700" htmlFor="homeAddress">
+                <b>Home Address</b>
+              </label>
+              <div className="w-full p-2 pl-10 text-sm border-b-2 text-gray-700">Debre Birhan, {call?.user?.address}</div>
+            </div>
+            {
+              decodedToken?.role == 'teacher' && <div className="flex flex-col mb-4">
+              <label className="text-gray-700" htmlFor="emergencyContact">
+                <b>Education level</b>
+              </label>
+              <div className="w-full p-2 pl-10 text-sm border-b-2 text-gray-700">{call?.education_level}</div>
+            </div>
+            }
+
+            
+          </div>
         </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
-            <div className="px-1 py-1 ">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <EditActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <EditInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Edit
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <DuplicateActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <DuplicateInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Duplicate
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-            <div className="px-1 py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <ArchiveActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <ArchiveInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Archive
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <MoveActiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <MoveInactiveIcon
-                        className="mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Move
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-            <div className="px-1 py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    {active ? (
-                      <DeleteActiveIcon
-                        className="mr-2 h-5 w-5 text-violet-400"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <DeleteInactiveIcon
-                        className="mr-2 h-5 w-5 text-violet-400"
-                        aria-hidden="true"
-                      />
-                    )}
-                    Delete
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
+
+        <Transition.Root show={isOpen} as={Fragment}>
+  <Dialog
+    as="div"
+    className="fixed z-10 inset-0 overflow-y-auto "
+    onClose={closeDialog}>
+    <div className="flex items-center justify-center min-h-screen ">
+      <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+
+      <Transition.Child
+        as={Fragment}
+        enter="ease-out duration-300"
+        enterFrom="opacity-0 scale-95"
+        enterTo="opacity-100 scale-100"
+        leave="ease-in duration-200"
+        leaveFrom="opacity-100 scale-100"
+        leaveTo="opacity-0 scale-95">
+        <div className="bg-white rounded-lg p-6 w-[500px] mx-auto z-10 ">
+          <Dialog.Title className="text-lg font-semibold mb-2">
+            Update Information
+          </Dialog.Title>
+          <form onSubmit={formik.handleSubmit}>
+
+        
+          <div className="mb-4">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              Username
+            </label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              className="mt-1 p-3 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              placeholder="Enter username"
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Change Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              className="mt-1 p-3 focus:ring-green-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              placeholder="Enter password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </div>
+
+          <button
+          type="submit"
+            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded mr-4">
+           { check? <>
+              
+              <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+          <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+         </svg>  Updating  ...</>:"Update"}
+          </button>
+          <button
+          type="button"
+            onClick={closeDialog}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded">
+            Close
+          </button>
+          </form>
+
+        </div>
+      </Transition.Child>
     </div>
-  )
+  </Dialog>
+</Transition.Root>
+
+      </div>
+    </Main>
+  );
 }
 
-function EditInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function EditActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function DuplicateInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function DuplicateActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-    </svg>
-  )
-}
-
-function ArchiveInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="8"
-        width="10"
-        height="8"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <rect
-        x="4"
-        y="4"
-        width="12"
-        height="4"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function ArchiveActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="8"
-        width="10"
-        height="8"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <rect
-        x="4"
-        y="4"
-        width="12"
-        height="4"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function MoveInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function MoveActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#C4B5FD" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function DeleteInactiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function DeleteActiveIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
-    </svg>
-  )
-}
+export default StudentProfileSettings;

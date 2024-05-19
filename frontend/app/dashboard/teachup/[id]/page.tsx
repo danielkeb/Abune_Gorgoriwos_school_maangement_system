@@ -8,7 +8,7 @@ import * as yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppContext } from "@/components/context/UserContext";
-import Table from './collaps';
+
 
 
 
@@ -16,12 +16,13 @@ const page = () => {
     const [teachers, setTeachers] = useState([]);
     const [schoolss, setSchoolss] = useState([]);
     const router = useParams();
-    
- 
+  
+    const { id } = router;
+
     useEffect(() => {
       const fetchData = async () => {
         try {
-         const { id } = router;
+        
          
           const res = await axios.get(`http://localhost:3333/teachers/get/${id}`);
           const school = await axios.get("http://localhost:3333/grade/get");
@@ -50,9 +51,11 @@ const page = () => {
       fetchData();
     }, []);
     
+
     
     
     const [check, setCheck] = useState(false);
+    const [check2, setCheck2] = useState(false);
    
   const formik = useFormik({
     initialValues: {
@@ -75,12 +78,12 @@ const page = () => {
       try {
         setCheck(true);
         console.log("final values =", formik.values)
-        const response = await axios.post(
-          "http://localhost:3333/auth/user/1",
+        const response = await axios.patch(
+          `http://localhost:3333/teachers/adminUpdate/${id}`,
           formik.values
         );
 
-        toast.success("New Teacher Registerd ");
+        toast.success("Teacher record Updated ");
         // router.push('/head')
       } catch (error:any) {
         toast.error(error?.response?.data.message);
@@ -91,20 +94,40 @@ const page = () => {
       email: yup
         .string()
         .email("Must be a valid email")
-        .required("Email is required !"),
-      frist_name: yup.string().required("First Name is Required !"),
-      middle_name: yup.string().required("Middle Name is Required !"),
-      last_name: yup.string().required("Last Name is Required !"),
-      address: yup.string().required("Address is Required !"),
-      username: yup.string().required("Username is Required !"),
-      phone: yup.string().required("Phone number is Required !"),
-      gender: yup.string().required("Gender is Required !"),
-      date_of_birth: yup.string().required("Date of birth  is Required !"),
+        .optional(),
+      frist_name: yup.string().optional(),
+      middle_name: yup.string().optional(),
+      last_name: yup.string().optional(),
+      address: yup.string().optional(),
+      username: yup.string().optional(),
+      phone: yup.string().optional(),
+      gender: yup.string().optional(),
+      date_of_birth: yup.string().optional(),
     }),
   });
+
+  const assignSubject= async ()=>{
+    try{
+      setCheck2(true)
+      if(formik.values.gradeId && formik.values.sectionId && formik.values.subjectId){
+        
+        const gradeId =parseInt(formik.values.gradeId)
+        const sectionId = parseInt(formik.values.sectionId)
+        const subjectId = parseInt(formik.values.subjectId)
+        console.log(gradeId,sectionId,subjectId)
+        const response = await axios.patch(`http://localhost:3333/teachers/connnect/all/${id}`,{gradeId,sectionId,subjectId});
+      }
+      toast.success("Teacher record Updated ");
+    }catch(error:any){
+      toast.error(error?.response?.data.message);
+    }
+    setCheck2(false)
+    
+    
+  } 
   const secc=schoolss.find((school:any) => school.id == formik.values.gradeId)
 
-  console.log('res is',formik.values.email)
+  
   return (
     <Main>
       <div className='flex flex-col justify-center items-center mt-5 '>
@@ -305,7 +328,7 @@ const page = () => {
 
               <br />
               <div className='flex justify-end items-center'>
-              <button className="bg-green-950  border-0 text-white  p-3 w-[20%] rounded-md">
+              <button  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded mr-4">
               { check? <>
               
               <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -429,8 +452,8 @@ const page = () => {
                   
                 </div>
                 <div className='flex justify-end items-center w-full'>
-              <button className="bg-green-950  border-0 text-white  p-3 w-[20%] rounded-md">
-              { check? <>
+              <button onClick={assignSubject} className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded mr-4">
+              { check2? <>
               
               <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>

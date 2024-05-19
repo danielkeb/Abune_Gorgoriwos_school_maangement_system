@@ -14,7 +14,15 @@ import { useEffect, useState } from 'react';
 import GradingIcon from '@mui/icons-material/Grading';
 import RecipeReviewCard from '../main/custom';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import CardMembershipIcon from '@mui/icons-material/CardMembership';
+import EventSeatIcon from '@mui/icons-material/EventSeat';
 import SchoolList from '../main/schools';
+import SubjectIcon from '@mui/icons-material/Subject';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+
+
 
 
 // Define roles
@@ -43,7 +51,7 @@ const [userRole, setUserRole]= useState('');
     <React.Fragment>
       {/* Dashboard */}
       <Link href="/dashboard">
-        <div className={`${path === '/dashboard' ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+        <div className={`${path === '/dashboard' ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
           <ListItemIcon>
             <DashboardIcon className={`${path === '/dashboard' ? ' text-white' : ''}`} />
           </ListItemIcon>
@@ -56,7 +64,7 @@ const [userRole, setUserRole]= useState('');
       {userRole && userRole === ROLES.SUPER_ADMIN && (
         <React.Fragment>
         <Link href="/dashboard/register">
-          <div className={`${path.startsWith('/dashboard/register') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+          <div className={`${path.startsWith('/dashboard/register') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
               <ShoppingCartIcon className={`${path.startsWith('/dashboard/register') ? ' text-white' : ''}`} />
             </ListItemIcon>
@@ -85,7 +93,7 @@ const [userRole, setUserRole]= useState('');
       {userRole && (userRole === ROLES.TEACHER) && (
         <React.Fragment>
         <Link href="/dashboard/grades">
-          <div className={`${path.startsWith('/dashboard/grades') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+          <div className={`${path.startsWith('/dashboard/grades') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
               <GradingIcon className={`${path.startsWith('/dashboard/grades') ? ' text-white' : ''}`} />
             </ListItemIcon>
@@ -99,43 +107,76 @@ const [userRole, setUserRole]= useState('');
 
         {userRole && (userRole === ROLES.TEACHER) && (
         <Link href="/dashboard/courseMaterials">
-          <div className={`${path.startsWith('/dashboard/courseMaterials') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+          <div className={`${path.startsWith('/dashboard/courseMaterials') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
               <PictureAsPdfIcon className={`${path.startsWith('/dashboard/courseMaterials') ? ' text-white' : ''}`}  />
             </ListItemIcon>
             <ListItemText primary="Materials" />
           </div>
         </Link>
+        
+      )}
+
+{userRole && (userRole === ROLES.TEACHER) && (
+
+<Link href="/dashboard/readingmaterials">
+<div className={`${path.startsWith('/dashboard/readingmaterials') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+  <ListItemIcon>
+    <AutoStoriesIcon className={`${path.startsWith('/dashboard/readingmaterials') ? ' text-white' : ''}`} />
+  </ListItemIcon>
+  <ListItemText primary="study materials" />
+</div>
+</Link>
+        
       )}
 
       {/* Classes, Sections, and Subjects accessible only to admin and teacher */}
       {userRole && (userRole === ROLES.ADMIN) && (
         <React.Fragment>
-          <Link href="/dashboard/classes">
-            <div className={`${path.startsWith("/dashboard/classes") ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+          <AppWrapper><RecipeReviewCard/></AppWrapper>
+          <Link href="/dashboard/teachers">
+            <div className={`${path.startsWith("/dashboard/teachers") ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
               <ListItemIcon>
-                <AssignmentIcon className={`${path.startsWith("/dashboard/classes") ? ' text-white' : ''}`} />
+                <PeopleIcon className={`${path.startsWith("/dashboard/teachers") ? ' text-white' : ''}`} />
               </ListItemIcon>
-              <ListItemText primary="Classes" />
+              <ListItemText primary="Teachers" />
             </div>
           </Link>
-          <Link href="/dashboard/section">
-            <div className={`${path.startsWith("/dashboard/section") ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+          <Link href="/dashboard/classes">
+            <div className={`${path.startsWith("/dashboard/classes") ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
               <ListItemIcon>
-                <AssignmentIcon className={`${path.startsWith("/dashboard/section") ? ' text-white' : ''}`} />
+                <MeetingRoomIcon className={`${path.startsWith("/dashboard/classes") ? ' text-white' : ''}`} />
+              </ListItemIcon>
+              <ListItemText primary="Grades" />
+            </div>
+          </Link>
+
+          <Link href="/dashboard/register">
+          <div className={`${path.startsWith('/dashboard/register') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+            <ListItemIcon>
+              <HowToRegIcon className={`${path.startsWith('/dashboard/register') ? ' text-white' : ''}`} />
+            </ListItemIcon>
+            <ListItemText primary="Registration" />
+          </div>
+        </Link>
+          
+          <Link href="/dashboard/section">
+            <div className={`${path.startsWith("/dashboard/section") ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+              <ListItemIcon>
+                <EventSeatIcon className={`${path.startsWith("/dashboard/section") ? ' text-white' : ''}`} />
               </ListItemIcon>
               <ListItemText primary="Sections" />
             </div>
           </Link>
           <Link href="/dashboard/subjects">
-            <div className={`${path.startsWith("/dashboard/subjects") ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+            <div className={`${path.startsWith("/dashboard/subjects") ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
               <ListItemIcon>
-                <AssignmentIcon className={`${path.startsWith("/dashboard/subjects") ? ' text-white' : ''}`} />
+                <SubjectIcon className={`${path.startsWith("/dashboard/subjects") ? ' text-white' : ''}`} />
               </ListItemIcon>
               <ListItemText primary="Subjects" />
             </div>
           </Link>
-          <AppWrapper><RecipeReviewCard/></AppWrapper>
+          
         </React.Fragment>
       )}
 
@@ -143,9 +184,9 @@ const [userRole, setUserRole]= useState('');
       {userRole && (userRole === ROLES.STUDENT) && (
         <React.Fragment>
         <Link href="/dashboard/certificate">
-          <div className={`${path.startsWith('/dashboard/certificate') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+          <div className={`${path.startsWith('/dashboard/certificate') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
-              <ShoppingCartIcon className={`${path.startsWith('/dashboard/certificate') ? ' text-white' : ''}`} />
+              <CardMembershipIcon className={`${path.startsWith('/dashboard/certificate') ? ' text-white' : ''}`} />
             </ListItemIcon>
 
             <ListItemText primary="Certification" />
@@ -154,9 +195,9 @@ const [userRole, setUserRole]= useState('');
         
 
       <Link href="/dashboard/readingmaterials">
-          <div className={`${path.startsWith('/dashboard/readingmaterials') ? 'bg-green-950 hover:bg-green-950 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+          <div className={`${path.startsWith('/dashboard/readingmaterials') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
-              <ShoppingCartIcon className={`${path.startsWith('/dashboard/readingmaterials') ? ' text-white' : ''}`} />
+              <AutoStoriesIcon className={`${path.startsWith('/dashboard/readingmaterials') ? ' text-white' : ''}`} />
             </ListItemIcon>
             <ListItemText primary="study materials" />
           </div>

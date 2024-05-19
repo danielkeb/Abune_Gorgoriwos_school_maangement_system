@@ -55,11 +55,15 @@ export class ResultService {
         throw new Error('Please provide a valid semester ID (1, 2, or 3).');
       }
       // Fetch all subjects for the given grade
-  
-      const subjects = await this.prisma.subject.findMany({ where: { gradeId } });
+
+      const subjects = await this.prisma.subject.findMany({
+        where: { gradeId },
+      });
 
       // Fetch all results for the given grade
-      const allResults = await this.prisma.result.findMany({ where: { gradeLevelId: gradeId } });
+      const allResults = await this.prisma.result.findMany({
+        where: { gradeLevelId: gradeId },
+      });
 
       // Initialize an object to store analysis data
       const analysisData = [];
@@ -67,7 +71,9 @@ export class ResultService {
       // Iterate over each subject
       for (const subject of subjects) {
         // Filter results for the current subject
-        const subjectResults = allResults.filter(result => result.subjectId === subject.id);
+        const subjectResults = allResults.filter(
+          (result) => result.subjectId === subject.id,
+        );
 
         // Initialize count for score ranges
         let below50Count = 0;
@@ -83,9 +89,9 @@ export class ResultService {
           } else if (semesterId === 2) {
             totalScore = result.totalScore2;
           } else {
-            totalScore = result.totalScore1 + result.totalScore2; 
+            totalScore = result.totalScore1 + result.totalScore2;
           }
-  
+
           // Update count based on score range
           if (totalScore < 50) {
             below50Count++;
@@ -102,17 +108,19 @@ export class ResultService {
         const between50And60Percent = (between50And60Count / totalCount) * 100;
         const above60Percent = (above60Count / totalCount) * 100;
         const teacher_get = subject.teacherId;
-       const teacher_Name= await this.prisma.teacher.findUnique({where:{user_Id:teacher_get}, select:{user:{select:{frist_name:true}}}})
+        const teacher_Name = await this.prisma.teacher.findUnique({
+          where: { user_Id: teacher_get },
+          select: { user: { select: { frist_name: true } } },
+        });
         // Store analysis data for the current subject
         analysisData.push({
-          id:subject.id,
+          id: subject.id,
           subject: subject.name,
-          teacher_Name:teacher_Name,
+          teacher_Name: teacher_Name,
           'Below 50': below50Percent,
           '50-60': between50And60Percent,
           'Above 60': above60Percent,
         });
-      
       }
 
       // Return the analysis data

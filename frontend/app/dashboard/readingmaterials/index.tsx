@@ -80,10 +80,10 @@ const ReadingMaterials = () => {
     };
 
     return (
-        <div className="w-full p-2 mt-0 text-center">
+        <div className="w-full p-2 mt-0 text-center  ">
             {!showPdf && (
-                <div className="w-full max-w-md">
-                    <div className="w-full max-w-md flex flex-wrap gap-4">
+                <div className="w-full flex-col p-4   ">
+                    <div className=" w-full  flex justify-center items-center  gap-2 p-6 boxshadow ">
                         <input
                             type="text"
                             className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
@@ -99,7 +99,7 @@ const ReadingMaterials = () => {
                         >
                             <option value="">Select grade</option>
                             {/* Options for grades */}
-                            <option value="12">Grade 12</option>
+                        <option value="12">Grade 12</option>
                         <option value="11">Grade 11</option>
                         <option value="10">Grade 10</option>
                         <option value="9">Grade 9</option>
@@ -130,7 +130,37 @@ const ReadingMaterials = () => {
                         <option value="English">English</option>
                         </select>
                     </div>
-                    {materials.map((material) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 w-[80%] mx-auto">
+  {materials.map((material) => (
+    <div key={material.id} className="bg-gray-100 flex items-center justify-center">
+      <div className="bg-white rounded-xl overflow-hidden shadow-xl hover:scale-105 hover:shadow-2xl transform duration-500 cursor-pointer">
+        <div className="p-2">
+          <h1 className="mt-2 text-lg font-bold hover:underline cursor-pointer">
+            {material?.subject}
+          </h1>
+          <p className="mt-2 font-sans text-gray-700">
+            {material?.description}
+          </p>
+        </div>
+        <div className="relative">
+          <img
+            className="w-80 h-[300px]"
+            src="https://sp-uploads.s3.amazonaws.com/uploads/services/6693546/20230219163649_63f250211f33c_ethiopian_grade_10_english_student_textbookpage1.jpg"
+            alt={material?.subject}
+          />
+     <p
+  onClick={() => handleOpenMaterial(material?.file)}
+  className="absolute text-lg sm:text-sm md:text-base transform translate-x-20 -translate-y-24 bg-blue-600 text-white py-2 sm:py-1 md:py-2 px-4 sm:px-2 md:px-3 rounded-full cursor-pointer hover:scale-105 duration-500"
+>
+  Read Material
+</p>
+
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+                    {/* {materials.map((material) => (
                         <div key={material.id} className="flex justify-between items-center border border-gray-300 rounded-md p-3 mb-2">
                             <div>{material.description}</div>
                             <div>
@@ -139,19 +169,27 @@ const ReadingMaterials = () => {
                                 </button>
                             </div>
                         </div>
-                    ))}
+                    ))} */}
                 </div>
             )}
 
             {pdfUrl && showPdf && (
+            
+
                 <div className="pdf-container">
                      <div className={styles.closeButton}> {/* Apply the closeButton class */}
                     <IconButton onClick={handleClosePdf} style={{ color: "black", fontSize: "30px" }}>
                         <CancelIcon />
                     </IconButton>
                 </div>
-                    <iframe id="pdfViewer" src={pdfUrl} style={{ width: '100%', height: '100%' }} />
+                    <iframe id="pdfViewer" src={pdfUrl} style={{ width: '100%', height: '800px' }} />
                 </div>
+
+
+  
+
+  
+             
             )}
 
             <ToastContainer position="bottom-right" />

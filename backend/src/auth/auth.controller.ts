@@ -7,12 +7,14 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   //Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { DtoAdmin, DtoSignin, DtoStudent } from './dto';
 //import { Response, response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { DtoUpdateUser } from './dto/dto.update';
 // import { DtoStudent } from 'src/students/dto';
 //import { Response } from 'express';
 
@@ -86,5 +88,19 @@ export class AuthController {
   @Get('user/:id')
   getUser( @Param('id', ParseIntPipe) id: number){
     return this.authService.getUser(id)
+  }
+
+  @Get('user_detail/:id/:role')
+  getUserDetail( @Param('id', ParseIntPipe) id: number,
+  @Param('role') role: string
+  ){
+    return this.authService.getUserDetail(id, role)
+  }
+  @Patch('user_update/:id')
+  updateUser( @Param('id', ParseIntPipe) id: number,
+  @Body() dto:DtoUpdateUser ,
+  
+  ){
+    return this.authService.updateUser(id,dto )
   }
 }

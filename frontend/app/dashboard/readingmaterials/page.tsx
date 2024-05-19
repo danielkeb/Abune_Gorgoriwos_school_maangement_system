@@ -6,7 +6,7 @@ const Page=()=>{
 
     return (
         <Main>
-        <div className="w-full  flex flex-col justify-around  items-center mt-10">
+        <div className="w-full  flex flex-col justify-around  items-center ">
             <ReadingMaterials/>
         </div>
         </Main>
