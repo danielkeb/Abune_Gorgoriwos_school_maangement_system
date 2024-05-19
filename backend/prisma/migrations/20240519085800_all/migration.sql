@@ -1,13 +1,3 @@
-/*
-  Warnings:
-
-  - Added the required column `expiresAt` to the `Reset` table without a default value. This is not possible if the table is not empty.
-
-*/
--- AlterTable
-ALTER TABLE "Reset" ADD COLUMN     "createdAT" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "expiresAt" TIMESTAMP(3) NOT NULL;
-
 -- CreateTable
 CREATE TABLE "schools" (
     "id" SERIAL NOT NULL,
@@ -31,6 +21,7 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "role" TEXT NOT NULL,
     "address" TEXT,
+    "image" TEXT,
     "phone" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "gender" TEXT NOT NULL,
@@ -84,6 +75,17 @@ CREATE TABLE "sections" (
     "gradeId" INTEGER NOT NULL,
 
     CONSTRAINT "sections_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Reset" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "shortcode" TEXT NOT NULL,
+    "createdAT" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Reset_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable

@@ -134,6 +134,7 @@ model Section {
 
   student Student[]
   teacher Teacher[]
+   subjects    Subject[] @relation(name: "SubjectSection")
 
   @@map("sections")
 }
@@ -152,6 +153,7 @@ model Subject {
   // other fields specific to Subject
   student   Student[]
   result    Result[]
+ sections  Section[] @relation(name: "SubjectSection")
   teacherId Int?
   teacher   Teacher?  @relation(fields: [teacherId], references: [user_Id])
 

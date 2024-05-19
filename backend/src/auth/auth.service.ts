@@ -54,7 +54,6 @@ export class AuthService {
     return { msg: 'sign up successfully' };
   }
 
-<<<<<<< HEAD
   async associateSubjectsAndCreateResults(
     userId: number,
     gradeId: number,
@@ -78,7 +77,7 @@ export class AuthService {
     for (const subject of subjects) {
       // Get the teacherId associated with the subject, or set it to null if not available
       const teacherId = subject.teacherId;
-      if(teacherId){
+      if (teacherId) {
         await this.prismaService.result.create({
           data: {
             studentId: userId,
@@ -88,18 +87,14 @@ export class AuthService {
             teacherId: teacherId,
           },
         });
-      }else{
+      } else {
         throw new NotFoundException('Subjects not been assigned');
       }
       // Create a result record for the student, subject, and grade
-
     }
   }
 
-  async signUpStudent(dto: DtoStudent, school_id: number) {
-=======
   async signUpUser(dto: DtoStudent, photo: string, school_id: number) {
->>>>>>> daniel
     const hash = await argon.hash(dto.password);
     const school = await this.prismaService.school.findUnique({
       where: {
@@ -149,7 +144,11 @@ export class AuthService {
         where: { user_Id: addUser.id },
         include: { user: true },
       });
-      await this.associateSubjectsAndCreateResults(quickSelect.user_Id, quickSelect.gradeId, quickSelect.sectionId);
+      await this.associateSubjectsAndCreateResults(
+        quickSelect.user_Id,
+        quickSelect.gradeId,
+        quickSelect.sectionId,
+      );
       return { msg: 'student registered', data: quickSelect };
     } else if (dto.role === 'teacher') {
       const teacher = await this.prismaService.teacher.create({
@@ -332,8 +331,10 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
-  async getUser(id:number){
-    const user= await this.prismaService.user.findUnique({where:{id:id}})
+  async getUser(id: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+    });
     return user;
   }
 }
