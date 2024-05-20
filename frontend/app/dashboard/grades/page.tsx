@@ -26,7 +26,7 @@ const Page = () => {
           `http://localhost:3333/teachers/grade/${decodedToken?.sub}`
         );
         setSchoolss(school.data);
-       const callander= await axios.get('http://localhost:3333/callander/spec')
+       const callander= await axios.get(`http://localhost:3333/callander/all/${decodedToken?.school_Id}`)
        
        setCall(callander.data);
   
@@ -86,7 +86,7 @@ const Page = () => {
    const calendarStartDate = new Date(getAll[0]?.start);
    const currentDate = new Date();
    calendarStartDate < currentDate
-   console.log( currentDate< calendarStartDate);
+   console.log(currentDate> calendarStartDate);
   //  console.log("Students: ", filteredResult[0].student )
   return (
     <Main>

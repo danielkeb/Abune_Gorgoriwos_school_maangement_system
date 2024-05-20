@@ -77,10 +77,10 @@ export class TeachersService {
         frist_name: teacher.user.frist_name,
         middle_name: teacher.user.middle_name,
         last_name: teacher.user.last_name,
-        gender:teacher.user.gender,
-        address:teacher.user.address,
+        gender: teacher.user.gender,
+        address: teacher.user.address,
         email: teacher.user.email,
-        date_of_birth:teacher.user.date_of_birth,
+        date_of_birth: teacher.user.date_of_birth,
         phone: teacher.user.phone,
         education_level: teacher.education_level,
         gradeId: teacher.gradelevel.map((grade) => grade.id),
@@ -92,22 +92,22 @@ export class TeachersService {
     });
 
     return teachersWithMergedUser;
-  //   const teacher = await this.prisma.teacher.findUnique({
-  //     where: { user_Id: id },
-  //     select: { gradelevel: { include: { subject: true, section: true } } },
-  //   });
-  //   console.log(teacher);
-  //   const flatTeacher = teacher.gradelevel.map((teach) => {
-  //     return {
-  //       id: teach.id,
-  //       Grade: teach.grade,
-  //       sections: teach.section.map((sec) => sec.name),
-  //       subjects: teach.subject,
-  //     };
-  //   });
-  //  // console.log('hello', flatTeacher);
-  //   // return teacher;
-  //   return flatTeacher;
+    //   const teacher = await this.prisma.teacher.findUnique({
+    //     where: { user_Id: id },
+    //     select: { gradelevel: { include: { subject: true, section: true } } },
+    //   });
+    //   console.log(teacher);
+    //   const flatTeacher = teacher.gradelevel.map((teach) => {
+    //     return {
+    //       id: teach.id,
+    //       Grade: teach.grade,
+    //       sections: teach.section.map((sec) => sec.name),
+    //       subjects: teach.subject,
+    //     };
+    //   });
+    //  // console.log('hello', flatTeacher);
+    //   // return teacher;
+    //   return flatTeacher;
   }
 
   async updateAdminTeacher(dto: UpdateAdminTeacherDto, userId: number) {
@@ -235,6 +235,16 @@ export class TeachersService {
           },
         },
       });
+      await this.prisma.section.update({
+        where: {
+          id: dto.sectionId,
+        },
+        data: {
+          subjects: {
+            connect: { id: dto.subjectId },
+          },
+        },
+      });
     }
 
     if (!isTeacherConnectedToGrade) {
@@ -308,6 +318,16 @@ export class TeachersService {
         data: {
           section: {
             disconnect: { id: dto.sectionId },
+          },
+        },
+      });
+      await this.prisma.section.update({
+        where: {
+          id: dto.sectionId,
+        },
+        data: {
+          subjects: {
+            disconnect: { id: dto.subjectId },
           },
         },
       });
@@ -478,5 +498,25 @@ export class TeachersService {
     }
 
     return { success: true };
+  }
+  async fetchTeacher(id: number) {
+    const teacher = await this.prisma.teacher.findUnique({
+      where: {
+        user_Id: id,
+      },
+      include: {
+        gradelevel: {
+          include: {
+            section: {
+              include: { subjects: { select: { id: true, name: true } } },
+            },
+          },
+        },
+      },
+    });
+    if (!teacher) {
+      throw new NotFoundException('teacher not found');
+    }
+    return teacher;
   }
 }

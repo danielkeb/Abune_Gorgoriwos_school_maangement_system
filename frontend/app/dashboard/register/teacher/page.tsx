@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import RegistrationHead from "../reghead/RegistrationHead";
 import Main from "../../main/Main";
 import { useFormik } from "formik";
@@ -12,6 +12,9 @@ import { AppContext } from "@/components/context/UserContext";
 
 const page = () => {
   const [check, setCheck] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const { decodedToken } = useContext(AppContext);
+  
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -21,20 +24,31 @@ const page = () => {
       role: "teacher",
       address: "",
       username: "",
+      image: null,
       phone: "",
       password: "1234",
       gender: "",
       date_of_birth: "",
       education_level: "",
     },
+  
     onSubmit: async (values) => {
 
       try {
         setCheck(true);
         console.log("final values =", formik.values)
+        const formData = new FormData();
+        Object.keys(values.image).forEach(key => {
+          formData.append(key, values.image as any);
+        });
         const response = await axios.post(
-          "http://localhost:3333/auth/user/1",
-          formik.values
+          `http://localhost:3333/auth/user/${decodedToken?.school_Id}/0/0`,
+          formik.values,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
 
         toast.success("New Teacher Registerd ");
@@ -287,26 +301,39 @@ const page = () => {
                     <label
                       className="w-full bg-white p-5 flex justify-center items-center"
                       htmlFor="photo">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
-                        />
-                      </svg>
+                      {selectedFileName ? (
+                        <span className="text-green-700">{selectedFileName}</span>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                          />
+                        </svg>
+                      )}
                     </label>
-                    <input type="file" id="photo" className="hidden" />
+                    <input
+                      type="file"
+                      id="photo"
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files?.[0];
+                        formik.setFieldValue("image", file || null);
+                        setSelectedFileName(file ? file.name : "");
+                      }}
+                    />
                   </div>
                 </div>
               </div>
               <br />
-              <button className="bg-green-950  border-0 text-white w-full p-3  rounded-md">
+              <button className="bg-green-700  border-0 text-white w-full p-3  rounded-md">
               { check? <>
               
               <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

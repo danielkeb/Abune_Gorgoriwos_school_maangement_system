@@ -75,6 +75,10 @@ export class TeachersController {
   ) {
     return this.teacherService.UpdateTeacherConnect(teacherId, dto);
   }
+  @Get('fetch/:teacherId')
+  fetchTeacher(@Param('teacherId', ParseIntPipe) teacherId: number) {
+    return this.teacherService.fetchTeacher(teacherId);
+  }
 
   @Patch('remove/section/subject/:teacherId')
   disconnectTeacher(

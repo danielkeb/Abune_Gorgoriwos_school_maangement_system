@@ -22,8 +22,6 @@ model School {
 
   createdAT    DateTime   @default(now())
   updatedAT    DateTime   @updatedAt
-  schoolYearId Int
-  schoolYear   SchoolYear @relation(fields: [schoolYearId], references: [id])
   User         User[]
 
   @@index([id])
@@ -39,12 +37,12 @@ model User {
   email         String    @unique
   role          String
   address       String?
+  image         String?
   phone         String
   password      String
   gender        String
   date_of_birth String
   loggedInAt    DateTime?
-
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
 
@@ -134,8 +132,17 @@ model Section {
 
   student Student[]
   teacher Teacher[]
+   subjects    Subject[] @relation(name: "SubjectSection")
 
   @@map("sections")
+}
+
+model Reset {
+  id Int @id @default(autoincrement())
+  userId Int
+  shortcode String
+  createdAT    DateTime   @default(now())
+  expiresAt    DateTime 
 }
 
 model Subject {
@@ -144,6 +151,7 @@ model Subject {
   // other fields specific to Subject
   student   Student[]
   result    Result[]
+ sections  Section[] @relation(name: "SubjectSection")
   teacherId Int?
   teacher   Teacher?  @relation(fields: [teacherId], references: [user_Id])
 
@@ -189,7 +197,7 @@ model SchoolYear {
   end_date   String
 
   term   Term[]
-  school School[]
+ 
 }
 
 model Term {
@@ -224,6 +232,7 @@ model Calander {
   title  String
   start  String
   allDay Boolean
+  schoolId Int?
 }
 
 model CourseMaterial {

@@ -33,7 +33,7 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { AppContext } from '@/components/context/UserContext';
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 
 const drawerWidth: number = 240;
@@ -152,9 +152,9 @@ const RegistrationHead: React.FC<MainProps> = ({ children }) => {
   };
 
 
-
+  const { decodedToken } = useContext(AppContext);
   return (
-    <section className=" py-1 bg-blueGray-50">
+    <section className=" py-1 ">
       <div className="w-full lg:w-8/12 px-4 mx-auto mt-6">
         <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
           <div className="rounded-t bg-white mb-0 px-6 py-6">
@@ -194,8 +194,10 @@ const RegistrationHead: React.FC<MainProps> = ({ children }) => {
    
         <List sx={{ p: 1 }} component="nav">
          
-
-          <Link
+         {
+          decodedToken?.role=="admin" && (
+            <>
+             <Link
             href="/dashboard/register"
            
             style={{ textDecoration: 'none', color: 'black' }}
@@ -210,7 +212,15 @@ const RegistrationHead: React.FC<MainProps> = ({ children }) => {
           >
             <MenuItem sx={{ px: 3 }}>Teacher</MenuItem>
           </Link>
-          <Link
+            </>
+
+          )
+
+         }
+          {
+          decodedToken?.role=="superadmin" && (
+            <>
+            <Link
             href="/dashboard/register/admin"
            
             style={{ textDecoration: 'none', color: 'black' }}
@@ -224,6 +234,13 @@ const RegistrationHead: React.FC<MainProps> = ({ children }) => {
           >
             <MenuItem sx={{ px: 3 }}>Schools</MenuItem>
           </Link>
+            </>
+
+          )
+
+         }
+          
+
         </List>
    
    

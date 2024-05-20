@@ -135,9 +135,9 @@ const [userRole, setUserRole]= useState('');
         <React.Fragment>
           <AppWrapper><RecipeReviewCard/></AppWrapper>
           <Link href="/dashboard/teachers">
-            <div className={`${path.startsWith("/dashboard/teachers") ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+            <div className={`${path.startsWith("/dashboard/teachers") || path.startsWith("/dashboard/teachup")  ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
               <ListItemIcon>
-                <PeopleIcon className={`${path.startsWith("/dashboard/teachers") ? ' text-white' : ''}`} />
+                <PeopleIcon className={`${path.startsWith("/dashboard/teachers") || path.startsWith("/dashboard/teachup") ? ' text-white' : ''}`} />
               </ListItemIcon>
               <ListItemText primary="Teachers" />
             </div>

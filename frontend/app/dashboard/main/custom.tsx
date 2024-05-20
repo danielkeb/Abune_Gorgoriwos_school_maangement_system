@@ -54,12 +54,14 @@ export default function RecipeReviewCard() {
   const { dork, setDork } = useContext(ToGetContext);
   const [expanded, setExpanded] = React.useState(false);
   const [schoolss, setSchoolss] = useState([]);
+  const[color, setColor]= useState();
   const router = useRouter();
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const handleGradeClick= (id:string)=>{
+    setColor(id)
     setDork(id)
     router.push("/dashboard/students");
   }
@@ -83,12 +85,13 @@ export default function RecipeReviewCard() {
         <ListItem disablePadding className="flex flex-col ml-10">
           {schoolss?.map((s: any) => {
             return (
-              <ListItemButton className="w-full " onClick={()=>handleGradeClick(s.id)}>
+              <ListItemButton className={`w-full ${color== s.id? "bg-green-700":"bg-transparent"}` } onClick={()=>handleGradeClick(s.id)}>
                 <ListItemIcon>
-                  <PeopleIcon />
+                  <PeopleIcon className={`w-full ${color== s.id? "text-white":""}` } />
+
                 </ListItemIcon>
 
-                <ListItemText primary={` Grade ${s.grade}`} />
+                <ListItemText className={`w-full ${color== s.id? "text-white":""}` } primary={` Grade ${s.grade}`} />
               </ListItemButton>
             );
           })}

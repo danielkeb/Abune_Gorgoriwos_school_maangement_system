@@ -15,6 +15,7 @@ import { AppContext } from "@/components/context/UserContext";
 const page = () => {
     const [teachers, setTeachers] = useState([]);
     const [schoolss, setSchoolss] = useState([]);
+    const [disData, setDisData]=useState()
     const router = useParams();
   
     const { id } = router;
@@ -23,11 +24,13 @@ const page = () => {
       const fetchData = async () => {
         try {
         
-         
+      
           const res = await axios.get(`http://localhost:3333/teachers/get/${id}`);
           const school = await axios.get("http://localhost:3333/grade/get");
+          const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
           setSchoolss(school.data);
           setTeachers(res.data);
+          setDisData(disconnectData.data)
           formik.setValues({
             email: res.data[0].email,
             frist_name: res.data[0].frist_name, // Assuming other fields are also available
@@ -125,13 +128,52 @@ const page = () => {
     
     
   } 
+ 
+
+  const handleDisconnect = async (grade:string, section:string, subject:string) => {
+    const gradeId= parseInt(grade) 
+    const sectionId= parseInt(section) 
+    const subjectId= parseInt(subject) 
+
+    try{
+      const response = await axios.patch(`http://localhost:3333/teachers/disconnect/all/${id}`,{gradeId, sectionId,subjectId});
+    
+      // Filter out the clicked row from the state
+      const updatedGradeLevels = disData.gradelevel.map((gradeLevel) => {
+        if (gradeLevel.id === gradeId) {
+          gradeLevel.section = gradeLevel.section.map((section) => {
+            if (section.id === sectionId) {
+              section.subjects = section.subjects.filter(
+                (subject) => subject.id !== subjectId
+              );
+            }
+            return section;
+          });
+        }
+        return gradeLevel;
+      });
+
+      setDisData({
+        ...disData,
+        gradelevel: updatedGradeLevels,
+      });
+
+      toast.success("Teacher record Updated ");
+
+    }catch(error:any){
+      toast.error(error?.response?.data.message);
+    }
+
+
+
+  };
   const secc=schoolss.find((school:any) => school.id == formik.values.gradeId)
 
-  
+   console.log("if I get it", disData);
   return (
     <Main>
       <div className='flex flex-col justify-center items-center mt-5 '>
-   <div className="flex-auto px-4 lg:px-10 py-10 pt-0 w-[70%]">
+   <div className="flex-auto px-4 lg:px-10 py-10 pt-0 w-[70%] bg-white boxshadow">
             <form onSubmit={formik.handleSubmit}>
               <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
                 Teacher Information
@@ -341,7 +383,8 @@ const page = () => {
             </form>
 
           </div>
-          <div className="flex-auto px-4 lg:px-10 py-10 pt-0 w-[70%]">
+          <br/>
+          <div className="flex-auto px-4 lg:px-10 py-10 pt-0 w-[70%] bg-white boxshadow">
           <hr className="mt-6 border-b-1 border-blueGray-300" />
           <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
                 Assign new Subject
@@ -467,13 +510,49 @@ const page = () => {
               </div>
    <br/>
    <hr className="mt-6 border-b-1 border-blueGray-300" />
-          <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-                Subjects and Sections
-              </h6>
+   <br/>
+          
    
           </div>
 
-           
+          <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase w-[70%] bg-white boxshadow p-6">
+                Disconnect Subject
+                <table className="w-full h-auto border-collapse border border-gray-300 mt-2">
+  <thead>
+    <tr className="bg-gray-100 border-b border-gray-300">
+      <th className="p-4 text-left">Grade</th>
+      <th className="p-4 text-left">Section</th>
+      <th className="p-4 text-left">Subject</th>
+      <th className="p-4 text-left">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {disData?.gradelevel.map((gradeLevel) =>
+      gradeLevel.section.map((section) =>
+        section.subjects.map((subject) => (
+          <tr key={subject.id} className="border-b border-gray-300">
+            <td className="p-4">{gradeLevel.grade}</td>
+            <td className="p-4">{section.name}</td>
+            <td className="p-4">{subject.name}</td>
+            <td className="p-4">
+              <button
+                onClick={() =>
+                  handleDisconnect(gradeLevel.id, section.id, subject.id)
+                }
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Disconnect
+              </button>
+            </td>
+          </tr>
+        ))
+      )
+    )}
+  </tbody>
+</table>
+
+
+              </h6>
           </div>
           <ToastContainer
         position="bottom-right"

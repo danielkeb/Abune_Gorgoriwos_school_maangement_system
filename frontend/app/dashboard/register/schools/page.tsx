@@ -177,7 +177,7 @@ const page = () => {
               </div>
 
               <br />
-              <button className="bg-green-950  border-0 text-white w-full p-3  rounded-md">
+              <button className="bg-green-700  border-0 text-white w-full p-3  rounded-md">
               { check? <>
               
               <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -5,19 +5,20 @@ import { CallanderDto } from './dto/callander.dto';
 @Injectable()
 export class CallanderService {
   constructor(private prismaService: PrismaService) {}
-  async addCallander(dto: CallanderDto) {
+  async addCallander(dto: CallanderDto, school_Id:number) {
     const post = await this.prismaService.calander.create({
       data: {
         id: dto.id,
         title: dto.title,
         start: dto.start,
         allDay: dto.allDay,
+        schoolId:school_Id
       },
     });
     return post;
   }
-  async getAllCallanders() {
-    const callanders = await this.prismaService.calander.findMany({});
+  async getAllCallanders(school_Id:number) {
+    const callanders = await this.prismaService.calander.findMany({where:{schoolId:school_Id}});
     return callanders;
   }
 
