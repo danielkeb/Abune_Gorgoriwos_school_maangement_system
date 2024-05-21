@@ -130,11 +130,7 @@ export default function DrawerAppBar(props: Props) {
               </Button>
             ))}
          
-        <Link href="/materials">
-              <Button style={{ backgroundColor: "none", color: "black" }}>
-                Materials
-              </Button>
-            </Link>
+       
             <Link href="/login">
               <Button style={{ backgroundColor: "green", color: "white" }}>
                 Portal
