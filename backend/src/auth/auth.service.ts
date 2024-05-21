@@ -273,10 +273,11 @@ export class AuthService {
     this.shortCodeService.sendSecurityAlert(user.email, userId);
     return { userId, message: 'send success', statuscode: 200 };
   }
-  async getUsers(role: string) {
+  async getUsers(role: string, schlId: number) {
     const allUsers = await this.prismaService.user.findMany({
       where: {
         role: role,
+        school_Id: schlId,
       },
       select: {
         id: true,

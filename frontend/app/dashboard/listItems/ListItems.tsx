@@ -79,6 +79,7 @@ const [userRole, setUserRole]= useState('');
 
       {/* Roles route accessible only to super admin */}
       {userRole && userRole === ROLES.SUPER_ADMIN && (
+        <React.Fragment>
         <Link href="/dashboard/roles">
           <ListItemButton>
             <ListItemIcon>
@@ -87,6 +88,8 @@ const [userRole, setUserRole]= useState('');
             <ListItemText primary="Roles" />
           </ListItemButton>
         </Link>
+        <SchoolList/>
+        </React.Fragment>
       )}
    
       {/* Grades route accessible only to admin and teacher */}

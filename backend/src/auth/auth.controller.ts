@@ -126,9 +126,12 @@ export class AuthController {
     return this.authService.resetPassword(dto, id, token);
   }
 
-  @Get('role/:role')
-  getUsers(@Param('role') role: string) {
-    return this.authService.getUsers(role);
+  @Get('role/:role/:schoolsId')
+  getUsers(
+    @Param('role') role: string,
+    @Param('schoolsId', ParseIntPipe) schoolsId: number,
+  ) {
+    return this.authService.getUsers(role, schoolsId);
   }
   @Get('get')
   getAdmin() {
