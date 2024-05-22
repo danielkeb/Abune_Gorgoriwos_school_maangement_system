@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { CallanderDto } from './dto/callander.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CallanderService {

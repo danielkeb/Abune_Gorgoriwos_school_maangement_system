@@ -2,7 +2,8 @@ import { NestFactory } from '@nestjs/core';
 //import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as cors from 'cors';
+import cors from 'cors';
+// import * as cors from 'cors';
 import * as path from 'path';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {

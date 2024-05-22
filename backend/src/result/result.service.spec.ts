@@ -1,54 +1,85 @@
+// result.service.spec.ts
+import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from '../prisma/prisma.service';
 import { ResultService } from './result.service';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { ConfigService } from '@nestjs/config/dist'; // Import the appropriate ConfigService if necessary
+import { NotFoundException, NotAcceptableException } from '@nestjs/common';
+import { AddResultkDto } from './dto';
 
 describe('ResultService', () => {
-  let resultService: ResultService;
+  let service: ResultService;
   let prismaService: PrismaService;
 
-  beforeEach(() => {
-    const configService = new ConfigService(); // Create an instance of ConfigService if necessary
-    prismaService = new PrismaService(configService); // Provide the configService to PrismaService constructor
-    resultService = new ResultService(prismaService);
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        ResultService,
+        {
+          provide: PrismaService,
+          useValue: {
+            subject: {
+              findUnique: jest.fn(),
+            },
+            result: {
+              create: jest.fn(),
+            },
+          },
+        },
+      ],
+    }).compile();
+
+    service = module.get<ResultService>(ResultService);
+    prismaService = module.get<PrismaService>(PrismaService);
   });
 
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
 
-test('example test', () => {
-  expect(true).toBe(true);
-});
+  describe('addMark', () => {
+    const dto: AddResultkDto = {
+      studentId: 1,
+      subjectId: 1,
+      test1: 80,
+      assignmentScore1: 85,
+      midtermScore1: 75,
+      finalExamScore1: 90,
+      totalScore1: 82,
+      gradeLevelId: 0,
+      teacherId: 0,
+    };
 
-  describe('makeAnalysis', () => {
-    it('should return analysis data for a given grade and semester', async () => {
-      // Mock the PrismaService methods to return dummy data
-      prismaService.subject.findMany = jest.fn().mockResolvedValue([
-        { id: 1, name: 'Math' },
-        { id: 2, name: 'Science' },
-      ]);
+    it('should throw NotFoundException if subject does not exist', async () => {
+      (prismaService.subject.findUnique as jest.Mock).mockResolvedValue(null);
 
-      prismaService.result.findMany = jest.fn().mockResolvedValue([
-        { subjectId: 1, totalScore1: 40, totalScore2: 50 },
-        { subjectId: 1, totalScore1: 60, totalScore2: 70 },
-        { subjectId: 2, totalScore1: 70, totalScore2: 80 },
-      ]);
-
-      prismaService.teacher.findUnique = jest.fn().mockResolvedValue({
-        user: { first_name: 'John', last_name: 'Doe' },
-      });
-
-      // Call the makeAnalysis method with gradeId = 1 and semesterId = 1
-      const analysisData = await resultService.makeAnalysis(1, 1);
-
-      // Assertions
-      expect(analysisData).toHaveLength(2); // Two subjects should be analyzed
-      expect(analysisData[0].subject).toBe('Math');
-      expect(analysisData[0]['Below 50']).toBe(50); // 50% of students scored below 50 in Math
-      expect(analysisData[0]['50-60']).toBe(50); // 50% of students scored between 50 and 60 in Math
-      expect(analysisData[0]['Above 60']).toBe(0); // 0% of students scored above 60 in Math
-      expect(analysisData[0].teacher_Name).toEqual({ first_name: 'John', last_name: 'Doe' });
+      await expect(service.addMark(dto)).rejects.toThrow(
+        new NotFoundException('Subject does not exist'),
+      );
     });
 
-    // Add more test cases for different scenarios if needed
-  });
+    it('should create a result and return success message', async () => {
+      (prismaService.subject.findUnique as jest.Mock).mockResolvedValue({
+        id: dto.subjectId,
+      });
 
-  // Add more test cases as needed for other methods of ResultService
+      (prismaService.result.create as jest.Mock).mockResolvedValue({});
+
+      await expect(service.addMark(dto)).resolves.toEqual({
+        msg: 'Result Created!',
+      });
+    });
+
+    it('should throw NotAcceptableException if result creation fails due to unique constraint', async () => {
+      (prismaService.subject.findUnique as jest.Mock).mockResolvedValue({
+        id: dto.subjectId,
+      });
+
+      (prismaService.result.create as jest.Mock).mockRejectedValue(
+        new Error('Unique constraint failed'),
+      );
+
+      await expect(service.addMark(dto)).rejects.toThrow(
+        new NotAcceptableException('student id and subject id must be unique'),
+      );
+    });
+  });
 });

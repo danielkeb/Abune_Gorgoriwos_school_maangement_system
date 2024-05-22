@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { DtoSignin, DtoStudent, DtoAdmin } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
@@ -13,7 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 //import { Response } from 'express';
 //import * as nodemailer from 'nodemailer';
-import { EmailService } from 'src/email/email.service';
+import { EmailService } from '../././email/email.service';
 
 @Injectable()
 export class AuthService {
