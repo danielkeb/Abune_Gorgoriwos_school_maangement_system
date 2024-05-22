@@ -13,15 +13,18 @@ export class CoursematerialService {
     teacher: number,
     subjectId: number,
     gradeId: number,
+    schoolId: number,
     dto: UploadCourse,
   ) {
     try {
       const teachId = parseInt(teacher.toString(), 10);
+      const Id = parseInt(schoolId.toString(), 10);
       const course = await this.prismaService.courseMaterial.create({
         data: {
           description: dto.description,
           file: filepath,
           teacherId: teachId,
+          schoolId: Id,
         },
       });
 

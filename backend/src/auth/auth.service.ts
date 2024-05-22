@@ -26,7 +26,7 @@ export class AuthService {
     private emailService: EmailService,
     private shortCodeService: ShortcodeEmailService,
   ) {}
-  async signUpSuperAdmin(dto: DtoAdmin, photo: string, ) {
+  async signUpSuperAdmin(dto: DtoAdmin, photo: string) {
     const hash = await argon.hash(dto.password);
     const emailExists = await this.prismaService.user.findUnique({
       where: {
@@ -95,9 +95,13 @@ export class AuthService {
     }
   }
 
-  async signUpUser(dto: DtoStudent, photo: string, school_id: number, gradeId, sectionId) {
- 
-
+  async signUpUser(
+    dto: DtoStudent,
+    photo: string,
+    school_id: number,
+    gradeId,
+    sectionId,
+  ) {
     const hash = await argon.hash(dto.password);
     const school = await this.prismaService.school.findUnique({
       where: {
@@ -335,38 +339,92 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
-  async getUser(id: number) {
+  async getUser(id: number, path: string) {
     const user = await this.prismaService.user.findUnique({
       where: { id: id },
     });
-    return user;
+    const imageUrl = `${path}/${user.image}`;
+    return { user, imageUrl };
   }
 
-  async getUserDetail(id:number, role:string){
-    if(role=="student"){
-    const user= await this.prismaService.student.findUnique({where:{user_Id:id}, select:{gradelevel:{select:{grade:true}}, section:{select:{name:true}},user:{select:{frist_name:true, middle_name:true,last_name:true, username:true,email:true,address:true,phone:true,gender:true,date_of_birth:true}}}})
-    return user;
-    }else if(role=="teacher"){
-      const user= await this.prismaService.teacher.findUnique({where:{user_Id:id}, select:{education_level:true,user:{select:{frist_name:true, middle_name:true,last_name:true, username:true,email:true,address:true,phone:true,gender:true,date_of_birth:true}}}})
+  async getUserDetail(id: number, role: string) {
+    if (role == 'student') {
+      const user = await this.prismaService.student.findUnique({
+        where: { user_Id: id },
+        select: {
+          gradelevel: { select: { grade: true } },
+          section: { select: { name: true } },
+          user: {
+            select: {
+              frist_name: true,
+              middle_name: true,
+              last_name: true,
+              username: true,
+              email: true,
+              image: true,
+              address: true,
+              phone: true,
+              gender: true,
+              date_of_birth: true,
+            },
+          },
+        },
+      });
       return user;
-
-    }else{
-    const user= await this.prismaService.user.findUnique({where:{id:id}, select:{frist_name:true, middle_name:true,last_name:true, username:true,email:true,address:true,phone:true,gender:true,date_of_birth:true}})
-    return{
-      "user":user
-    };
+    } else if (role == 'teacher') {
+      const user = await this.prismaService.teacher.findUnique({
+        where: { user_Id: id },
+        select: {
+          education_level: true,
+          user: {
+            select: {
+              frist_name: true,
+              middle_name: true,
+              last_name: true,
+              username: true,
+              email: true,
+              image: true,
+              address: true,
+              phone: true,
+              gender: true,
+              date_of_birth: true,
+            },
+          },
+        },
+      });
+      return user;
+    } else {
+      const user = await this.prismaService.user.findUnique({
+        where: { id: id },
+        select: {
+          frist_name: true,
+          middle_name: true,
+          last_name: true,
+          username: true,
+          email: true,
+          address: true,
+          image: true,
+          phone: true,
+          gender: true,
+          date_of_birth: true,
+        },
+      });
+      return {
+        user: user,
+      };
     }
-
   }
 
-  async updateUser(id:number, dto:DtoUpdateUser){
+  async updateUser(id: number, dto: DtoUpdateUser) {
     let hash;
-    if(dto.password){
+    if (dto.password) {
       hash = await argon.hash(dto.password);
     }
- 
-    const user= await this.prismaService.user.update({where:{id:id}, data:{username:dto.username,password:hash }})
-    return "update complet";
 
+    const user = await this.prismaService.user.update({
+      where: { id: id },
+      data: { username: dto.username, password: hash },
+    });
+    return 'update complete';
   }
 }

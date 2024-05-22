@@ -121,8 +121,8 @@ export class TeachersService {
         middle_name: dto.middle_name,
         address: dto.address,
         email: dto.email,
-        date_of_birth:dto.date_of_birth,
-        gender:dto.gender,
+        date_of_birth: dto.date_of_birth,
+        gender: dto.gender,
         phone: dto.phone,
       },
     });
@@ -199,12 +199,36 @@ export class TeachersService {
         'Invalid request data. Required properties are missing.',
       );
     }
+
+    // Check if the section, grade, and subject exist
+    const [sectionExists, gradeExists, subjectExists] = await Promise.all([
+      this.prisma.section.findUnique({ where: { id: dto.sectionId } }),
+      this.prisma.gradeLevel.findUnique({ where: { id: dto.gradeId } }),
+      this.prisma.subject.findUnique({ where: { id: dto.subjectId } }),
+    ]);
+
+    if (!sectionExists) {
+      throw new NotFoundException(`Section with id ${dto.sectionId} not found`);
+    }
+
+    if (!gradeExists) {
+      throw new NotFoundException(`Grade with id ${dto.gradeId} not found`);
+    }
+
+    if (!subjectExists) {
+      throw new NotFoundException(`Subject with id ${dto.subjectId} not found`);
+    }
+
     const teacherInfo = await this.prisma.teacher.findUnique({
       where: {
         user_Id: teacherId,
       },
       include: {
-        section: true,
+        section: {
+          include: {
+            subjects: true,
+          },
+        },
         gradelevel: true,
         subject: true,
       },
@@ -224,6 +248,15 @@ export class TeachersService {
       (sub) => sub.id === dto.subjectId,
     );
 
+    // Check if teacher is already connected to any subject within the same section and grade
+    const isTeacherConnectedToSameSectionGradeSubject =
+      teacherInfo.section.some(
+        (sec) =>
+          sec.id === dto.sectionId &&
+          sec.subjects.some((sub) => sub.gradeId === dto.gradeId),
+      );
+
+    // Update section connection if not already connected
     if (!isTeacherConnectedToSection) {
       await this.prisma.teacher.update({
         where: {
@@ -235,18 +268,9 @@ export class TeachersService {
           },
         },
       });
-      await this.prisma.section.update({
-        where: {
-          id: dto.sectionId,
-        },
-        data: {
-          subjects: {
-            connect: { id: dto.subjectId },
-          },
-        },
-      });
     }
 
+    // Update grade connection if not already connected
     if (!isTeacherConnectedToGrade) {
       await this.prisma.teacher.update({
         where: {
@@ -260,7 +284,8 @@ export class TeachersService {
       });
     }
 
-    if (!isTeacherConnectedToSubject) {
+    // Update subject connection if not already connected to any subject within the same section and grade
+    if (!isTeacherConnectedToSameSectionGradeSubject) {
       await this.prisma.teacher.update({
         where: {
           user_Id: teacherId,
@@ -271,6 +296,11 @@ export class TeachersService {
           },
         },
       });
+    } else if (!isTeacherConnectedToSubject) {
+      // If teacher is connected to another subject in the same section and grade, do not connect the new subject
+      throw new BadRequestException(
+        `Teacher is already connected to another subject in section ${dto.sectionId} and grade ${dto.gradeId}`,
+      );
     }
 
     // Fetch updated teacher info after connections are made
@@ -279,7 +309,11 @@ export class TeachersService {
         user_Id: teacherId,
       },
       include: {
-        section: true,
+        section: {
+          include: {
+            subjects: true,
+          },
+        },
         gradelevel: true,
         subject: true,
       },

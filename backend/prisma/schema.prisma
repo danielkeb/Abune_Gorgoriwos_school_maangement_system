@@ -244,6 +244,7 @@ model CourseMaterial {
   // Define the many-to-one relationship with Subject
   subject    Subject?     @relation(fields: [subjectId], references: [id])
   subjectId  Int?
+  schoolId Int?
   gradeLevel GradeLevel[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
