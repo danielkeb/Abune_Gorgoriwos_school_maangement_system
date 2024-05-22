@@ -120,7 +120,7 @@ export class StudentsService {
               teacher: true,
             },
           });
-           
+
           // // Filter students with a totalScore greater than 50
           // const totalScores = studentResults.map(
           //   (result) => result.totalScore1,
@@ -156,19 +156,26 @@ export class StudentsService {
           //   (score, index) => (score + totalScores2[index]) / 2,
           // );
 
-          
-
           // const averageTotalScore_one =
           //   totalScores_one.reduce((sum, score) => sum + score, 0) /
           //   totalScores_one.length;
           // const averageTotalScore_two =
           //   totalScores_two.reduce((sum, score) => sum + score, 0) /
-          //   totalScores_two.length;  
+          //   totalScores_two.length;
 
           // Filter students based on the average total score
           const getInfo = await this.prismaService.student.findUnique({
             where: { user_Id: user_id },
-            select: {gradeId:true,sectionId:true, overallScore: true,firstScore:true,secondScore:true,firstrank:true,secondtrank:true,overallrank:true },
+            select: {
+              gradeId: true,
+              sectionId: true,
+              overallScore: true,
+              firstScore: true,
+              secondScore: true,
+              firstrank: true,
+              secondtrank: true,
+              overallrank: true,
+            },
           });
           const eligibleStudents = getInfo.overallScore > 50 ? true : false;
           // averageTotalScore > 50 ? studentResults : [];
@@ -181,24 +188,23 @@ export class StudentsService {
             totalScore1: getInfo.firstScore,
             totalScore2: getInfo.secondScore,
             overallScore: getInfo.overallScore,
-            firstRank:getInfo.firstrank,
-            secondRank:getInfo.secondtrank,
-            overallRank:getInfo.overallrank,
-            subjectScores: await Promise.all(studentResults.map(async (result) => {
-              const subject = await prisma.subject.findUnique({
-                where: { id: result.subjectId },
-              });
-              return {
-                subject: subject?.name || 'Unknown',
-                totalScore1: result.totalScore1,
-                totalScore2: result.totalScore2,
-                average: (result.totalScore1 + result.totalScore2) / 2,
-              };
-            })),
+            firstRank: getInfo.firstrank,
+            secondRank: getInfo.secondtrank,
+            overallRank: getInfo.overallrank,
+            subjectScores: await Promise.all(
+              studentResults.map(async (result) => {
+                const subject = await prisma.subject.findUnique({
+                  where: { id: result.subjectId },
+                });
+                return {
+                  subject: subject?.name || 'Unknown',
+                  totalScore1: result.totalScore1,
+                  totalScore2: result.totalScore2,
+                  average: (result.totalScore1 + result.totalScore2) / 2,
+                };
+              }),
+            ),
           };
-
-
-
 
           // const historyData = {
           //   studentId: studentResults[0].studentId, // Use the studentId from the first result
@@ -217,7 +223,7 @@ export class StudentsService {
           //     result.totalScore1;
           // }
 
-          // Insert into Student History
+          // Insert into Student Histor
           await prisma.studentHistory.create({
             data: historyData,
           });
@@ -259,12 +265,13 @@ export class StudentsService {
       };
     }
   }
- async getStudentHistory(id:number){
-  const history= await this.prismaService.studentHistory.findMany({where:{studentId:id}})
- 
-   return history
- 
- }
+  async getStudentHistory(id: number) {
+    const history = await this.prismaService.studentHistory.findMany({
+      where: { studentId: id },
+    });
+
+    return history;
+  }
   // async associateSubjectsAndCreateResults(
   // async promoteStudents(students: PromoteStudentsNextGradeDto[]) {
   //   for (const student of students) {
@@ -1029,10 +1036,6 @@ export class StudentsService {
     }
   }
 
-
-
-
-  
   async getStudentResult(id: number) {
     try {
       // Fetch the student's results
@@ -1044,7 +1047,7 @@ export class StudentsService {
           subject: true,
         },
       });
-  
+
       // Calculate the total score and average score for each semester
       let totalScore1 = 0;
       let totalScore2 = 0;
@@ -1054,11 +1057,11 @@ export class StudentsService {
         totalScore1 += result.totalScore1;
         totalScore2 += result.totalScore2;
       }
-  
+
       // Calculate the average score for each semester
       const averageScore1 = totalResults > 0 ? totalScore1 / totalResults : 0;
       const averageScore2 = totalResults > 0 ? totalScore2 / totalResults : 0;
-  
+
       // Prepare the result object
       const studentResult = {
         results,
@@ -1067,11 +1070,10 @@ export class StudentsService {
         averageScore1,
         averageScore2,
       };
-  
+
       return studentResult;
     } catch (error) {
       throw new Error(`Error fetching student results: ${error}`);
     }
   }
-  
 }

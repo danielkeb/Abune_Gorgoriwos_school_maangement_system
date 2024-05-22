@@ -41,7 +41,7 @@ const ManageClass = () => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       if (popupRef.current && !popupRef.current.contains(target)) {
-        setshowUpdateForm(false);
+        setShowUpdateForm(false);
       }
     };
 
@@ -115,7 +115,7 @@ const ManageClass = () => {
       <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
       <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div className="sm:flex sm:items-start">
+          <div className="justify-center">
             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
               <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">Create New Class</h3>
               <div className="mt-2 mx-auto max-w-md">
@@ -140,7 +140,7 @@ const ManageClass = () => {
                   ))}
                 </select>
                 {error && <p className="text-red-500 mb-4">try again</p>}
-                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <div className=" justify-center">
                   <button
                     onClick={handleSubmit}
                     className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-2"

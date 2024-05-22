@@ -13,7 +13,13 @@ import { JwtService } from '@nestjs/jwt';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 //import { Response } from 'express';
 //import * as nodemailer from 'nodemailer';
+<<<<<<< HEAD
 import { EmailService } from '../././email/email.service';
+=======
+import { DtoUpdateUser } from './dto/dto.update';
+import { EmailService } from '../email/email.service';
+import { ShortcodeEmailService } from '../email/mobileversion.email.service';
+>>>>>>> 65fa7bc76f4cd719d0627198c5e99abc1a0d89d6
 
 @Injectable()
 export class AuthService {
@@ -22,8 +28,9 @@ export class AuthService {
     private config: ConfigService,
     private jwt: JwtService,
     private emailService: EmailService,
+    private shortCodeService: ShortcodeEmailService,
   ) {}
-  async signUpSuperAdmin(dto: DtoAdmin) {
+  async signUpSuperAdmin(dto: DtoAdmin, photo: string) {
     const hash = await argon.hash(dto.password);
     const emailExists = await this.prismaService.user.findUnique({
       where: {
@@ -43,6 +50,7 @@ export class AuthService {
         date_of_birth: dto.date_of_birth,
         role: dto.role,
         address: dto.address,
+        image: photo,
         username: dto.username,
         phone: dto.phone,
         password: hash,
@@ -74,7 +82,7 @@ export class AuthService {
     for (const subject of subjects) {
       // Get the teacherId associated with the subject, or set it to null if not available
       const teacherId = subject.teacherId;
-      if(teacherId){
+      if (teacherId) {
         await this.prismaService.result.create({
           data: {
             studentId: userId,
@@ -84,15 +92,20 @@ export class AuthService {
             teacherId: teacherId,
           },
         });
-      }else{
+      } else {
         throw new NotFoundException('Subjects not been assigned');
       }
       // Create a result record for the student, subject, and grade
-
     }
   }
 
-  async signUpStudent(dto: DtoStudent, school_id: number) {
+  async signUpUser(
+    dto: DtoStudent,
+    photo: string,
+    school_id: number,
+    gradeId,
+    sectionId,
+  ) {
     const hash = await argon.hash(dto.password);
     const school = await this.prismaService.school.findUnique({
       where: {
@@ -121,6 +134,7 @@ export class AuthService {
         date_of_birth: dto.date_of_birth,
         role: dto.role,
         address: dto.address,
+        image: photo,
         username: dto.username,
         phone: dto.phone,
         password: hash,
@@ -133,15 +147,19 @@ export class AuthService {
           user_Id: addUser.id,
           careof_contact1: dto.careOf_contact1,
           careof_contact2: dto.careOf_contact2,
-          gradeId: dto.gradeId,
-          sectionId: dto.sectionId,
+          gradeId: gradeId,
+          sectionId: sectionId,
         },
       });
       const quickSelect = await this.prismaService.student.findUnique({
         where: { user_Id: addUser.id },
         include: { user: true },
       });
-      await this.associateSubjectsAndCreateResults(quickSelect.user_Id, quickSelect.gradeId, quickSelect.sectionId);
+      await this.associateSubjectsAndCreateResults(
+        quickSelect.user_Id,
+        quickSelect.gradeId,
+        quickSelect.sectionId,
+      );
       return { msg: 'student registered', data: quickSelect };
     } else if (dto.role === 'teacher') {
       const teacher = await this.prismaService.teacher.create({
@@ -248,10 +266,26 @@ export class AuthService {
     //   }
     // });
   }
-  async getUsers(role: string) {
+
+  async forgetPasswordShortCode(dto: any) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (!user) {
+      throw new ForbiddenException('Incorrect email address!');
+    }
+    const userId = user.id;
+
+    this.shortCodeService.sendSecurityAlert(user.email, userId);
+    return { userId, message: 'send success', statuscode: 200 };
+  }
+  async getUsers(role: string, schlId: number) {
     const allUsers = await this.prismaService.user.findMany({
       where: {
         role: role,
+        school_Id: schlId,
       },
       select: {
         id: true,
@@ -309,8 +343,92 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
-  async getUser(id:number){
-    const user= await this.prismaService.user.findUnique({where:{id:id}})
-    return user;
+  async getUser(id: number, path: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+    });
+    const imageUrl = `${path}/${user.image}`;
+    return { user, imageUrl };
+  }
+
+  async getUserDetail(id: number, role: string) {
+    if (role == 'student') {
+      const user = await this.prismaService.student.findUnique({
+        where: { user_Id: id },
+        select: {
+          gradelevel: { select: { grade: true } },
+          section: { select: { name: true } },
+          user: {
+            select: {
+              frist_name: true,
+              middle_name: true,
+              last_name: true,
+              username: true,
+              email: true,
+              image: true,
+              address: true,
+              phone: true,
+              gender: true,
+              date_of_birth: true,
+            },
+          },
+        },
+      });
+      return user;
+    } else if (role == 'teacher') {
+      const user = await this.prismaService.teacher.findUnique({
+        where: { user_Id: id },
+        select: {
+          education_level: true,
+          user: {
+            select: {
+              frist_name: true,
+              middle_name: true,
+              last_name: true,
+              username: true,
+              email: true,
+              image: true,
+              address: true,
+              phone: true,
+              gender: true,
+              date_of_birth: true,
+            },
+          },
+        },
+      });
+      return user;
+    } else {
+      const user = await this.prismaService.user.findUnique({
+        where: { id: id },
+        select: {
+          frist_name: true,
+          middle_name: true,
+          last_name: true,
+          username: true,
+          email: true,
+          address: true,
+          image: true,
+          phone: true,
+          gender: true,
+          date_of_birth: true,
+        },
+      });
+      return {
+        user: user,
+      };
+    }
+  }
+
+  async updateUser(id: number, dto: DtoUpdateUser) {
+    let hash;
+    if (dto.password) {
+      hash = await argon.hash(dto.password);
+    }
+
+    const user = await this.prismaService.user.update({
+      where: { id: id },
+      data: { username: dto.username, password: hash },
+    });
+    return 'update complete';
   }
 }

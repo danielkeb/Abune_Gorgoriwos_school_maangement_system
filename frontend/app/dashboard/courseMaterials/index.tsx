@@ -29,6 +29,7 @@ const CourseMaterials: React.FC = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [gradeLevels, setGradeLevels] = useState<GradeLevel[]>([]);
   const { decodedToken, token } = useContext(AppContext);
+  
 
   useEffect(() => {
     const fetchGradeLevelsAndSubjects = async () => {
@@ -75,6 +76,8 @@ const CourseMaterials: React.FC = () => {
   
     // Convert teacherId, subjectId, and gradeId to numbers
     const teacherIdNumber = parseInt(decodedToken.sub);
+    const schoolIdNumber = parseInt(decodedToken.school_Id);
+
     const subjectIdNumber = parseInt(selectedSubject.id.toString());
     const gradeIdNumber = parseInt(selectedGrade.id.toString());
   
@@ -83,7 +86,7 @@ const CourseMaterials: React.FC = () => {
     formData.append('description', description);
   
     try {
-      await axios.post(`http://localhost:3333/coursematerial/?teacherId=${teacherIdNumber}&subjectId=${subjectIdNumber}&gradeId=${gradeIdNumber}`, formData, {
+      await axios.post(`http://localhost:3333/coursematerial/?teacherId=${teacherIdNumber}&subjectId=${subjectIdNumber}&gradeId=${gradeIdNumber}&schoolId=${schoolIdNumber}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data' // Add this header for file upload

@@ -19,12 +19,12 @@ model School {
   school_name    String
   school_address String
   school_phone   String
+  
 
   createdAT    DateTime   @default(now())
   updatedAT    DateTime   @updatedAt
-  schoolYearId Int
-  schoolYear   SchoolYear @relation(fields: [schoolYearId], references: [id])
   User         User[]
+  gradelevel   GradeLevel[]
 
   @@index([id])
   @@map("schools")
@@ -39,12 +39,12 @@ model User {
   email         String    @unique
   role          String
   address       String?
+  image         String?
   phone         String
   password      String
   gender        String
   date_of_birth String
   loggedInAt    DateTime?
-
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
 
@@ -112,6 +112,8 @@ model GradeLevel {
   student        Student[]
   result         Result[]
   courseMaterial CourseMaterial[]
+  schoolId   Int?
+  school     School? @relation(fields: [schoolId], references: [id])
 
   //Make the teacherId optional !
   teacher Teacher[]
@@ -119,13 +121,6 @@ model GradeLevel {
   // other fields specific to GradeLevel
 }
 
-// enum ClassType{
-//   nursery
-//   junior_primary
-//   senior_primary
-//   junior_secondary
-//   senior_secondary
-// }
 model Section {
   id         Int        @id @default(autoincrement())
   name       String
@@ -134,8 +129,17 @@ model Section {
 
   student Student[]
   teacher Teacher[]
+   subjects    Subject[] @relation(name: "SubjectSection")
 
   @@map("sections")
+}
+
+model Reset {
+  id Int @id @default(autoincrement())
+  userId Int
+  shortcode String
+  createdAT    DateTime   @default(now())
+  expiresAt    DateTime 
 }
 
 model Subject {
@@ -144,6 +148,7 @@ model Subject {
   // other fields specific to Subject
   student   Student[]
   result    Result[]
+ sections  Section[] @relation(name: "SubjectSection")
   teacherId Int?
   teacher   Teacher?  @relation(fields: [teacherId], references: [user_Id])
 
@@ -189,7 +194,7 @@ model SchoolYear {
   end_date   String
 
   term   Term[]
-  school School[]
+ 
 }
 
 model Term {
@@ -224,6 +229,7 @@ model Calander {
   title  String
   start  String
   allDay Boolean
+  schoolId Int?
 }
 
 model CourseMaterial {
@@ -238,6 +244,7 @@ model CourseMaterial {
   // Define the many-to-one relationship with Subject
   subject    Subject?     @relation(fields: [subjectId], references: [id])
   subjectId  Int?
+  schoolId Int?
   gradeLevel GradeLevel[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt

@@ -60,13 +60,13 @@ export class DtoStudent {
   @IsString()
   careOf_contact2?: string;
 
-  @IsOptional()
-  @IsInt()
-  gradeId: number;
+  // @IsOptional()
+  // @IsInt()
+  // gradeId: number;
 
-  @IsOptional()
-  @IsInt()
-  sectionId: number;
+  // @IsOptional()
+  // @IsInt()
+  // sectionId: number;
 
   @IsOptional()
   @IsString()

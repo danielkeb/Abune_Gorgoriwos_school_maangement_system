@@ -66,18 +66,8 @@ function Manage() {
       { field: "email", headerName: "Email", width: "200" },
       { field: "phone", headerName: "phone", width: "200" },
       { field: "education_level", headerName: "Education Leve", width: "200" },
-      {field:"grade", headerName:"Grade", width:'160',  }, 
-      {field:"section", headerName:"Section", width:'160',type:'singleSelect', valueOptions:["section"]},
-      {
-        field: "view",
-        headerName: "View",
-        type: "actions",
-        renderCell: (params) => (
-          <button className="border-none bg-transparent w-full h-full" onClick={() => openDialog(params.id)}>
-            <VisibilityIcon />
-          </button>
-        ),
-      },
+      
+
       {
         field: "edit",
         headerName: "Edit",
@@ -96,8 +86,8 @@ function Manage() {
   );
 
   return (
-    <div className="w-full ml-4 flex justify-center items-center ">
-      <div className=" w-[80%] mt-6">
+    <div className="w-full mt-6 ml-4 flex justify-center items-center ">
+      <div className=" w-[80%]  bg-white boxshadow p-6">
         <DataGrid
           rows={teachers}
           getRowId={(row) => row.id}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { IconButton, TablePagination } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
@@ -31,6 +31,7 @@ const ClassForm = () => {
   const [selectedGrade, setSelectedGrade] = useState<GradeLevel | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [manage, setManage] =useState(false);
 
   // Handle change in class type select
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -88,7 +89,9 @@ const ClassForm = () => {
       toast.error('An error occurred while registering the grade');
     }
   };
-
+useEffect(()=>{
+  setManage(true);
+})
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -101,12 +104,12 @@ const ClassForm = () => {
   return (
     <div className="w-full p-8 mt-3 text-center">
       {/* Manage class and section buttons */}
-  <div className="w-full flex flex-wrap gap-4 mb-4 mx-auto relative hover:bg-blue-100">
+  <div className="w-full flex flex-wrap gap-4 mb-4 mx-auto relative ">
   <button className="button-primary hover:bg-blue-100" onClick={handleManageClasses}>
     Manage Classes
   </button>
   <div className="line"></div>
-  <button className="button-primary" onClick={handleCreateNewClass}>
+  <button className="button-primary hover:bg-blue-100" onClick={handleCreateNewClass}>
     Create New Class
   </button>
 </div>
@@ -122,7 +125,7 @@ const ClassForm = () => {
       <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
       <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div className="sm:flex sm:items-start">
+          <div className="justify-center">
             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
               <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">Create New Class</h3>
               <div className="mt-2 mx-auto max-w-md">
@@ -147,19 +150,20 @@ const ClassForm = () => {
                   ))}
                 </select>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
-                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                  <button
-                    onClick={handleSubmit}
-                    className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-2"
-                  >
-                    Register
-                  </button>
-                  <button
+                <div className="flex justify-center">
+                <button
                     onClick={() => setShowCreateForm(false)}
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
                   >
                     Cancel
                   </button>
+                  <button
+                    onClick={handleSubmit}
+                    className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 ml-8 rounded-md"
+                  >
+                    Register
+                  </button>
+                 
                 </div>
               </div>
             </div>
@@ -172,9 +176,10 @@ const ClassForm = () => {
 
 
       {/* Conditional rendering for manage classes information */}
-     
+      {manage && (
         <div className="mt-8 w-full">
           {/* Table content */}
+          
           <table className="min-w-full bg-white border border-gray-300">
             <thead>
               <tr>
@@ -212,6 +217,7 @@ const ClassForm = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </div>
+         )},
       
       <ToastContainer position="bottom-right" />
     </div>

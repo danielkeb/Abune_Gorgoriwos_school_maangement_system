@@ -26,7 +26,7 @@ import { Roles } from '../auth/decorator/roles.decorator';
 import { Role } from '../auth/decorator/enums/role.enum';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { diskStorage } from 'multer';
-import path, { extname } from 'path';
+import { extname } from 'path';
 
 @Controller('coursematerial')
 export class CoursematerialController {
@@ -56,6 +56,7 @@ export class CoursematerialController {
     @Query('teacherId') teacherId: number,
     @Query('subjectId') subjectId: number,
     @Query('gradeId') gradeId: number,
+    @Query('schoolId') schoolId: number,
     @Body() dto: UploadCourse,
   ) {
     console.log('File uploaded:', file);
@@ -77,6 +78,7 @@ export class CoursematerialController {
       teacherId,
       subjectId,
       gradeId,
+      schoolId,
       dto, // Pass description directly to service method
     );
     return data;

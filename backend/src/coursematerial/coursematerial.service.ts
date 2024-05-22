@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UploadCourse } from './dto/course.dto';
 import path from 'path';
@@ -17,15 +13,18 @@ export class CoursematerialService {
     teacher: number,
     subjectId: number,
     gradeId: number,
+    schoolId: number,
     dto: UploadCourse,
   ) {
     try {
       const teachId = parseInt(teacher.toString(), 10);
+      const Id = parseInt(schoolId.toString(), 10);
       const course = await this.prismaService.courseMaterial.create({
         data: {
           description: dto.description,
           file: filepath,
           teacherId: teachId,
+          schoolId: Id,
         },
       });
 

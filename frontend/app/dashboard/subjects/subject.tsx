@@ -51,6 +51,18 @@ const SubjectComponent = () => {
   const [filterGrade, setFilterGrade] = useState('');
   const [page, setPage] = useState(0);
   
+  const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
+
+  // ... (other useEffect hooks)
+
+  useEffect(() => {
+    if (gradeId !== null) {
+      const filtered = teachers.filter((teacher) => teacher.gradeId.includes(gradeId));
+      setFilteredTeachers(filtered);
+    } else {
+      setFilteredTeachers([]);
+    }
+  }, [gradeId, teachers]);
 
   useEffect(() => {
     fetchGrades();
@@ -218,7 +230,7 @@ const SubjectComponent = () => {
       </div>
       {/* Create new subject form */}
       {showCreateForm && (
-      <div className="fixed z-10 inset-0 overflow-y-auto">
+  <div className="fixed z-10 inset-0 overflow-y-auto">
     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div className="fixed inset-0 transition-opacity" aria-hidden="true">
         <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -226,76 +238,71 @@ const SubjectComponent = () => {
       <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
       <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div className="sm:flex sm:items-start">
+          <div className="justify-center">
             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-              <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">create Subject</h3>
-              <div className="mt-2 mx-auto max-w-md">
-          <input
-            type="text"
-            className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
-            placeholder="Subject"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-          />
-          <select
-            className="w-full p-3 border border-gray-300 rounded-md mb-4"
-            value={gradeId || ''}
-            onChange={handleChange}
-            name="gradeId"
-            
-          >
-            <option value="">Select Grade</option>
-            {grades.map((grade) => (
-              <option key={grade.id} value={grade.id}>
-                {grade.grade}
-              </option>
-            ))}
-          </select>
-  {gradeId !== null && (
-        <select
-              className="w-full p-3 border border-gray-300 rounded-md mb-4"
-              value={teacherId || ''}
-              onChange={handleChange}
-              name="teacherId"
-            >
-             {teachers.map((teacher) => {
-    // Check if the teacher is assigned to the selected grade level
-    const isTeacherAssignedToGrade = teacher.gradeId.includes(gradeId);
-
-    // If the teacher is assigned to the selected grade level, display them in the dropdown list
-    if (isTeacherAssignedToGrade) {
-      return (
-        <option key={teacher.id} value={teacher.id}>
-          {teacher.first_name} {teacher.last_name}
-        </option>
-      );
-    }
-    return null; // Skip this teacher if not assigned to the selected grade level
-  })}
-            </select>
-          )}
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <button
-            className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md"
-            onClick={handleSubmit}
-          >
-            <SendIcon sx={{ marginRight: 1 }} /> {/* Adjusting margin for icon alignment */}
-            Submit
-          </button>
-          <button
+              <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">Create Subject</h3>
+              <div className="mt-2 mx-auto max-w-md justify-center">
+                <input
+                  type="text"
+                  className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
+                  placeholder="Subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                />
+                <select
+                  className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                  value={gradeId || ''}
+                  onChange={handleChange}
+                  name="gradeId"
+                >
+                  <option value="">Select Grade</option>
+                  {grades.map((grade) => (
+                    <option key={grade.id} value={grade.id}>
+                      {grade.grade}
+                    </option>
+                  ))}
+                </select>
+                {gradeId !== null && (
+                  <select
+                    className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                    value={teacherId || ''}
+                    onChange={handleChange}
+                    name="teacherId"
+                  >
+                    <option value="">Select Teacher</option>
+                    {filteredTeachers.map((teacher) => (
+                      <option key={teacher.id} value={teacher.id}>
+                        {teacher.first_name} {teacher.last_name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {error && <p className="text-red-500 mb-4">{error}</p>}
+                <div className="flex justify-center">
+                <button
                     onClick={() => setShowCreateForm(false)}
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
                   >
                     Cancel
                   </button>
-        </div>
-        </div>
+                  <button
+                    className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-8 flex items-center"
+                    onClick={handleSubmit}
+                  >
+                    <SendIcon sx={{ marginRight: 1 }} />
+                    Submit
+                  </button>
+                 
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      )}
+    </div>
+  </div>
+)}
+
       {/* Table with Paginated and Filtered Data */}
       
         <div className="mt-8 w-full">
@@ -388,32 +395,37 @@ const SubjectComponent = () => {
                     </option>
                      ))}
                 </select>
-                <select
-  className="w-full p-3 border border-gray-300 rounded-md mb-4"
-  value={selectedSubject.teacherId}
-  onChange={(e) =>
-    setSelectedSubject({
-      ...selectedSubject,
-      teacherId: parseInt(e.target.value),
-    })
-  }
->
-  <option value="">Select Teacher</option>
-  {teachers.map((teacher) => {
-    // Check if the teacher is assigned to the selected grade level
-    const isTeacherAssignedToGrade = teacher.gradeId.includes(selectedSubject.gradeId);
-
-    // If the teacher is assigned to the selected grade level, display them in the dropdown list
-    if (isTeacherAssignedToGrade) {
-      return (
-        <option key={teacher.id} value={teacher.id}>
-          {teacher.first_name} {teacher.last_name}
-        </option>
-      )
+                {selectedSubject.gradeId && teachers.length > 0 && (
+  <select
+    className="w-full p-3 border border-gray-300 rounded-md mb-4"
+    value={selectedSubject.teacherId || ''}
+    onChange={(e) =>
+      setSelectedSubject({
+        ...selectedSubject,
+        teacherId: parseInt(e.target.value),
+      })
     }
-    return null; // Skip this teacher if not assigned to the selected grade level
-  })}
-</select>
+  >
+    <option value="">Select Teacher</option>
+    {teachers.map((teacher) => {
+      // Check if the teacher is assigned to the selected grade level
+      const isTeacherAssignedToGrade = teacher.gradeId.includes(selectedSubject.gradeId);
+
+      // If the teacher is assigned to the selected grade level, display them in the dropdown list
+      if (isTeacherAssignedToGrade) {
+        return (
+          <option key={teacher.id} value={teacher.id}>
+            {teacher.first_name} {teacher.last_name}
+          </option>
+        );
+      }
+      return null; // Skip this teacher if not assigned to the selected grade level
+    })}
+  </select>
+)}
+
+
+
 
 
                

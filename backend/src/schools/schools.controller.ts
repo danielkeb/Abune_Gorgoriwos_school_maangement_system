@@ -33,12 +33,11 @@ export class SchoolsController {
   @ApiForbiddenResponse({ description: 'Forbidden.' })
   @UseGuards(JwtGuard, RoleGuard)
   @Roles(Role.SUPERUSER)
-  @Post('register/:id')
+  @Post('register')
   async schoolRegistered(
-    @Param('id', ParseIntPipe) id: number,
     @Body() dto: DtoSchool,
   ) {
-    return this.schoolService.schoolRegistered(id, dto);
+    return this.schoolService.schoolRegistered(dto);
   }
 
   @ApiHeader({ name: 'Authorization', required: true }) // Authentication header

@@ -5,15 +5,7 @@ import { DtoSchool } from './dto';
 @Injectable()
 export class SchoolsService {
   constructor(private prisamService: PrismaService) {}
-  async schoolRegistered(id: number, dto: DtoSchool) {
-    const userexist = this.prisamService.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
-    if (!userexist) {
-      throw new NotFoundException('super admin not found');
-    }
+  async schoolRegistered( dto: DtoSchool) {
     const school = await this.prisamService.school.create({
       data: {
         ...dto,

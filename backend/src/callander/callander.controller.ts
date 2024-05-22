@@ -22,14 +22,16 @@ export class CallanderController {
 
   @UseGuards(JwtGuard, RoleGuard)
   @Roles(Role.ADMIN)
-  @Post('add')
-  addCallander(@Body() dto: CallanderDto) {
-    return this.callnderService.addCallander(dto);
+  @Post('add/:school_Id')
+  addCallander(
+    @Param('school_Id', ParseIntPipe) school_Id: number,
+    @Body() dto: CallanderDto) {
+    return this.callnderService.addCallander(dto, school_Id);
   }
 
-  @Get('all')
-  getAllCallanders() {
-    return this.callnderService.getAllCallanders();
+  @Get('all/:school_Id')
+  getAllCallanders( @Param('school_Id', ParseIntPipe) school_Id: number) {
+    return this.callnderService.getAllCallanders(school_Id);
   }
   @UseGuards(JwtGuard, RoleGuard)
   @Roles(Role.ADMIN)

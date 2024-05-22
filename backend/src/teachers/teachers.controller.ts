@@ -49,7 +49,7 @@ export class TeachersController {
     return this.teacherService.getTeachersGrade(id);
   }
 
-  @Get('graderte/:id646')
+  @Get('graderte/:id')
   getTeachersStudent(@Param('id', ParseIntPipe) id: number) {
     return this.teacherService.getTeachersGrade(id);
   }
@@ -74,6 +74,10 @@ export class TeachersController {
     @Body() dto: SubjectUpdateDto,
   ) {
     return this.teacherService.UpdateTeacherConnect(teacherId, dto);
+  }
+  @Get('fetch/:teacherId')
+  fetchTeacher(@Param('teacherId', ParseIntPipe) teacherId: number) {
+    return this.teacherService.fetchTeacher(teacherId);
   }
 
   @Patch('remove/section/subject/:teacherId')

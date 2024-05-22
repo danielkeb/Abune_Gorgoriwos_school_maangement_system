@@ -33,7 +33,7 @@ export default function Home() {
       try {
 
           console.log("here is the id", decodedToken?.sub)
-        const response = await axios.get("http://localhost:3333/callander/all");
+        const response = await axios.get(`http://localhost:3333/callander/all/${decodedToken?.school_Id}`);
     
      
 
@@ -63,6 +63,7 @@ export default function Home() {
     start: "",
     allDay: false,
     id: 0,
+
   });
 
   console.log("Events", gender);
@@ -145,7 +146,7 @@ export default function Home() {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `http://localhost:3333/callander/add`,
+        `http://localhost:3333/callander/add/${decodedToken?.school_Id}`,
         newEvent,
         {
           headers: {

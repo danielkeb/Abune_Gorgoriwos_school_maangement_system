@@ -25,6 +25,7 @@ const page = () => {
 
   const [schoolss, setSchoolss] = useState([]);
   const [check, setCheck] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -34,6 +35,7 @@ const page = () => {
       role: "admin",
       address: "",
       username: "",
+      image: null,
       phone: "",
       password: "1234",
       gender: "",
@@ -43,11 +45,20 @@ const page = () => {
     onSubmit: async (values) => {
       try {
         setCheck(true);
+        const formData = new FormData();
+        Object.keys(values.image).forEach(key => {
+          formData.append(key, values.image as any);
+        });
         const response = await axios.post(
-          `http://localhost:3333/auth/user/${parseInt(
+          `http://localhost:3333/auth/signUp/user/${parseInt(
             formik.values.school_name
-          )}`,
-          formik.values
+          )}/0/0`,
+          formik.values,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
 
         toast.success("Admin Registerd ");
@@ -227,7 +238,7 @@ const page = () => {
                       Address
                     </label>
                     <input
-                      type="text"
+                      type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="04 kebele"
                       name="address"
@@ -267,15 +278,14 @@ const page = () => {
                     </label>
                     <select
                       id="yourSelect"
-                      name="school_name"
+                      name="gender"
                       value={formik.values.school_name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option value="" disabled >
+                      <option value="" disabled>
                         Select a school
                       </option>
-        
                       {schoolss.map(
                         (school: {
                           school_name: string;
@@ -307,26 +317,39 @@ const page = () => {
                     <label
                       className="w-full bg-white p-5 flex justify-center items-center"
                       htmlFor="photo">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
-                        />
-                      </svg>
+                      {selectedFileName ? (
+                        <span className="text-green-700">{selectedFileName}</span>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                          />
+                        </svg>
+                      )}
                     </label>
-                    <input type="file" id="photo" className="hidden" />
+                    <input
+                      type="file"
+                      id="photo"
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files?.[0];
+                        formik.setFieldValue("image", file || null);
+                        setSelectedFileName(file ? file.name : "");
+                      }}
+                    />
                   </div>
                 </div>
               </div>
               <br />
-              <button className="bg-green-950  border-0 text-white w-full p-3  rounded-md">
+              <button className="bg-green-700  border-0 text-white w-full p-3  rounded-md">
               { check? <>
               
               <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

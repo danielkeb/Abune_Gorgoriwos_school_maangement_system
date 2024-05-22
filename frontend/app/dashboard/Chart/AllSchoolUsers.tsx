@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Grid, Card, CardContent, Typography } from '@mui/material';
+import { AppContext } from '@/components/context/UserContext';
 
 const A: React.FC = () => {
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [schools, setSchools] = useState([]);
+  const { decodedToken, token, logout } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {

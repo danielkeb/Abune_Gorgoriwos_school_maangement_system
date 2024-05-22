@@ -14,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
 import { YearModule } from './year/year.module';
 import { CallanderModule } from './callander/callander.module';
 import { CoursematerialModule } from './coursematerial/coursematerial.module';
+import { ProfileController } from './profile/profile.controller';
 
 @Module({
   imports: [
@@ -36,5 +37,6 @@ import { CoursematerialModule } from './coursematerial/coursematerial.module';
     CallanderModule,
     CoursematerialModule,
   ],
+  controllers: [ProfileController],
 })
 export class AppModule {}

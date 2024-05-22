@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import IconButton from '@mui/material/IconButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 import styles from '../styles/ReadingMaterialsCss.module.css';
+import { AppContext } from "@/components/context/UserContext";
 const ReadingMaterials = () => {
     const [materials, setMaterials] = useState([]);
     const [filter, setFilter] = useState("");
@@ -12,15 +13,21 @@ const ReadingMaterials = () => {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [pdfUrl, setPdfUrl] = useState('');
     const [showPdf, setShowPdf] = useState(false);
+    const { decodedToken, token } = useContext(AppContext);
+    
+
 
     useEffect(() => {
         fetchMaterials();
+        
     }, [filter, selectedGrade, selectedSubject]); // Fetch materials whenever filter or selectedGrade or selectedSubject changes
 
     const fetchMaterials = async () => {
+        const schoolId= parseInt(decodedToken.school_Id);
         try {
             const response = await axios.get("http://localhost:3333/coursematerial/get");
-            let filteredMaterials = response.data;
+            
+            let filteredMaterials = response.data.filter(material => material.schoolId === schoolId); 
 
             // Filter materials based on the keyword
             if (filter.trim() !== "") {
