@@ -16,6 +16,9 @@ const Page = () => {
   const [teacherView, setTeacherView] = useState([]);
   const [schoolss, setSchoolss] = useState([]);
   const [call, setCall]= useState([]);
+  const [daysLeft, setDaysLeft] = useState(null);
+  const [semesterEnd, setSemesterEnd] = useState(null);
+
   // const[searchId, setSearchId]= useState();
   // const [selectedSection, setSelectedSection] = useState(); // State to store the selected section
 
@@ -26,10 +29,10 @@ const Page = () => {
           `http://localhost:3333/teachers/grade/${decodedToken?.sub}`
         );
         setSchoolss(school.data);
-       const callander= await axios.get(`http://localhost:3333/callander/all/${decodedToken?.school_Id}`)
-       
-       setCall(callander.data);
-  
+        const callander = await axios.get(`http://localhost:3333/callander/all/${decodedToken?.school_Id}`);
+        setCall(callander.data);
+        const semesterEndData = callander?.data.find(c => c.title === "Semester I End");
+        setSemesterEnd(semesterEndData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -37,6 +40,43 @@ const Page = () => {
 
     fetchData();
   }, [decodedToken]);
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      if (semesterEnd && semesterEnd.start) {
+        const currentDate = new Date();
+        const endDate = new Date(semesterEnd.start);
+        const timeDiff = endDate - currentDate;
+
+        if (timeDiff >= 0) {
+          const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+          const hoursDiff = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutesDiff = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+          const timeLeft = `${daysDiff} days, ${hoursDiff} hours, ${minutesDiff} minutes`;
+
+          if (daysDiff <= 10) {
+            setDaysLeft(timeLeft);
+          } else {
+            setDaysLeft(null); // Clear daysLeft if more than 10 days left
+          }
+        } else {
+          setDaysLeft(null); // Clear daysLeft if the date is past
+        }
+      }
+    };
+
+    if (semesterEnd) {
+      // Calculate time left initially
+      calculateTimeLeft();
+
+      // Set up interval to update time left every second
+      const intervalId = setInterval(calculateTimeLeft, 1000);
+
+      // Clean up interval on component unmount
+      return () => clearInterval(intervalId);
+    }
+  }, [semesterEnd]);
 
   const formik = useFormik({
     initialValues: {
@@ -86,7 +126,7 @@ const Page = () => {
    const calendarStartDate = new Date(getAll[0]?.start);
    const currentDate = new Date();
    calendarStartDate < currentDate
-   console.log(currentDate> calendarStartDate);
+   
   //  console.log("Students: ", filteredResult[0].student )
   return (
     <Main>
@@ -95,6 +135,16 @@ const Page = () => {
 
    
         <form onSubmit={formik.handleSubmit} className=" bg-white box boxshadow w-[80%] justify-center mt-5  p-4">
+        {daysLeft !== null && (
+
+<div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+  
+    <p className="text-red-600 text-center">
+      {daysLeft} left until the end of the semester!
+    </p>
+ 
+</div>
+)}
           <div className=" flex mt-8   ">
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
@@ -186,7 +236,7 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="w-full lg:w-6/12 px-4">
+          <div className="w-full  px-4 flex justify-between items-center">
             <div className="relative w-full mb-3">
               <button
                 type="submit"
@@ -196,10 +246,11 @@ const Page = () => {
                 Find Section
               </button>
             </div>
+
           </div>
         </form>
         </div>
-        <div className="w-full flex  justify-center items-center">
+        <div className="w-full flex  justify-center items-center ">
      
         {
           // filteredResult && filteredResult[0]?.student && <DisplayTable filteredResult={filteredResult } gradeId={parseInt(formik.values.searchId)} subjectId={parseInt(formik.values.subject)} selectedSection={parseInt(formik.values.selectedSection)}  />

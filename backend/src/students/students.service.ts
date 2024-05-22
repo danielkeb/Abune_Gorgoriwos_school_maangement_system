@@ -29,6 +29,7 @@ export class StudentsService {
         middle_name: dto.middle_name,
         last_name: dto.last_name,
         email: dto.email,
+        status: dto.status,
         phone: dto.phone,
         address: dto.address,
         date_of_birth: dto.date_of_birth,
@@ -246,8 +247,27 @@ export class StudentsService {
               data: {
                 gradeId: gradeId,
                 sectionId: sectionId,
+                firstrank:null,
+                secondScore:null,
+                overallrank:null,
+                firstScore:null,
+                secondtrank:null,
+                overallScore:null
               },
             });
+          } else{
+            await prisma.student.update({
+              where: { user_Id: user_id },
+              data: {
+                firstrank:null,
+                secondScore:null,
+                overallrank:null,
+                firstScore:null,
+                secondtrank:null,
+                overallScore:null
+              },
+            });
+
           }
         }
       });
@@ -399,8 +419,10 @@ export class StudentsService {
       const user_id = student.user_Id;
       const gradeId = student.gradeId;
       const sectionId = student.sectionId;
+
+      const canPass= await this.prismaService.student.findUnique({where:{user_Id:user_id}, select:{gradeId:true,sectionId:true}})
       const existingSubjects = await this.prismaService.student
-        .findUnique({ where: { user_Id: user_id }, include: { subject: true } })
+        .findUnique({ where: { user_Id: user_id }, include: { subject: true,  } })
         .then((student) => student?.subject);
 
       // Step 2: Delete Existing Subjects
@@ -414,7 +436,7 @@ export class StudentsService {
         });
       }
       //await this.associateSubjects(user_id, gradeId);
-      await this.associateSubjectsAndCreateResults(user_id, gradeId, sectionId);
+      await this.associateSubjectsAndCreateResults(user_id, canPass.gradeId, canPass.sectionId);
     }
     return {
       status: 'Sucess',
@@ -887,6 +909,7 @@ export class StudentsService {
       select: {
         user: true,
         careof_contact1: true,
+    
         gradeId: true,
         sectionId: true,
         gradelevel: {
@@ -904,6 +927,7 @@ export class StudentsService {
       first_name: s.user.frist_name,
       middle_name: s.user.middle_name,
       last_name: s.user.last_name,
+      status: s.user.status,
       email: s.user.email,
       address: s.user.address,
       phone: s.user.phone,

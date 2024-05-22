@@ -35,7 +35,8 @@ const StudentActions = ({
         date_of_birth,
         sectionId,
         section,
-        gradeId
+        gradeId,
+        status
 
   
       } = params.row;
@@ -53,7 +54,8 @@ const StudentActions = ({
         date_of_birth,
         sectionId,
         section,
-        gradeId
+        gradeId,
+        status
       };
   
 

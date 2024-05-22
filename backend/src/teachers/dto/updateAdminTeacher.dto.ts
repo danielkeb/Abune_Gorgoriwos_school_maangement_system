@@ -25,6 +25,11 @@ export class UpdateAdminTeacherDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
+  status?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   last_name?: string;
 
   @ApiProperty()

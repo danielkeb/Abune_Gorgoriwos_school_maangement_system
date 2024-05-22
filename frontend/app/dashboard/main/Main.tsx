@@ -18,8 +18,9 @@ import { Avatar, Button, Hidden, Menu, MenuItem, Popover, lighten } from '@mui/m
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { AppContext } from '@/components/context/UserContext';
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { redirect } from 'next/navigation';
+import axios from 'axios';
 
 function Copyright(props: any) {
 
@@ -148,7 +149,28 @@ const Main: React.FC<MainProps> = ({children})=> {
     if(!decodedToken){
       redirect("/login")
     }
+    if(decodedToken.status=="inactive"){
+      logout();
+    }
   }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+       const status= await axios.get(`http://localhost:3333/auth/status/${decodedToken?.sub}`)
+       if(status.data.status=="inactive"){
+        logout();
+       }
+        //console.log("here is the status",status.data.status)
+  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // console.log("The decoded token is 0",decodedToken)
   const user = {

@@ -23,11 +23,11 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('teachers')
 export class TeachersController {
   constructor(private teacherService: TeachersService) {}
-  @Get('get')
-  getTeachers() {
-    return this.teacherService.getTeachers();
+  @Get('get/:school_Id')
+  getTeachers(@Param('school_Id', ParseIntPipe) school_Id: number) {
+    return this.teacherService.getTeachers(school_Id);
   }
-  @Get('get/:id')
+  @Get('single_teacher/:id')
   getTeacherById(@Param('id', ParseIntPipe) id: number) {
     return this.teacherService.getTeacherById(id);
   }

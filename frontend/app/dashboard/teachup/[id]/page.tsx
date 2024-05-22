@@ -25,15 +25,17 @@ const page = () => {
         try {
         
       
-          const res = await axios.get(`http://localhost:3333/teachers/get/${id}`);
+          const res = await axios.get(`http://localhost:3333/teachers/single_teacher/${id}`);
           const school = await axios.get("http://localhost:3333/grade/get");
           const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
           setSchoolss(school.data);
           setTeachers(res.data);
           setDisData(disconnectData.data)
+          console.log("the hulk",res.data)
           formik.setValues({
             email: res.data[0].email,
-            frist_name: res.data[0].frist_name, // Assuming other fields are also available
+            frist_name: res.data[0].frist_name,
+            status: res.data[0].status, 
             middle_name: res.data[0].middle_name,
             last_name: res.data[0].last_name,
             address: res.data[0].address,
@@ -64,6 +66,7 @@ const page = () => {
     initialValues: {
       email: '',
       frist_name: "",
+      status:"",
       middle_name: "",
       last_name: "",
       address: "",
@@ -361,6 +364,31 @@ const page = () => {
                        <option value="bsc" >BSc</option>
                        <option value="msc" >Msc</option>
                        <option value="phd" >Phd</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="w-full lg:w-6/12 px-4">
+                  <div className="relative w-full mb-3">
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password">
+                      Status
+                    </label>
+                    <select
+                      id="yourSelect"
+                      name="status"
+                      value={formik.values.status}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
+                      <option value="" disabled>
+                       Status
+                      </option>
+                     
+                       <option value="active" >Active</option>
+                       <option value="inactive" >Inactive</option>
+                  
                     </select>
                   </div>
                 </div>
