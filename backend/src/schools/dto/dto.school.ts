@@ -15,9 +15,4 @@ export class DtoSchool {
   @IsNotEmpty()
   @IsString()
   school_phone: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt()
-  schoolYearId: number;
 }

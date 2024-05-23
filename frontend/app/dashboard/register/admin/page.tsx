@@ -277,27 +277,23 @@ const page = () => {
                       Select school
                     </label>
                     <select
-                      id="yourSelect"
-                      name="gender"
-                      value={formik.values.school_name}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option value="" disabled>
-                        Select a school
-                      </option>
-                      {schoolss.map(
-                        (school: {
-                          school_name: string;
-                          id: number;
-                          school_address: string;
-                        }) => (
-                          <option key={school.school_name} value={school?.id}>
-                            {school?.school_name}
-                          </option>
-                        )
-                      )}
-                    </select>
+  id="yourSelect"
+  name="school_id" // Changed from gender to school_id
+  value={formik.values.school_id} // Changed from school_name to school_id
+  onChange={formik.handleChange}
+  onBlur={formik.handleBlur}
+  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400"
+>
+  <option value="">
+    Select a school
+  </option>
+  {schoolss.map((school: { school_name: string; id: number; school_address: string }) => (
+    <option key={school.id} value={school.id}>
+      {school.school_name}
+    </option>
+  ))}
+</select>
+
                   </div>
                 </div>
               </div>

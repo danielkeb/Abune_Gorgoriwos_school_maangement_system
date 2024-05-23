@@ -13,13 +13,9 @@ import { JwtService } from '@nestjs/jwt';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 //import { Response } from 'express';
 //import * as nodemailer from 'nodemailer';
-<<<<<<< HEAD
 import { EmailService } from '../././email/email.service';
-=======
 import { DtoUpdateUser } from './dto/dto.update';
-import { EmailService } from '../email/email.service';
 import { ShortcodeEmailService } from '../email/mobileversion.email.service';
->>>>>>> 65fa7bc76f4cd719d0627198c5e99abc1a0d89d6
 
 @Injectable()
 export class AuthService {
