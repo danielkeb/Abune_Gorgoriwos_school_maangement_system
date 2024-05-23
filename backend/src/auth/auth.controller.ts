@@ -147,6 +147,10 @@ export class AuthController {
   getAdmin() {
     return this.authService.getAdmin();
   }
+  @Get("status/:id")
+  getStatus(@Param('id', ParseIntPipe) id: number){
+    return this.authService.getStatus(id)
+  }
   @Get('user/:id')
   getUser(@Param('id', ParseIntPipe) id: number) {
     const filePath = join(process.cwd());

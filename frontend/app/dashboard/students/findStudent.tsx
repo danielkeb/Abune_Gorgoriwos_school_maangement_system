@@ -24,6 +24,20 @@ function FindStudent({teacherView,sectionToDisplay}) {
         { field: 'date_of_birth', headerName: 'Date of Birth', width: 150,type:'string', editable:true },
         { field: 'section', headerName: 'Sections',  width: 150, type:'singleSelect', valueOptions:secc, editable:true},
         { field: 'careof_contact1', headerName: 'Care Of Contact', width: 150, type:'string', editable:true },
+        {
+          field: 'status',
+          headerName: 'Status',
+          width: 150,
+          type: 'singleSelect',
+          valueOptions: ['active', 'inactive'],
+          editable: true,
+          renderCell: (params) => (
+            <span style={{ color: params.value === 'active' ? 'green' : 'red', textTransform: 'uppercase' }}>
+              {params.value}
+            </span>
+          ),
+        },
+        
 
         {
             field: 'actions',

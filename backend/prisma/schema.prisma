@@ -42,6 +42,7 @@ model User {
   image         String?
   phone         String
   password      String
+  status        String? @default("active")
   gender        String
   date_of_birth String
   loggedInAt    DateTime?

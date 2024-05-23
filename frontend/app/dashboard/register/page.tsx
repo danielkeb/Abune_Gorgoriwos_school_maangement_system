@@ -16,10 +16,15 @@ const page = () => {
   const { decodedToken } = useContext(AppContext);
   useLayoutEffect(() => {
    
-    if(decodedToken?.role=="student" || decodedToken?.role=="teacher"){
+    if(decodedToken?.role=="student" || decodedToken?.role=="teacher"  ){
       redirect("/dashboard")
     }
+    if(decodedToken?.role=="superadmin" ){
+      redirect("/dashboard/register/admin")
+    }
   }, [])
+
+  
   useEffect(() => {
     const fetchData = async () => {
       try {

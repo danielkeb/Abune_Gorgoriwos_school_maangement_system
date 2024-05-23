@@ -23,6 +23,7 @@ CREATE TABLE "users" (
     "image" TEXT,
     "phone" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "status" TEXT DEFAULT 'active',
     "gender" TEXT NOT NULL,
     "date_of_birth" TEXT NOT NULL,
     "loggedInAt" TIMESTAMP(3),

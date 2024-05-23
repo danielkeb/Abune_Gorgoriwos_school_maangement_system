@@ -1,6 +1,6 @@
 "use client";
 import { Box, Card, Typography, gridClasses } from "@mui/material";
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useContext, useEffect, useMemo, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
@@ -11,15 +11,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useRouter } from "next/navigation";
+import { AppContext } from "@/components/context/UserContext";
 function Manage() {
   const [teachers, setTeachers] = useState([]);
   const [pageSize, setPageSize] = useState(5);
   const [rowId, setRowId] = useState(null);
   const router = useRouter();
+  const { decodedToken } = useContext(AppContext);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:3333/teachers/get");
+        const res = await axios.get(`http://localhost:3333/teachers/get/${decodedToken?.school_Id}`);
         setTeachers(res.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -66,6 +69,16 @@ function Manage() {
       { field: "email", headerName: "Email", width: "200" },
       { field: "phone", headerName: "phone", width: "200" },
       { field: "education_level", headerName: "Education Leve", width: "200" },
+      {
+        field: 'status',
+        headerName: 'Status',
+        width: 150,
+        renderCell: (params) => (
+          <span style={{ color: params.value === 'active' ? 'green' : 'red', textTransform: 'uppercase' }}>
+            {params.value}
+          </span>
+        ),
+      },
       
 
       {

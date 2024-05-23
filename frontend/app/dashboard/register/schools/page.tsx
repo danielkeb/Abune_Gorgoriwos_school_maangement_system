@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import RegistrationHead from "../reghead/RegistrationHead";
 import Main from "../../main/Main";
 import { useFormik } from "formik";
@@ -8,6 +8,7 @@ import axios from "axios";
 import * as yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AppContext } from "@/components/context/UserContext";
 
 const page = () => {
   useEffect(() => {
@@ -23,6 +24,7 @@ const page = () => {
 
   const[authToken, setAuthToken]= useState("")
   const[check, setCheck]= useState(false)
+  const { decodedToken } = useContext(AppContext);
   console.log("token vale", authToken)
   const formik = useFormik({
     initialValues: {
@@ -36,7 +38,7 @@ const page = () => {
         setCheck(true)
         // console.log(formik.values);
         const response = await axios.post(
-          "http://localhost:3333/schools/register",
+          `http://localhost:3333/schools/register`,
           formik.values,
           {
             headers: {

@@ -31,6 +31,10 @@ export class DtoAdmin {
   @IsString()
   middle_name?: string;
 
+  @IsString()
+  @IsString()
+  status?: string;
+
   @IsOptional()
   @IsInt()
   sectionId?: number;

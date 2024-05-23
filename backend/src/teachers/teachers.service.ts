@@ -28,9 +28,9 @@ export class TeachersService {
     return teacher;
   }
 
-  async getTeachers(): Promise<any[]> {
+  async getTeachers(school_Id:number): Promise<any[]> {
     // Adjust the return type as per your requirement
-    const allTeachers = await this.prisma.teacher.findMany({
+    const allTeachers = await this.prisma.teacher.findMany({ where:{user:{school_Id:school_Id}},
       include: {
         user: true,
         gradelevel: {
@@ -43,6 +43,7 @@ export class TeachersService {
       return {
         id: teacher.user.id,
         frist_name: teacher.user.frist_name,
+        status: teacher.user.status,
         middle_name: teacher.user.middle_name,
         last_name: teacher.user.last_name,
         email: teacher.user.email,
@@ -75,6 +76,8 @@ export class TeachersService {
       return {
         id: teacher.user.id,
         frist_name: teacher.user.frist_name,
+        status: teacher.user.status,
+      
         middle_name: teacher.user.middle_name,
         last_name: teacher.user.last_name,
         gender: teacher.user.gender,
@@ -124,6 +127,7 @@ export class TeachersService {
         date_of_birth: dto.date_of_birth,
         gender: dto.gender,
         phone: dto.phone,
+        status:dto.status
       },
     });
 

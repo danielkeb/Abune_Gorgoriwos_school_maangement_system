@@ -34,31 +34,101 @@ const NewWay = ({teacherView,gradeId,subjectId,selectedSection,semester}) => {
    }
 
       
-      const  columns= useMemo(()=> [
-        { field: 'id', headerName: 'ID', width: 150 },
-        { field: 'studentId', headerName: 'Stud_ID', width: 150 },
-        { field: 'first_name', headerName: 'First Name', width: 150 },
-        { field: 'last_name', headerName: 'Last Name', width: 150 },
-        { field: 'test1', headerName: 'Test(10%)', width: 150, type:'number',editable:true,  },
-        { field: 'assignmentScore1', headerName: 'assignement(15%)', width: 150, type:'number', editable:true },
-        { field: 'midtermScore1', headerName: 'mid-exam(25%)', width: 150 , type:'number', editable:true},
-        { field: 'finalExamScore1', headerName: 'final(50%)', width: 150,type:'number', editable:true },
-        { field: 'totalScore1', headerName: 'Total', width: 150, type:'number', editable:true },
-
-        { field: 'test2', headerName: 'Test(10%)', width: 150, type:'number',editable:true,  },
-        { field: 'assignmentScore2', headerName: 'assignement(15%)', width: 150, type:'number', editable:true },
-        { field: 'midtermScore2', headerName: 'mid-exam(25%)', width: 150 , type:'number', editable:true},
-        { field: 'finalExamScore2', headerName: 'final(50%)', width: 150,type:'number', editable:true },
-        { field: 'totalScore2', headerName: 'Total', width: 150, type:'number', editable:true },
-        {
-          field: 'actions',
-          headerName: 'Actions',
-          type: 'actions',
-          renderCell: (params) => (
-            <UsersActions {...{ params, rowId, setRowId,gradeId,subjectId,selectedSection,semester }} />
-          ),
-        },
-      ],[rowId]);
+   const columns = useMemo(() => [
+    { field: 'id', headerName: 'ID', width: 150 },
+    { field: 'studentId', headerName: 'Stud_ID', width: 150 },
+    { field: 'first_name', headerName: 'First Name', width: 150 },
+    { field: 'last_name', headerName: 'Last Name', width: 150 },
+    { 
+      field: 'test1', 
+      headerName: 'Test(10%)', 
+      width: 150, 
+      type: 'number', 
+      editable: true, 
+      valueParser: (value) => parseFloat(value) || 0 
+    },
+    { 
+      field: 'assignmentScore1', 
+      headerName: 'assignement(15%)', 
+      width: 150, 
+      type: 'number', 
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    { 
+      field: 'midtermScore1', 
+      headerName: 'mid-exam(25%)', 
+      width: 150, 
+      type: 'number', 
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    {
+      field: 'finalExamScore1',
+      headerName: 'final(50%)',
+      width: 150,
+      type: 'number',
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    { 
+      field: 'totalScore1', 
+      headerName: 'Total', 
+      width: 150, 
+      type: 'number', 
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    { 
+      field: 'test2', 
+      headerName: 'Test(10%)', 
+      width: 150, 
+      type: 'number', 
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    { 
+      field: 'assignmentScore2', 
+      headerName: 'assignement(15%)', 
+      width: 150, 
+      type: 'number', 
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    { 
+      field: 'midtermScore2', 
+      headerName: 'mid-exam(25%)', 
+      width: 150, 
+      type: 'number', 
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    {
+      field: 'finalExamScore2',
+      headerName: 'final(50%)',
+      width: 150,
+      type: 'number',
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    { 
+      field: 'totalScore2', 
+      headerName: 'Total', 
+      width: 150, 
+      type: 'number', 
+      editable: true,
+      valueParser: (value) => parseFloat(value) || 0
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      type: 'actions',
+      renderCell: (params) => (
+        <UsersActions {...{ params, rowId, setRowId, gradeId, subjectId, selectedSection, semester }} />
+      ),
+    },
+  ], [rowId]);
+  
   return (
     <div className='  bg-white box boxshadow w-[80%] justify-center mt-5   p-4'>
        <div style={{  width: '100%' }}>

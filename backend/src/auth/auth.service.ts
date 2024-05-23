@@ -179,11 +179,22 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email,
+
       },
     });
 
     if (!user) {
       throw new UnauthorizedException('Incorrect email or password');
+    }
+    const check = await this.prismaService.user.findUnique({
+      where: {
+        email: dto.email,
+        status:"active"
+
+      },
+    });
+    if (!check) {
+      throw new UnauthorizedException('Unauthorize contact your admin!');
     }
 
     // const passwordMatches = await argon.verify(user.password, dto.password);
@@ -197,6 +208,7 @@ export class AuthService {
       user.email,
       user.frist_name,
       user.school_Id,
+      user.status
     );
   }
 
@@ -206,6 +218,7 @@ export class AuthService {
     email: string,
     frist_name: string,
     school_Id: number,
+    status:string
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
@@ -213,6 +226,7 @@ export class AuthService {
       email,
       frist_name,
       school_Id,
+      status
     };
     const secret = this.config.get('JWT_SECRET');
 
@@ -261,6 +275,12 @@ export class AuthService {
     //     pass: 'p w p a t e w w i a t b m j k ap w p a t e w w i a t b m j k a'
     //   }
     // });
+  }
+
+  async getStatus(id:number){
+    const user = await this.prismaService.user.findUnique({where:{id:id},select:{status:true}})
+
+    return user
   }
 
   async forgetPasswordShortCode(dto: any) {

@@ -54,13 +54,15 @@ const UsersActions = ({
       let tobeSent = {};
   
       if (semester === 1) {
+       
         tobeSent = {
           ...commonData,
           test1,
           midtermScore1,
           assignmentScore1,
           finalExamScore1,
-          totalScore1,
+          totalScore1:test1+midtermScore1+assignmentScore1+finalExamScore1,
+          
         };
       } else if (semester === 2) {
         tobeSent = {
@@ -69,7 +71,7 @@ const UsersActions = ({
           midtermScore2,
           assignmentScore2,
           finalExamScore2,
-          totalScore2,
+          totalScore2:test2+midtermScore2+assignmentScore2+finalExamScore2,
         };
       }
   
