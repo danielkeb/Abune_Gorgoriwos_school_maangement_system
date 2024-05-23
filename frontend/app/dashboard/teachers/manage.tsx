@@ -134,12 +134,12 @@ function Manage() {
             top: params.isFirstVisible ? 0 : 5,
             bottom: params.isLastVisible ? 0 : 5,
           })}
-          sx={{
-            [`& .${Grid.row}`]: {
-              bgcolor: (theme) =>
-                theme.palette.mode === "light" ? grey[200] : grey[900],
-            },
-          }}
+          // sx={{
+          //   [`& .${Grid.row}`]: {
+          //     bgcolor: (theme) =>
+          //       theme.palette.mode === "light" ? grey[200] : grey[900],
+          //   },
+          // }}
           slots={{ toolbar: GridToolbar }}
           onCellKeyDown={(params) => setRowId(params.id)}
           onCellEditStart={(params) => setRowId(params.id)}
