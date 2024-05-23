@@ -16,6 +16,7 @@ function StudentProfileSettings() {
   const [call, setCall]= useState({});
   const [isClient, setIsClient] = useState(false);
   const [check, setCheck] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>('');
   // const[searchId, setSearchId]= useState();
   // const [selectedSection, setSelectedSection] = useState(); // State to store the selected section
 
@@ -26,7 +27,11 @@ function StudentProfileSettings() {
           `http://localhost:3333/auth/user_detail/${decodedToken?.sub}/${decodedToken?.role}`
         );
         setCall(school.data);
-
+        if (school.data.user.image) {
+          const responseImg = await axios.get(`http://localhost:3333/${school.data.user.image}`, { responseType: 'blob' });
+          const url = URL.createObjectURL(responseImg.data);
+          setImageUrl(url);
+        }
   
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -93,12 +98,8 @@ function StudentProfileSettings() {
         <div className="flex flex-col lg:flex-row justify-center mt-6 gap-6">
           <div className="w-full lg:w-1/3 bg-gray-100 max-h-[300px] p-4 boxshadow">
             <div className="flex flex-col items-center">
-              <Image
-                src="/avater-removebg-preview (1).png"
-                alt="Profile Picture"
-                width={100}
-                height={100}
-                className="rounded-ful w-[200px] mt-[-10px]"
+            <img src={imageUrl} alt="Profile" width={100} height={100}
+                className="rounded-ful mb-7 w-[200px] mt-[-10px]"
               />
               <h3 className="text-black py-2 text-lg rounded mt-[-30px] "><b>{call?.user?.frist_name} {call?.user?.middle_name} {call?.user?.last_name} </b></h3>
               

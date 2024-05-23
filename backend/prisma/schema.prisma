@@ -19,10 +19,12 @@ model School {
   school_name    String
   school_address String
   school_phone   String
+  
 
   createdAT    DateTime   @default(now())
   updatedAT    DateTime   @updatedAt
   User         User[]
+  gradelevel   GradeLevel[]
 
   @@index([id])
   @@map("schools")
@@ -111,6 +113,8 @@ model GradeLevel {
   student        Student[]
   result         Result[]
   courseMaterial CourseMaterial[]
+  schoolId   Int?
+  school     School? @relation(fields: [schoolId], references: [id])
 
   //Make the teacherId optional !
   teacher Teacher[]
@@ -118,13 +122,6 @@ model GradeLevel {
   // other fields specific to GradeLevel
 }
 
-// enum ClassType{
-//   nursery
-//   junior_primary
-//   senior_primary
-//   junior_secondary
-//   senior_secondary
-// }
 model Section {
   id         Int        @id @default(autoincrement())
   name       String
@@ -248,6 +245,7 @@ model CourseMaterial {
   // Define the many-to-one relationship with Subject
   subject    Subject?     @relation(fields: [subjectId], references: [id])
   subjectId  Int?
+  schoolId Int?
   gradeLevel GradeLevel[]
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt

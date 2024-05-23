@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  Res,
   //Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -23,6 +24,9 @@ import { extname } from 'path';
 //import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import type { Response } from 'express';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -95,7 +99,13 @@ export class AuthController {
       photoPath = photo.path;
     }
 
-    return this.authService.signUpUser(dto, photoPath, school_id, gradeId, sectionId);
+    return this.authService.signUpUser(
+      dto,
+      photoPath,
+      school_id,
+      gradeId,
+      sectionId,
+    );
   }
 
   @HttpCode(HttpStatus.OK)
@@ -126,9 +136,12 @@ export class AuthController {
     return this.authService.resetPassword(dto, id, token);
   }
 
-  @Get('role/:role')
-  getUsers(@Param('role') role: string) {
-    return this.authService.getUsers(role);
+  @Get('role/:role/:schoolsId')
+  getUsers(
+    @Param('role') role: string,
+    @Param('schoolsId', ParseIntPipe) schoolsId: number,
+  ) {
+    return this.authService.getUsers(role, schoolsId);
   }
   @Get('get')
   getAdmin() {
@@ -140,20 +153,42 @@ export class AuthController {
   }
   @Get('user/:id')
   getUser(@Param('id', ParseIntPipe) id: number) {
-    return this.authService.getUser(id);
+    const filePath = join(process.cwd());
+    return this.authService.getUser(id, filePath);
   }
 
   @Get('user_detail/:id/:role')
-  getUserDetail( @Param('id', ParseIntPipe) id: number,
-  @Param('role') role: string
-  ){
-    return this.authService.getUserDetail(id, role)
+  getUserDetail(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('role') role: string,
+  ) {
+    return this.authService.getUserDetail(id, role);
   }
   @Patch('user_update/:id')
-  updateUser( @Param('id', ParseIntPipe) id: number,
-  @Body() dto:DtoUpdateUser ,
-  
-  ){
-    return this.authService.updateUser(id,dto )
+  updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: DtoUpdateUser,
+  ) {
+    return this.authService.updateUser(id, dto);
+  }
+  @Get('/:filename')
+  async openImg(
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    try {
+      const filePath = join(process.cwd(), 'uploads', `${filename}`);
+      const readableStream = createReadStream(filePath);
+
+      // Set response headers
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Disposition', `inline; filename=${filename}`);
+
+      // Pipe the stream to the response
+      readableStream.pipe(res);
+    } catch (error) {
+      console.error('Error opening image:', error);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error opening PDF');
+    }
   }
 }

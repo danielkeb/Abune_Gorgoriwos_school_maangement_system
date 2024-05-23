@@ -3,7 +3,7 @@ import {
   NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { AddResultkDto, UpdateResultDto } from './dto';
 import { AddManyResultkDto } from './dto/addmanyresult.dto';
 

@@ -6,7 +6,6 @@ CREATE TABLE "schools" (
     "school_phone" TEXT NOT NULL,
     "createdAT" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAT" TIMESTAMP(3) NOT NULL,
-    "schoolYearId" INTEGER NOT NULL,
 
     CONSTRAINT "schools_pkey" PRIMARY KEY ("id")
 );
@@ -24,6 +23,7 @@ CREATE TABLE "users" (
     "image" TEXT,
     "phone" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "status" TEXT DEFAULT 'active',
     "gender" TEXT NOT NULL,
     "date_of_birth" TEXT NOT NULL,
     "loggedInAt" TIMESTAMP(3),
@@ -64,6 +64,7 @@ CREATE TABLE "GradeLevel" (
     "id" SERIAL NOT NULL,
     "grade" TEXT NOT NULL,
     "classType" TEXT,
+    "schoolId" INTEGER,
 
     CONSTRAINT "GradeLevel_pkey" PRIMARY KEY ("id")
 );
@@ -167,6 +168,7 @@ CREATE TABLE "Calander" (
     "title" TEXT NOT NULL,
     "start" TEXT NOT NULL,
     "allDay" BOOLEAN NOT NULL,
+    "schoolId" INTEGER,
 
     CONSTRAINT "Calander_pkey" PRIMARY KEY ("sub")
 );
@@ -178,6 +180,7 @@ CREATE TABLE "CourseMaterial" (
     "file" TEXT NOT NULL,
     "teacherId" INTEGER NOT NULL,
     "subjectId" INTEGER,
+    "schoolId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -198,6 +201,12 @@ CREATE TABLE "_GradeLevelToTeacher" (
 
 -- CreateTable
 CREATE TABLE "_SectionToTeacher" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_SubjectSection" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -245,13 +254,16 @@ CREATE UNIQUE INDEX "_SectionToTeacher_AB_unique" ON "_SectionToTeacher"("A", "B
 CREATE INDEX "_SectionToTeacher_B_index" ON "_SectionToTeacher"("B");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "_SubjectSection_AB_unique" ON "_SubjectSection"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_SubjectSection_B_index" ON "_SubjectSection"("B");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_CourseMaterialToGradeLevel_AB_unique" ON "_CourseMaterialToGradeLevel"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_CourseMaterialToGradeLevel_B_index" ON "_CourseMaterialToGradeLevel"("B");
-
--- AddForeignKey
-ALTER TABLE "schools" ADD CONSTRAINT "schools_schoolYearId_fkey" FOREIGN KEY ("schoolYearId") REFERENCES "SchoolYear"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_school_Id_fkey" FOREIGN KEY ("school_Id") REFERENCES "schools"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -267,6 +279,9 @@ ALTER TABLE "students" ADD CONSTRAINT "students_gradeId_fkey" FOREIGN KEY ("grad
 
 -- AddForeignKey
 ALTER TABLE "students" ADD CONSTRAINT "students_sectionId_fkey" FOREIGN KEY ("sectionId") REFERENCES "sections"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "GradeLevel" ADD CONSTRAINT "GradeLevel_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "sections" ADD CONSTRAINT "sections_gradeId_fkey" FOREIGN KEY ("gradeId") REFERENCES "GradeLevel"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -318,6 +333,12 @@ ALTER TABLE "_SectionToTeacher" ADD CONSTRAINT "_SectionToTeacher_A_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "_SectionToTeacher" ADD CONSTRAINT "_SectionToTeacher_B_fkey" FOREIGN KEY ("B") REFERENCES "teachers"("user_Id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_SubjectSection" ADD CONSTRAINT "_SubjectSection_A_fkey" FOREIGN KEY ("A") REFERENCES "sections"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_SubjectSection" ADD CONSTRAINT "_SubjectSection_B_fkey" FOREIGN KEY ("B") REFERENCES "Subject"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CourseMaterialToGradeLevel" ADD CONSTRAINT "_CourseMaterialToGradeLevel_A_fkey" FOREIGN KEY ("A") REFERENCES "CourseMaterial"("id") ON DELETE CASCADE ON UPDATE CASCADE;

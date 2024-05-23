@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { DtoSignin, DtoStudent, DtoAdmin } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
@@ -297,10 +297,11 @@ export class AuthService {
     this.shortCodeService.sendSecurityAlert(user.email, userId);
     return { userId, message: 'send success', statuscode: 200 };
   }
-  async getUsers(role: string) {
+  async getUsers(role: string, schlId: number) {
     const allUsers = await this.prismaService.user.findMany({
       where: {
         role: role,
+        school_Id: schlId,
       },
       select: {
         id: true,
@@ -358,11 +359,12 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
-  async getUser(id: number) {
+  async getUser(id: number, path: string) {
     const user = await this.prismaService.user.findUnique({
       where: { id: id },
     });
-    return user;
+    const imageUrl = `${path}/${user.image}`;
+    return { user, imageUrl };
   }
 
   async getUserDetail(id: number, role: string) {
@@ -379,6 +381,7 @@ export class AuthService {
               last_name: true,
               username: true,
               email: true,
+              image: true,
               address: true,
               phone: true,
               gender: true,
@@ -400,6 +403,7 @@ export class AuthService {
               last_name: true,
               username: true,
               email: true,
+              image: true,
               address: true,
               phone: true,
               gender: true,
@@ -419,6 +423,7 @@ export class AuthService {
           username: true,
           email: true,
           address: true,
+          image: true,
           phone: true,
           gender: true,
           date_of_birth: true,
@@ -440,6 +445,6 @@ export class AuthService {
       where: { id: id },
       data: { username: dto.username, password: hash },
     });
-    return 'update complet';
+    return 'update complete';
   }
 }
