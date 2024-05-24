@@ -247,27 +247,26 @@ export class StudentsService {
               data: {
                 gradeId: gradeId,
                 sectionId: sectionId,
-                firstrank:null,
-                secondScore:null,
-                overallrank:null,
-                firstScore:null,
-                secondtrank:null,
-                overallScore:null
+                firstrank: null,
+                secondScore: null,
+                overallrank: null,
+                firstScore: null,
+                secondtrank: null,
+                overallScore: null,
               },
             });
-          } else{
+          } else {
             await prisma.student.update({
               where: { user_Id: user_id },
               data: {
-                firstrank:null,
-                secondScore:null,
-                overallrank:null,
-                firstScore:null,
-                secondtrank:null,
-                overallScore:null
+                firstrank: null,
+                secondScore: null,
+                overallrank: null,
+                firstScore: null,
+                secondtrank: null,
+                overallScore: null,
               },
             });
-
           }
         }
       });
@@ -420,9 +419,12 @@ export class StudentsService {
       const gradeId = student.gradeId;
       const sectionId = student.sectionId;
 
-      const canPass= await this.prismaService.student.findUnique({where:{user_Id:user_id}, select:{gradeId:true,sectionId:true}})
+      const canPass = await this.prismaService.student.findUnique({
+        where: { user_Id: user_id },
+        select: { gradeId: true, sectionId: true },
+      });
       const existingSubjects = await this.prismaService.student
-        .findUnique({ where: { user_Id: user_id }, include: { subject: true,  } })
+        .findUnique({ where: { user_Id: user_id }, include: { subject: true } })
         .then((student) => student?.subject);
 
       // Step 2: Delete Existing Subjects
@@ -436,7 +438,11 @@ export class StudentsService {
         });
       }
       //await this.associateSubjects(user_id, gradeId);
-      await this.associateSubjectsAndCreateResults(user_id, canPass.gradeId, canPass.sectionId);
+      await this.associateSubjectsAndCreateResults(
+        user_id,
+        canPass.gradeId,
+        canPass.sectionId,
+      );
     }
     return {
       status: 'Sucess',
@@ -909,7 +915,7 @@ export class StudentsService {
       select: {
         user: true,
         careof_contact1: true,
-    
+
         gradeId: true,
         sectionId: true,
         gradelevel: {
@@ -931,6 +937,7 @@ export class StudentsService {
       email: s.user.email,
       address: s.user.address,
       phone: s.user.phone,
+      image: s.user.image,
 
       date_of_birth: s.user.date_of_birth,
       school_Id: s.user.school_Id,

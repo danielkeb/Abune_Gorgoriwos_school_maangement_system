@@ -5,6 +5,7 @@ import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SendIcon from '@mui/icons-material/Send';
+import { AppContext } from '@/components/context/UserContext';
 
 interface Teacher {
   id: number;
@@ -40,6 +41,7 @@ const SectionUpdate = () => {
   const popupRef = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const {decodedToken } = React.useContext(AppContext);
   
 
   useEffect(() => {
@@ -144,7 +146,7 @@ const SectionUpdate = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get<Teacher[]>('http://localhost:3333/teachers/get');
+      const response = await axios.get<Teacher[]>(`http://localhost:3333/teachers/get/${decodedToken.school_Id}`);
       setTeachers(response.data);
     } catch (error) {
       console.error('Error fetching teachers:', error);
@@ -246,7 +248,7 @@ const SectionUpdate = () => {
                         </button>
                         <button
                           onClick={handleManageSection}
-                          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
+                          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 ml-7 rounded-md"
                         >
                           Cancel
                         </button>

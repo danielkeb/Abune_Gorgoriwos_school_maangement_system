@@ -179,7 +179,6 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email,
-
       },
     });
 
@@ -189,8 +188,7 @@ export class AuthService {
     const check = await this.prismaService.user.findUnique({
       where: {
         email: dto.email,
-        status:"active"
-
+        status: 'active',
       },
     });
     if (!check) {
@@ -208,7 +206,7 @@ export class AuthService {
       user.email,
       user.frist_name,
       user.school_Id,
-      user.status
+      user.status,
     );
   }
 
@@ -218,7 +216,7 @@ export class AuthService {
     email: string,
     frist_name: string,
     school_Id: number,
-    status:string
+    status: string,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
@@ -226,7 +224,7 @@ export class AuthService {
       email,
       frist_name,
       school_Id,
-      status
+      status,
     };
     const secret = this.config.get('JWT_SECRET');
 
@@ -277,10 +275,13 @@ export class AuthService {
     // });
   }
 
-  async getStatus(id:number){
-    const user = await this.prismaService.user.findUnique({where:{id:id},select:{status:true}})
+  async getStatus(id: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+      select: { status: true },
+    });
 
-    return user
+    return user;
   }
 
   async forgetPasswordShortCode(dto: any) {

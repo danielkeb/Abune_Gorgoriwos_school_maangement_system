@@ -54,6 +54,7 @@ const Manage = () => {
             `http://localhost:3333/students/getstu/${decodedToken?.school_Id}/${dork}/${formik.values.selectedSection}`
           );
           setTeacherView(res.data);
+          console.log("student data flow", res.data);
         } else {
           toast.error("Please Select all fields!");
         }

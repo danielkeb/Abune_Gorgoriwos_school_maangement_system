@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { AppContext } from '@/components/context/UserContext';
 
 interface Teacher {
   id: number;
@@ -52,6 +53,7 @@ const SubjectComponent = () => {
   const [page, setPage] = useState(0);
   
   const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
+  const {decodedToken} = React.useContext(AppContext);
 
   // ... (other useEffect hooks)
 
@@ -86,7 +88,7 @@ const SubjectComponent = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get<Teacher[]>('http://localhost:3333/teachers/get');
+      const response = await axios.get<Teacher[]>(`http://localhost:3333/teachers/get/${decodedToken.school_Id}`);
       setTeachers(response.data);
     } catch (error) {
       console.error('Error fetching teachers:', error);
