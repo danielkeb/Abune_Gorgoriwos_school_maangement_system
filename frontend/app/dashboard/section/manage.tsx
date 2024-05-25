@@ -63,7 +63,7 @@ const SectionUpdate = () => {
 
   const fetchGrades = async () => {
     try {
-      const response = await axios.get<Grade[]>('http://localhost:3333/grade/get');
+      const response = await axios.get<Grade[]>(`http://localhost:3333/grade/get/${decodedToken.school_Id}`);
       setGrades(response.data);
     } catch (error) {
       console.error('Error fetching grades:', error);
@@ -248,7 +248,7 @@ const SectionUpdate = () => {
                         </button>
                         <button
                           onClick={handleManageSection}
-                          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 ml-7 rounded-md"
+                          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 m-7 rounded-md"
                         >
                           Cancel
                         </button>

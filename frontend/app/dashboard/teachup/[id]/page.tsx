@@ -17,6 +17,7 @@ const page = () => {
     const [schoolss, setSchoolss] = useState([]);
     const [disData, setDisData]=useState()
     const router = useParams();
+    const { decodedToken } = React.useContext(AppContext);
   
     const { id } = router;
 
@@ -26,7 +27,7 @@ const page = () => {
         
       
           const res = await axios.get(`http://localhost:3333/teachers/single_teacher/${id}`);
-          const school = await axios.get("http://localhost:3333/grade/get");
+          const school = await axios.get(`http://localhost:3333/grade/get/${decodedToken.school_Id}`);
           const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
           setSchoolss(school.data);
           setTeachers(res.data);

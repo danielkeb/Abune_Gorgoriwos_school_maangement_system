@@ -50,7 +50,7 @@ const page = () => {
           formData.append(key, values.image as any);
         });
         const response = await axios.post(
-          `http://localhost:3333/auth/signUp/user/${parseInt(
+          `http://localhost:3333/auth/user/${parseInt(
             formik.values.school_name
           )}/0/0`,
           formik.values,
@@ -238,7 +238,7 @@ const page = () => {
                       Address
                     </label>
                     <input
-                      type="email"
+                      type="text"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="04 kebele"
                       name="address"
@@ -278,7 +278,7 @@ const page = () => {
                     </label>
                     <select
                       id="yourSelect"
-                      name="gender"
+                      name="school_name"
                       value={formik.values.school_name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}

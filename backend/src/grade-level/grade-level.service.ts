@@ -77,8 +77,11 @@ export class GradeLevelService {
   //   return updateGrade;
   // }
 
-  async getGradeLevel() {
+  async getGradeLevel(school_Id: number) {
     const gradeLevels = await this.prismaService.gradeLevel.findMany({
+      where: {
+        schoolId: school_Id,
+      },
       include: {
         teacher: { select: { user_Id: true } },
         section: true,
@@ -89,8 +92,11 @@ export class GradeLevelService {
     return gradeLevels;
   }
 
-  async manageGradeLevel() {
+  async manageGradeLevel(school_Id: number) {
     const classes = await this.prismaService.gradeLevel.findMany({
+      where: {
+        schoolId: school_Id,
+      },
       include: {
         teacher: {
           include: {

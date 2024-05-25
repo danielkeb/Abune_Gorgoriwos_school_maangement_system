@@ -24,9 +24,9 @@ function Manage() {
       try {
         const res = await axios.get(`http://localhost:3333/teachers/get/${decodedToken.school_Id}`);
         setTeachers(res.data);
-        const responseImg = await axios.get(`http://localhost:3333/${res.data.user.image}`, { responseType: 'blob' });
-            const url = URL.createObjectURL(responseImg.data);
-            setImageUrl(url);
+        // const responseImg = await axios.get(`http://localhost:3333/${res.data.user.image}`, { responseType: 'blob' });
+        //     const url = URL.createObjectURL(responseImg.data);
+        //     setImageUrl(url);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

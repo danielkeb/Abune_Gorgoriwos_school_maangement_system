@@ -29,12 +29,12 @@ export class GradeLevelController {
     return this.gradeLevelService.updateGradeLevel(gradeId, dto);
   }
 
-  @Get('get')
-  getGradeLevel() {
-    return this.gradeLevelService.getGradeLevel();
+  @Get('get/:id')
+  getGradeLevel(@Param('id', ParseIntPipe) id: number) {
+    return this.gradeLevelService.getGradeLevel(id);
   }
-  @Get('manage')
-  manageGradeLevel() {
-    return this.gradeLevelService.manageGradeLevel();
+  @Get('manage/:id')
+  manageGradeLevel(@Param('id', ParseIntPipe) id: number) {
+    return this.gradeLevelService.manageGradeLevel(id);
   }
 }
