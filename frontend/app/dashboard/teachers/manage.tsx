@@ -1,6 +1,11 @@
 "use client";
+<<<<<<< HEAD
 import { Box, Card, Typography, gridClasses } from "@mui/material";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
+=======
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import React, { Fragment, useContext, useEffect, useMemo, useState } from "react";
+>>>>>>> origin/main
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
@@ -120,12 +125,21 @@ function Manage() {
             top: params.isFirstVisible ? 0 : 5,
             bottom: params.isLastVisible ? 0 : 5,
           })}
+<<<<<<< HEAD
           sx={{
             [`& .${gridClasses.row}`]: {
               bgcolor: (theme) =>
                 theme.palette.mode == "light" ? grey[200] : grey[900],
             },
           }}
+=======
+          // sx={{
+          //   [`& .${Grid.row}`]: {
+          //     bgcolor: (theme) =>
+          //       theme.palette.mode === "light" ? grey[200] : grey[900],
+          //   },
+          // }}
+>>>>>>> origin/main
           slots={{ toolbar: GridToolbar }}
           onCellKeyDown={(params) => setRowId(params.id)}
           onCellEditStart={(params) => setRowId(params.id)}>

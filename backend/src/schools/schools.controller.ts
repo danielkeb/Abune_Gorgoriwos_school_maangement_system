@@ -34,9 +34,7 @@ export class SchoolsController {
   @UseGuards(JwtGuard, RoleGuard)
   @Roles(Role.SUPERUSER)
   @Post('register')
-  async schoolRegistered(
-    @Body() dto: DtoSchool,
-  ) {
+  async schoolRegistered(@Body() dto: DtoSchool) {
     return this.schoolService.schoolRegistered(dto);
   }
 
@@ -57,7 +55,7 @@ export class SchoolsController {
     return this.schoolService.schoolsGet();
   }
   @Get('getsex/:id')
-  getStudentSex(@Param('id', ParseIntPipe) id: number){
+  getStudentSex(@Param('id', ParseIntPipe) id: number) {
     return this.schoolService.getStudentSex(id);
   }
   @Get('get/:id')

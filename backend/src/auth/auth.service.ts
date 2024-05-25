@@ -13,8 +13,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 //import { Response } from 'express';
 //import * as nodemailer from 'nodemailer';
+import { EmailService } from '../././email/email.service';
 import { DtoUpdateUser } from './dto/dto.update';
-import { EmailService } from '../email/email.service';
 import { ShortcodeEmailService } from '../email/mobileversion.email.service';
 
 @Injectable()
@@ -136,6 +136,8 @@ export class AuthService {
         password: hash,
       },
     });
+    
+    await this.emailService.sendRegistrationEmail(dto.email, dto.password);
 
     if (dto.role === 'student') {
       await this.prismaService.student.create({
@@ -168,6 +170,10 @@ export class AuthService {
       return { addUser, teacher };
     }
 
+
+ 
+  
+
     if (addUser) {
       return addUser;
     } else {
@@ -195,10 +201,10 @@ export class AuthService {
       throw new UnauthorizedException('Unauthorize contact your admin!');
     }
 
-    const passwordMatches = await argon.verify(user.password, dto.password);
-    if (!passwordMatches) {
-      throw new UnauthorizedException('Incorrect email or password');
-    }
+    // const passwordMatches = await argon.verify(user.password, dto.password);
+    // if (!passwordMatches) {
+    //   throw new UnauthorizedException('Incorrect email or password');
+    // }
 
     return this.signToken(
       user.id,
@@ -258,7 +264,7 @@ export class AuthService {
       },
     );
 
-    this.emailService.sendSecurityAlert(user.email, token, user.id);
+  this.emailService.sendSecurityAlert(user.email, token, user.id);
     return {
       msg: 'Password reset link sent to your Email',
     };
