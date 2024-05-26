@@ -104,7 +104,8 @@ model Student {
 
 model GradeLevel {
   id        Int     @id @default(autoincrement())
-  grade     String  @unique
+  grade     String
+  gradewithschool String? @unique
   classType String?
 
   //Make the teacherId optional !
@@ -127,7 +128,7 @@ model Section {
   name       String
   gradeId    Int
   gradelevel GradeLevel @relation(fields: [gradeId], references: [id])
-
+  schoolId   Int?
   student Student[]
   teacher Teacher[]
    subjects    Subject[] @relation(name: "SubjectSection")
@@ -151,6 +152,7 @@ model Subject {
   result    Result[]
  sections  Section[] @relation(name: "SubjectSection")
   teacherId Int?
+  schoolId Int?
   teacher   Teacher?  @relation(fields: [teacherId], references: [user_Id])
 
   courseMaterial CourseMaterial[]

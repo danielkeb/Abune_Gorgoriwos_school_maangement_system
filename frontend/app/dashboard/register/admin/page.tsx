@@ -278,7 +278,7 @@ const page = () => {
                     </label>
                     <select
                       id="yourSelect"
-                      name="gender"
+                      name="school_name"
                       value={formik.values.school_name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}

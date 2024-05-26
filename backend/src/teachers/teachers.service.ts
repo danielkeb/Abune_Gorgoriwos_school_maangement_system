@@ -28,9 +28,10 @@ export class TeachersService {
     return teacher;
   }
 
-  async getTeachers(school_Id:number): Promise<any[]> {
+  async getTeachers(school_Id: number): Promise<any[]> {
     // Adjust the return type as per your requirement
-    const allTeachers = await this.prisma.teacher.findMany({ where:{user:{school_Id:school_Id}},
+    const allTeachers = await this.prisma.teacher.findMany({
+      where: { user: { school_Id: school_Id } },
       include: {
         user: true,
         gradelevel: {
@@ -78,7 +79,7 @@ export class TeachersService {
         id: teacher.user.id,
         frist_name: teacher.user.frist_name,
         status: teacher.user.status,
-      
+
         middle_name: teacher.user.middle_name,
         last_name: teacher.user.last_name,
         gender: teacher.user.gender,
@@ -128,7 +129,7 @@ export class TeachersService {
         date_of_birth: dto.date_of_birth,
         gender: dto.gender,
         phone: dto.phone,
-        status:dto.status
+        status: dto.status,
       },
     });
 
@@ -557,5 +558,27 @@ export class TeachersService {
       throw new NotFoundException('teacher not found');
     }
     return teacher;
+  }
+
+  async getAllTeachers() {
+    const teachers = await this.prisma.teacher.findMany({
+      include: {
+        user: true,
+      },
+    });
+
+    const merge = teachers.map((teacher) => {
+      return {
+        id: teacher.user.id,
+        frist_name: teacher.user.frist_name,
+        status: teacher.user.status,
+
+        middle_name: teacher.user.middle_name,
+        last_name: teacher.user.last_name,
+        gender: teacher.user.gender,
+        schoolId: teacher.user.school_Id,
+      };
+    });
+    return merge;
   }
 }

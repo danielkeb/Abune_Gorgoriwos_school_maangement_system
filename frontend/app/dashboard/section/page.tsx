@@ -18,7 +18,7 @@ const Page= ()=> {
     }
     return (
         <Main>
-        <div className="w-full mt-4 ml-4">
+        <div className="w-full mt-1 ml-4">
         <div className="flex border-b border-gray-300">
           <div
             className={`py-2 px-4 cursor-pointer ${

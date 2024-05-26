@@ -3,23 +3,29 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { AccessibilityOutline, FingerPrintOutline, SchoolOutline } from 'react-ionicons';
 
-const CardAdmin = () => {
-  const [userData, setUserData] = useState({ students: 0, teachers: 0 });
+const SuperCardAdmin = () => {
+  const [userData, setUserData] = useState({ users: 0, schools: 0, students: 0, teachers: 0 });
   const [isClient, setIsClient] = useState(false);
   const { decodedToken, token, logout } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const teachersResponse = await axios.get(`http://localhost:3333/auth/role/teacher/${decodedToken.school_Id}`);
-        const studentsResponse = await axios.get(`http://localhost:3333/auth/role/student/${decodedToken.school_Id}`);
+        const teachersResponse = await axios.get('http://localhost:3333/teachers/get');
+        const studentsResponse = await axios.get('http://localhost:3333/students/get');
+        const adminsResponse = await axios.get('http://localhost:3333/auth/get');
+        const schoolsResponse = await axios.get('http://localhost:3333/schools/get');
 
-        if (teachersResponse.status === 200 && studentsResponse.status === 200 ) {
+        if (teachersResponse.status === 200 && studentsResponse.status === 200 && adminsResponse.status === 200 && schoolsResponse.status === 200) {
           const teachersCount = teachersResponse.data.length;
           const studentsCount = studentsResponse.data.length;
+          const adminsCount = adminsResponse.data.length;
+          const schoolsCount = schoolsResponse.data.length;
 
           setUserData({
+            users: adminsCount,
             students: studentsCount,
+            schools: schoolsCount,
             teachers: teachersCount,
           });
         }
@@ -36,6 +42,8 @@ const CardAdmin = () => {
   }, []);
 
   const featuresList = [
+    { title: "Admin", amount: userData?.users },
+    { title: "Schools", amount: userData?.schools },
     { title: "Teachers", amount: userData?.teachers },
     { title: "Students", amount: userData?.students },
   ];
@@ -47,7 +55,6 @@ const CardAdmin = () => {
 
   return (
     <div className=' w-[90%]'>
-      {decodedToken?.role === "admin" ? (
         <div className="flex md:flex-row flex-col w-full items-center justify-center md:gap-4 gap-4">
           {featuresList.map((feature, index) => (
             <div key={index} className="boxshadow p-6 bg-gradient-to-r from-green-400 to-sky-500">
@@ -74,13 +81,9 @@ const CardAdmin = () => {
             </div>
           ))}
         </div>
-      ) : (
-        <div className="w-[90%] flex justify-start">
-          <h5 className="text-xl">Welcome Back {decodedToken?.frist_name} 👋</h5>
-        </div>
-      )}
+      
     </div>
   );
 };
 
-export default CardAdmin;
+export default SuperCardAdmin;

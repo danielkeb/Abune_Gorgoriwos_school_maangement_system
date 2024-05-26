@@ -27,6 +27,12 @@ export class TeachersController {
   getTeachers(@Param('school_Id', ParseIntPipe) school_Id: number) {
     return this.teacherService.getTeachers(school_Id);
   }
+
+  @Get('get')
+  getAllTeachers() {
+    return this.teacherService.getAllTeachers();
+  }
+
   @Get('single_teacher/:id')
   getTeacherById(@Param('id', ParseIntPipe) id: number) {
     return this.teacherService.getTeacherById(id);

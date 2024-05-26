@@ -80,7 +80,7 @@ const ClassForm = () => {
         await axios.patch(`http://localhost:3333/grade/update/${selectedGrade.id}`, { grade, classType });
         toast.success('Update successful');
       } else {
-        await axios.post('http://localhost:3333/grade/add', { grade, classType });
+        await axios.post(`http://localhost:3333/grade/add/${decodedToken.school_Id}`, { grade, classType });
         toast.success('Add successful');
       }
       setGrade('');

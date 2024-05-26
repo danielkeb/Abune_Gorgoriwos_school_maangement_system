@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SectionAddDto,  } from './dto/sectionAdd.dto';
+import { SectionAddDto, SectionUpdateAddDto } from './dto/sectionAdd.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SectionUpdateAddDto } from './dto/sectionadd.update.dto';
 
 // interface StudentResult {
 //   totalScore1: number;
@@ -27,7 +26,8 @@ export class SectionService {
   constructor(private prismaService: PrismaService) {}
 
   async addSection(
-    dto: SectionUpdateAddDto,
+    schoolId: number,
+    dto: SectionAddDto,
   ): Promise<{ msg: string; addSection?: any }> {
     try {
       const { gradeId, name } = dto;
@@ -75,6 +75,7 @@ export class SectionService {
         data: {
           name: dto.name,
           gradeId: dto.gradeId,
+          schoolId: schoolId,
         },
       });
 
@@ -102,7 +103,6 @@ export class SectionService {
       };
     }
   }
-
 
   async getSection(secId: number): Promise<any[]> {
     try {
@@ -145,8 +145,11 @@ export class SectionService {
     }
     return searchSection;
   }
-  async manageSection() {
+  async manageSection(schoolId: number) {
     const section = await this.prismaService.section.findMany({
+      where: {
+        schoolId: schoolId,
+      },
       select: {
         id: true,
         name: true,

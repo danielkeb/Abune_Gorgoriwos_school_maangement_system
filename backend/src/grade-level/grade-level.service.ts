@@ -8,14 +8,19 @@ import { GradeLevel } from './dto';
 export class GradeLevelService {
   constructor(private prismaService: PrismaService) {}
 
-  async addGradeLevel(dto: GradeLevel) {
+  async addGradeLevel(schoolId: number, dto: GradeLevel) {
     try {
+      // Append schoolId to the grade
+      const grade = `${dto.grade}-${schoolId}`;
+
       // Check if the grade already exists
       const existingGrade = await this.prismaService.gradeLevel.findUnique({
         where: {
-          grade: dto.grade,
+          schoolId: schoolId,
+          gradewithschool: grade,
         },
       });
+
       if (existingGrade) {
         throw new ForbiddenException('Grade already exists');
       }
@@ -25,6 +30,8 @@ export class GradeLevelService {
         data: {
           grade: dto.grade,
           classType: dto.classType, // Set classType if provided
+          schoolId: schoolId,
+          gradewithschool: grade,
         },
       });
 
@@ -32,7 +39,8 @@ export class GradeLevelService {
       const newSection = await this.prismaService.section.create({
         data: {
           name: 'A class', // Use the grade as the section name
-          gradeId: newGradeLevel.id, // Associate the section with the newly created grade level
+          gradeId: newGradeLevel.id,
+          schoolId: schoolId, // Associate the section with the newly created grade level
         },
       });
 
@@ -89,9 +97,18 @@ export class GradeLevelService {
       },
     });
 
-    return gradeLevels;
-  }
+    // Remove schoolId from the grade before returning to the frontend
+    const processedGradeLevels = gradeLevels.map((gradeLevel) => {
+      // Assuming the grade is in the format 'grade-schoolId'
+      const originalGrade = gradeLevel.grade.split('-')[0];
+      return {
+        ...gradeLevel,
+        grade: originalGrade,
+      };
+    });
 
+    return processedGradeLevels;
+  }
   async manageGradeLevel(school_Id: number) {
     const classes = await this.prismaService.gradeLevel.findMany({
       where: {
@@ -108,6 +125,16 @@ export class GradeLevelService {
       },
     });
 
-    return classes;
+    // Remove schoolId from the grade before returning to the frontend
+    const processedClasses = classes.map((gradeLevel) => {
+      // Assuming the grade is in the format 'grade-schoolId'
+      const originalGrade = gradeLevel.grade.split('-')[0];
+      return {
+        ...gradeLevel,
+        grade: originalGrade,
+      };
+    });
+
+    return processedClasses;
   }
 }
