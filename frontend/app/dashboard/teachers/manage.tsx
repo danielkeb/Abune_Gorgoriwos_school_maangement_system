@@ -69,7 +69,7 @@ function Manage() {
           <img
             src={`http://localhost:3333/${params.row?.image}`}
             alt={`${params.row.frist_name} ${params.row?.last_name}`}
-            style={{ width: "100%", height: "100%", borderRadius: "50" }}
+            style={{ width: "100%", height: "100%", borderRadius: "50%" }}
           />
         ),
       },

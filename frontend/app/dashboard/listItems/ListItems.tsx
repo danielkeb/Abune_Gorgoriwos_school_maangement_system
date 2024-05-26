@@ -66,9 +66,18 @@ const [userRole, setUserRole]= useState('');
         <Link href="/dashboard/register">
           <div className={`${path.startsWith('/dashboard/register') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
-              <ShoppingCartIcon className={`${path.startsWith('/dashboard/register') ? ' text-white' : ''}`} />
+              <PeopleIcon className={`${path.startsWith('/dashboard/register') ? ' text-white' : ''}`} />
             </ListItemIcon>
             <ListItemText primary="Registration" />
+          </div>
+        </Link>
+
+        <Link href="/dashboard/admin">
+          <div className={`${path.startsWith('/dashboard/admin') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+            <ListItemIcon>
+              <ShoppingCartIcon className={`${path.startsWith('/dashboard/admin') ? ' text-white' : ''}`} />
+            </ListItemIcon>
+            <ListItemText primary="School Directors" />
           </div>
         </Link>
 
