@@ -136,7 +136,7 @@ export class AuthService {
         password: hash,
       },
     });
-    
+
     await this.emailService.sendRegistrationEmail(dto.email, dto.password);
 
     if (dto.role === 'student') {
@@ -169,10 +169,6 @@ export class AuthService {
 
       return { addUser, teacher };
     }
-
-
- 
-  
 
     if (addUser) {
       return addUser;
@@ -264,7 +260,7 @@ export class AuthService {
       },
     );
 
-  this.emailService.sendSecurityAlert(user.email, token, user.id);
+    this.emailService.sendSecurityAlert(user.email, token, user.id);
     return {
       msg: 'Password reset link sent to your Email',
     };

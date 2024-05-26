@@ -18,6 +18,7 @@ import BasicPie from "./dumChart";
 import Divider from "@mui/material/Divider";
 import Activity from "./activity";
 import Profile from "./profile";
+import SuperCardAdmin from "./superadminCard";
 
 interface Event {
   title: string;
@@ -172,7 +173,10 @@ export default function Home() {
   return (
     <>
       <div className="w-full h-full  flex flex-col  justify-center  items-center mt-[100px] ">
-       <CardAdmin/>
+        {
+          decodedToken.role =="superadmin"?<SuperCardAdmin/>:<CardAdmin/>
+        }
+       
 
         
  

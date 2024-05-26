@@ -117,11 +117,11 @@ const SubjectComponent = () => {
     try {
       let response;
       if (subjectId) {
-        response = await axios.get<SubjectData>(`http://localhost:3333/subjects/get/${subjectId}`);
+        response = await axios.get<SubjectData>(`http://localhost:3333/subjects/get/${decodedToken.school_Id}/${subjectId}`);
         setSelectedSubject(response.data);
         setShowModal(true);
       } else {
-        response = await axios.get<SubjectData[]>('http://localhost:3333/subjects/get');
+        response = await axios.get<SubjectData[]>(`http://localhost:3333/subjects/get/${decodedToken.school_Id}`);
         setClassData(response.data);
       }
       setError('');
@@ -191,7 +191,7 @@ const SubjectComponent = () => {
     }
 
     try {
-      await axios.post('http://localhost:3333/subjects/add', { name: subject, gradeId, teacherId });
+      await axios.post(`http://localhost:3333/subjects/add/${decodedToken.school_Id}`, { name: subject, gradeId, teacherId });
       setSubject('');
       setGradeId(null);
       setTeacherId(null);

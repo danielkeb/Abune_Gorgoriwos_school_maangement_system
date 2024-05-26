@@ -66,7 +66,7 @@ const SectionComponent = () => {
 
   const fetchClassData = async () => {
     try {
-      const response = await axios.get<SectionData[]>('http://localhost:3333/section/manage');
+      const response = await axios.get<SectionData[]>(`http://localhost:3333/section/manage/${decodedToken.school_Id}`);
       setClassData(response.data);
     } catch (error) {
       console.error('Error fetching class data:', error);
@@ -100,7 +100,7 @@ const SectionComponent = () => {
     }
 
     try {
-      await axios.post('http://localhost:3333/section/add', { name: sectionName, gradeId, teacherId });
+      await axios.post(`http://localhost:3333/section/add/${decodedToken.school_Id}`, { name: sectionName, gradeId, teacherId });
       setSectionName('');
       setGradeId('');
       setTeacherId('');

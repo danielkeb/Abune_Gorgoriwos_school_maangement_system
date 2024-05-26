@@ -73,7 +73,7 @@ const SectionUpdate = () => {
 
   const fetchClassData = async () => {
     try {
-      const response = await axios.get<SectionData[]>('http://localhost:3333/section/manage');
+      const response = await axios.get<SectionData[]>(`http://localhost:3333/section/manage/${decodedToken.school_Id}`);
       setClassData(response.data);
       console.log(response.data);
     } catch (error) {
@@ -240,10 +240,10 @@ const SectionUpdate = () => {
                       {error && <p className="text-red-500 mb-4">{error}</p>}
                       <div className='bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse'>
                         <button
-                          className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md w-full"
+                          className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-2"
                           onClick={handleUpdateSection}
                         >
-                          <SendIcon sx={{ marginRight: 1 }} />
+                          <SendIcon sx={{ marginRight:1 }} />
                           Update
                         </button>
                         <button

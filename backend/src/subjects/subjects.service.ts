@@ -14,6 +14,7 @@ export class SubjectsService {
   constructor(private prisma: PrismaService) {}
 
   async addSubject(
+    school_id: number,
     dto: AddSubjectsDto,
   ): Promise<{ msg: string; addSubject?: any }> {
     try {
@@ -60,6 +61,7 @@ export class SubjectsService {
           name: dto.name,
           gradeId: dto.gradeId,
           teacherId: dto.teacherId,
+          schoolId: school_id,
         },
       });
 
@@ -83,8 +85,11 @@ export class SubjectsService {
       };
     }
   }
-  async getSubject() {
+  async getSubject(schoolId: number) {
     const subjects = await this.prisma.subject.findMany({
+      where: {
+        schoolId: schoolId,
+      },
       select: {
         name: true,
         id: true,
@@ -113,9 +118,9 @@ export class SubjectsService {
 
     return subjects;
   }
-  async searchSubjects(subj: number) {
+  async searchSubjects(subj: number, schoolId: number) {
     const searchSubjects = await this.prisma.subject.findUnique({
-      where: { id: subj },
+      where: { id: subj, schoolId: schoolId },
       include: {
         gradelevel: { select: { grade: true } },
         teacher: {
