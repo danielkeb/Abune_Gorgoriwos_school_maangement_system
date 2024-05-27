@@ -21,6 +21,7 @@ import SchoolList from '../main/schools';
 import SubjectIcon from '@mui/icons-material/Subject';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 
 
@@ -58,7 +59,14 @@ const [userRole, setUserRole]= useState('');
           <ListItemText primary="Dashboard" />
         </div>
       </Link>
-
+   
+      {/* Roles route accessible only to super admin */}
+      {userRole && userRole === ROLES.SUPER_ADMIN && (
+        <React.Fragment>
+        
+        <SchoolList/>
+        </React.Fragment>
+      )}
       
       {/* Registration route accessible only to super admin */}
       {userRole && userRole === ROLES.SUPER_ADMIN && (
@@ -66,31 +74,26 @@ const [userRole, setUserRole]= useState('');
         <Link href="/dashboard/register">
           <div className={`${path.startsWith('/dashboard/register') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
             <ListItemIcon>
-              <ShoppingCartIcon className={`${path.startsWith('/dashboard/register') ? ' text-white' : ''}`} />
+              <PeopleIcon className={`${path.startsWith('/dashboard/register') ? ' text-white' : ''}`} />
             </ListItemIcon>
             <ListItemText primary="Registration" />
           </div>
         </Link>
 
+        <Link href="/dashboard/admin">
+          <div className={`${path.startsWith('/dashboard/admin') ? 'bg-green-700 hover:bg-green-700 text-white' : ''} flex justify-center items-center pb-2 pt-2 pl-4 hover:bg-gray-100 w-full`}>
+            <ListItemIcon>
+              <AdminPanelSettingsIcon className={`${path.startsWith('/dashboard/admin') ? ' text-white' : ''}`} />
+            </ListItemIcon>
+            <ListItemText primary="School Directors" />
+          </div>
+        </Link>
+
    
-        <RecipeReviewCard/>
+        
 </React.Fragment>
       )}
 
-      {/* Roles route accessible only to super admin */}
-      {userRole && userRole === ROLES.SUPER_ADMIN && (
-        <React.Fragment>
-        <Link href="/dashboard/roles">
-          <ListItemButton>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Roles" />
-          </ListItemButton>
-        </Link>
-        <SchoolList/>
-        </React.Fragment>
-      )}
    
       {/* Grades route accessible only to admin and teacher */}
       {userRole && (userRole === ROLES.TEACHER) && (

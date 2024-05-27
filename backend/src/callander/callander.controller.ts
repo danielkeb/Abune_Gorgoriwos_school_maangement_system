@@ -33,6 +33,11 @@ export class CallanderController {
   getAllCallanders( @Param('school_Id', ParseIntPipe) school_Id: number) {
     return this.callnderService.getAllCallanders(school_Id);
   }
+
+  @Get('all_admin/:school_Id')
+  getAllCallandersAdmin(@Param('school_Id', ParseIntPipe) school_Id: number) {
+    return this.callnderService.getAllCallandersAdmin(school_Id);
+  }
   @UseGuards(JwtGuard, RoleGuard)
   @Roles(Role.ADMIN)
   @Delete('remove/:id')

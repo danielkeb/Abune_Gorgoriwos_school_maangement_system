@@ -29,17 +29,29 @@ interface Event {
 
 export default function Home() {
 
+  const { decodedToken, token, logout } = useContext(AppContext);
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-
-          console.log("here is the id", decodedToken?.sub)
-        const response = await axios.get(`http://localhost:3333/callander/all/${decodedToken?.school_Id}`);
-    
-     
-
-       
+        if(decodedToken?.role=="superadmin"){
+          console.log("is trying", decodedToken.role)
+          const response = await axios.get("http://localhost:3333/callander/all/0");
         setAllEvents(response.data);
+
+        }else if (decodedToken?.role!="superadmin"){
+          console.log("here is the id", decodedToken?.sub)
+          const response = await axios.get(`http://localhost:3333/callander/all/${decodedToken?.school_Id}`);
+      
+       
+  
+         
+          setAllEvents(response.data);
+
+        }
+
+         
 
       
         
@@ -51,7 +63,7 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const { decodedToken, token, logout } = useContext(AppContext);
+
 
   const[gender, setGender]=useState({})
   const [allEvents, setAllEvents] = useState<Event[]>([]);
@@ -67,6 +79,10 @@ export default function Home() {
 
   });
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   console.log("Events", gender);
   let contentTobeRenderd;
   if(decodedToken?.role=="admin"){
@@ -75,7 +91,7 @@ export default function Home() {
     contentTobeRenderd= <div className=" w-[90%]  flex justify-start "><h5 className="text-xl">Welcom Back {decodedToken?.frist_name} 👋</h5> </div>
   }
   function handleDateClick(arg: { date: Date; allDay: boolean }) {
-    if (decodedToken.role == "admin") {
+    if (decodedToken?.role == "admin" || decodedToken?.role=="superadmin") {
       setNewEvent({
         ...newEvent,
         start: arg.date,
@@ -98,7 +114,7 @@ export default function Home() {
   }
 
   function handleDeleteModal(data: { event: { id: string } }) {
-    if (decodedToken.role == "admin") {
+    if (decodedToken.role == "admin" || decodedToken.role== "superadmin") {
       setShowDeleteModal(true);
       setIdToDelete(Number(data.event.id));
     }
@@ -146,15 +162,30 @@ export default function Home() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `http://localhost:3333/callander/add/${decodedToken?.school_Id}`,
-        newEvent,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+
+      if(decodedToken?.role=="admin"){
+        const res = await axios.post(
+          `http://localhost:3333/callander/add/${decodedToken?.school_Id}`,
+          newEvent,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }else if(decodedToken?.role=="superadmin"){
+        const res = await axios.post(
+          `http://localhost:3333/callander/add/0`,
+          newEvent,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+      }
+      
 
       setAllEvents([...allEvents, newEvent]);
       console.log("the all event:", allEvents, "the new event: ", newEvent);
@@ -170,9 +201,14 @@ export default function Home() {
     }
   }
 
+  if (!isClient) {
+    // While waiting for client-side rendering, return null or a loading spinner
+    return null;
+  }
+
   return (
     <>
-      <div className="w-full h-full  flex flex-col  justify-center  items-center mt-[100px] ">
+      <div className="w-full   flex flex-col  justify-center  items-center  ">
         {
           decodedToken?.role =="superadmin"?<SuperCardAdmin/>:<CardAdmin/>
         }
@@ -183,7 +219,7 @@ export default function Home() {
          
         <div className=" mt-[-10px] w-full flex flex-col md:flex-row gap-6 container mx-auto my-auto px-4 py-10 text-sm lg:font-normal">
 
-  <div className="w-full md:w-1/2 h-96 md:h-auto boxshadow p-4">
+  <div className="w-full md:w-1/2 h-96 md:h-auto boxshadow p-6 bg-white">
 
     <FullCalendar
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -211,13 +247,13 @@ export default function Home() {
     />
   </div>
   <div className="w-full md:w-1/2 flex flex-col gap-6">
-    <div className="flex justify-center boxshadow h-48 md:h-auto">
+    <div className="flex justify-center bg-white boxshadow h-auto md:h-auto sm:h-auto">
       {
         decodedToken?.role=="admin"?<BasicPie />:<Profile/>
       }
       
     </div>
-    <div className="boxshadow flex-1  flex flex-col  items-center p-4">
+    <div className="boxshadow flex-1  flex flex-col  items-center p-4 bg-white">
     <h1 className=" text-lg lg:text-2xl mb-4  ">Upcoming Events</h1>
    
       <Activity/>
@@ -338,33 +374,42 @@ export default function Home() {
                           Add Event
                         </Dialog.Title>
                         <form action="submit" onSubmit={handleSubmit}>
-                          <div className="relative w-full mb-3">
-                            <select
-                              id="yourSelect"
-                              name="title"
-                              onChange={(e) => handleChange(e)}
-                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 
-                            shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 
-                            focus:ring-inset
-                            sm:text-sm sm:leading-6">
-                              <option value="" disabled>
-                                Select an option
-                              </option>
-                              <option value="Semester I Start">
-                                Semester I Start
-                              </option>
-                              <option value="Semester I End">
-                                Semester I End
-                              </option>
-                              <option value="Semester II Start">
-                                Semester II Start
-                              </option>
-                              <option value="Semester II End">
-                                Semester II End
-                              </option>
-                            </select>
+                          <div className="relative w-full mb-3">{
+                           decodedToken?.role=="admin" ?<select
+                           id="yourSelect"
+                           name="title"
+                           onChange={(e) => handleChange(e)}
+                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 
+                         shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
+                         focus:ring-2 
+                         focus:ring-inset
+                         sm:text-sm sm:leading-6">
+                           <option value="" disabled>
+                             Select an option
+                           </option>
+                           <option value="Semester I Start">
+                             Semester I Start
+                           </option>
+                           <option value="Semester I End">
+                             Semester I End
+                           </option>
+                           <option value="Semester II Start">
+                             Semester II Start
+                           </option>
+                           <option value="Semester II End">
+                             Semester II End
+                           </option>
+                         </select>:<input type="text" className="block w-full rounded-md border-0 py-1.5 text-gray-900 
+                         shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
+                         focus:ring-2 
+                         focus:ring-inset
+                         sm:text-sm sm:leading-6" onChange={(e) => handleChange(e)} />
 
+
+
+
+                          }
+                            
                             {/* <input type="text" name="title" className="block w-full rounded-md border-0 py-1.5 text-gray-900 
                             shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 

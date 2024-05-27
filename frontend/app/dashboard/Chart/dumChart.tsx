@@ -28,8 +28,10 @@ export default function BasicPie() {
       series={[
         {
           data: [
-            { id: 0, value:gender?.male, label: 'Male S' ,color:'#228B22' },
-            { id: 1, value:gender?.female, label: 'Female S',   },
+            { id: 0, value:gender?.student_male, label: 'SM' ,color:'#228B22' },
+            { id: 1, value:gender?.student_female, label: 'SF', color:'#ec4899'   },
+            { id: 2, value:gender?.teacher_male, label: 'TM' ,color:'#EA580C' },
+            { id: 3, value:gender?.teacher_female, label: 'TF', color:'#1d4ed8'   }
           
           ],
         },

@@ -16,6 +16,8 @@ const page = () => {
     const [teachers, setTeachers] = useState([]);
     const [schoolss, setSchoolss] = useState([]);
     const [disData, setDisData]=useState()
+    const [selectedFileName, setSelectedFileName] = useState("");
+    const [check, setCheck] = useState(false);
     const router = useParams();
     const { decodedToken } = React.useContext(AppContext);
   
@@ -26,13 +28,11 @@ const page = () => {
         try {
         
       
-          const res = await axios.get(`http://localhost:3333/teachers/single_teacher/${id}`);
-          const school = await axios.get(`http://localhost:3333/grade/get/${decodedToken.school_Id}`);
-          const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
+          const res = await axios.get(`http://localhost:3333/auth/single_admins/${id}`);
+          const school = await axios.get("http://localhost:3333/schools/get");
           // const result = await response.json();
           setSchoolss(school.data);
           setTeachers(res.data);
-          setDisData(disconnectData.data)
           console.log("the hulk",res.data)
           formik.setValues({
             email: res.data[0].email,
@@ -45,10 +45,10 @@ const page = () => {
             phone: res.data[0].phone,
             gender: res.data[0].gender,
             date_of_birth: res.data[0].date_of_birth,
-            education_level: res.data[0].education_level,
-            gradeId:0,
-            sectionId:0,
-            subjectId:0
+            school_name:res.data[0].school_Id,
+            image:res.data[0].image,
+            photo:res.data[0].image
+   
           });
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -56,13 +56,13 @@ const page = () => {
       };
   
       fetchData();
-    }, []);
+    }, [check]);
     
 
     
     
-    const [check, setCheck] = useState(false);
-    const [check2, setCheck2] = useState(false);
+
+
    
   const formik = useFormik({
     initialValues: {
@@ -76,22 +76,31 @@ const page = () => {
       phone: "",
       gender: "",
       date_of_birth: "",
-      education_level: "",
-      gradeId:0,
-      sectionId:0,
-      subjectId:0
+      school_name: "",
+      image:"",
+      photo:""
+
     },
     onSubmit: async (values) => {
 
       try {
         setCheck(true);
         console.log("final values =", formik.values)
+        const formData = new FormData();
+        Object.keys(values.image).forEach((key) => {
+          formData.append(key, values.image as any);
+        });
         const response = await axios.patch(
-          `http://localhost:3333/teachers/adminUpdate/${id}`,
-          formik.values
-        );
+            `http://localhost:3333/auth/single_admin_update/${id}`,
+            formik.values,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
 
-        toast.success("Teacher record Updated ");
+        toast.success("Admin record Updated ");
         // router.push('/head')
       } catch (error:any) {
         toast.error(error?.response?.data.message);
@@ -114,51 +123,6 @@ const page = () => {
     }),
   });
 
-  const assignSubject= async ()=>{
-    try{
-      setCheck2(true)
-      if(formik.values.gradeId && formik.values.sectionId && formik.values.subjectId){
-        
-        const gradeId =parseInt(formik.values.gradeId)
-        const sectionId = parseInt(formik.values.sectionId)
-        const subjectId = parseInt(formik.values.subjectId)
-        console.log(gradeId,sectionId,subjectId)
-        const response = await axios.patch(`http://localhost:3333/teachers/connnect/all/${id}`,{gradeId,sectionId,subjectId});
-        const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
-
-        setDisData(disconnectData.data);
-      }
-      toast.success("Teacher record Updated ");
-    }catch(error:any){
-      toast.error(error?.response?.data.message);
-    }
-    setCheck2(false)
-    
-    
-  } 
-  const handleDisconnect = async (grade, section, subject) => {
-    const gradeId = parseInt(grade);
-    const sectionId = parseInt(section);
-    const subjectId = parseInt(subject);
-
-    try {
-        const response = await axios.patch(
-            `http://localhost:3333/teachers/disconnect/all/${id}`,
-            { gradeId, sectionId, subjectId }
-        );
-
-        // Update the local state
-        const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
-
-        setDisData(disconnectData.data);
-        toast.success('Teacher record updated');
-    } catch (error) {
-        toast.error(error?.response?.data?.message || 'Error updating record');
-    }
-};
-
-
-  const secc=schoolss.find((school:any) => school.id == formik.values.gradeId)
 
    console.log("if I get it", disData);
   return (
@@ -167,8 +131,11 @@ const page = () => {
    <div className="flex-auto px-4 lg:px-10 py-10 pt-0 w-[70%] bg-white boxshadow">
             <form onSubmit={formik.handleSubmit}>
               <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-                Teacher Information
+                Director Information
               </h6>
+
+              <img src={`http://localhost:3333/${formik.values.photo}`}  className='w-[200px] h-[200px] rounded-full boxshadow' />
+              <br/>
               <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 px-4">
                   <div className="relative w-full mb-3">
@@ -335,23 +302,27 @@ const page = () => {
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="grid-password">
-                      Education Level
+                      Select school
                     </label>
                     <select
                       id="yourSelect"
-                      name="education_level"
-                      value={formik.values.education_level}
+                      name="school_name"
+                      value={formik.values.school_name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option value="" disabled>
-                        Select Education level
-                      </option>
-                     
-                       <option value="diploma" >Diploma</option>
-                       <option value="bsc" >BSc</option>
-                       <option value="msc" >Msc</option>
-                       <option value="phd" >Phd</option>
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none w-full focus:border-2 focus:border-gray-400">
+                      <option value="">Select a school</option>
+                      {schoolss.map(
+                        (school: {
+                          school_name: string;
+                          id: number;
+                          school_address: string;
+                        }) => (
+                          <option key={school.id} value={school.id}>
+                            {school.school_name}
+                          </option>
+                        )
+                      )}
                     </select>
                   </div>
                 </div>
@@ -380,11 +351,61 @@ const page = () => {
                     </select>
                   </div>
                 </div>
+                <br/>
+
+       
+             
+
               </div>
 
               <hr className="mt-6 border-b-1 border-blueGray-300" />
 
               <br />
+              <div className="flex flex-wrap ">
+                <div className="w-full lg:w-12/12 px-4 ">
+                  <div className="relative w-full mb-3">
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password">
+                      Change Image
+                    </label>
+                    <label
+                      className="w-full   p-5 flex justify-center items-center "
+                      htmlFor="photo">
+                      {selectedFileName ? (
+                        <span className="text-green-700">
+                          {selectedFileName}
+                        </span>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          className="w-6 h-6">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+                          />
+                        </svg>
+                      )}
+                    </label>
+                    <input
+                      type="file"
+                      id="photo"
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files?.[0];
+                        formik.setFieldValue("image", file || null);
+                        setSelectedFileName(file ? file.name : "");
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className='flex justify-end items-center'>
               <button  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded mr-4">
               { check? <>
@@ -398,173 +419,12 @@ const page = () => {
 
             </form>
 
+           
           </div>
           <br/>
-          <div className="flex-auto px-4 lg:px-10 py-10 pt-0 w-[70%] bg-white boxshadow">
-          <hr className="mt-6 border-b-1 border-blueGray-300" />
-          <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-                Assign new Subject
-              </h6>
-              <div className="flex flex-wrap">
-                
-              <div className="w-full lg:w-6/12 px-4">
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password">
-                      Education Level
-                    </label>
-                    <select
-                      id="yourSelect"
-                      name="gradeId"
-                      value={formik.values.gradeId}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option  >
-                        Select Grade Level
-                      </option>
-                     
-                      {schoolss.map(
-                        (school:any) => (
-                          <option key={school.id} value={school?.id}>
-                            {school?.grade}
-                          </option>
-                        )
-                      )}
-                
-                    </select>
-                    {formik.errors.gradeId && (
-                <small className="text-red-500 ">
-                  {formik.errors.gradeId}
-                </small>
-              )}
-                  </div>
-                </div>
-                <div className="w-full lg:w-6/12 px-4">
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password">
-                      Select section
-                    </label>
-                    <select
-                      id="yourSelect"
-                      name="sectionId"
-                      value={formik.values.sectionId}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option  >
-                       Available Sections {secc?.section.length}
-                      </option>
-                     
-                      {secc?.section.map(
-                        (school:any) => (
-                          <option key={school.id} value={school?.id}>
-                            {school?.name}
-                          </option>
-                        )
-                      )}
-                
-                    </select>
-                    {formik.errors.section && (
-                <small className="text-red-500 ">
-                  {formik.errors.section}
-                </small>
-              )}
-                  </div>
-                </div>
-                <div className="w-full lg:w-6/12 px-4">
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password">
-                      Select Subject
-                    </label>
-                    <select
-                      id="subjectId"
-                      name="subjectId"
-                      value={formik.values.subjectId}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400">
-                      <option  >
-                       Available Subjects {secc?.subject.length}
-                      </option>
-                     
-                      {secc?.subject.map(
-                        (school:any) => (
-                          <option key={school.id} value={school?.id}>
-                            {school?.name}
-                          </option>
-                        )
-                      )}
-                
-                    </select>
-                    {formik.errors.subjectId && (
-                <small className="text-red-500 ">
-                  {formik.errors.subjectId}
-                </small>
-              )}
-                  </div>
-                  
-                </div>
-                <div className='flex justify-end items-center w-full'>
-              <button onClick={assignSubject} className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded mr-4">
-              { check2? <>
-              
-              <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
-          <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
-         </svg>  Assigning  ...</>:"Assign"}
-              </button>
-              </div>
-                
-                
-                <hr className="mt-6 border-b-1 border-blueGray-300" />
-              </div>
-   <br/>
-   <hr className="mt-6 border-b-1 border-blueGray-300" />
-   <br/>
+
+
           
-   
-          </div>
-
-          <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase w-[70%] bg-white boxshadow p-6">
-                Disconnect Subject
-                <table className="w-full h-auto border-collapse border border-gray-300 mt-2">
-      <thead>
-        <tr className="bg-gray-100 border-b border-gray-300">
-          <th className="p-4 text-left">Grade</th>
-          <th className="p-4 text-left">Section</th>
-          <th className="p-4 text-left">Subject</th>
-          <th className="p-4 text-left">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {disData?.map((subject) =>
-          subject.sections.map((section) => (
-            <tr key={`${subject.id}-${section.id}`} className="border-b border-gray-300">
-              <td className="p-4">{subject.gradeId}</td>
-              <td className="p-4">{section.name}</td>
-              <td className="p-4">{subject.name}</td>
-              <td className="p-4">
-                <button
-                  onClick={() => handleDisconnect(subject.gradeId, section.id, subject.id)}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                >
-                  Disconnect
-                </button>
-              </td>
-            </tr>
-          ))
-        )}
-      </tbody>
-    </table>
-
-
-              </h6>
           </div>
           <ToastContainer
         position="bottom-right"

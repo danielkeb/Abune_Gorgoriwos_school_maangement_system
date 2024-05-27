@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { DtoSignin, DtoStudent, DtoAdmin } from './dto';
+import { DtoSignin, DtoStudent, DtoAdmin, UpdateSuperAdminAdminDto } from './dto';
 import * as argon from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -136,8 +136,8 @@ export class AuthService {
         password: hash,
       },
     });
-
-    await this.emailService.sendRegistrationEmail(dto.email, dto.password);
+    // this  is for sending an email notifiying the user his/her user name and password.     
+     // await this.emailService.sendRegistrationEmail(dto.email, dto.password);
 
     if (dto.role === 'student') {
       await this.prismaService.student.create({
@@ -197,10 +197,10 @@ export class AuthService {
       throw new UnauthorizedException('Unauthorize contact your admin!');
     }
 
-    // const passwordMatches = await argon.verify(user.password, dto.password);
-    // if (!passwordMatches) {
-    //   throw new UnauthorizedException('Incorrect email or password');
-    // }
+    const passwordMatches = await argon.verify(user.password, dto.password);
+    if (!passwordMatches) {
+      throw new UnauthorizedException('Incorrect email or password');
+    }
 
     return this.signToken(
       user.id,
@@ -449,5 +449,48 @@ export class AuthService {
       data: { username: dto.username, password: hash },
     });
     return 'update complete';
+  }
+
+  async getAllAdmins(){
+    const admins = await this.prismaService.user.findMany({where:{role:'admin'}})
+
+    return admins;
+  }
+
+  async getSingleAdmins(id:number){
+    const admin = await this.prismaService.user.findMany({where:{role:"admin",id:id}})
+    return admin;
+  }
+
+  async updateAdmin(dto:UpdateSuperAdminAdminDto, id:number,photoPath:string){
+    let photo
+
+    if(photoPath){
+     photo=photoPath
+    }else{
+      photo=dto.image
+    }
+    const adminUser = await this.prismaService.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        frist_name: dto.first_name,
+        last_name: dto.last_name,
+        middle_name: dto.middle_name,
+        address: dto.address,
+        email: dto.email,
+        date_of_birth: dto.date_of_birth,
+        gender: dto.gender,
+        phone: dto.phone,
+        status: dto.status,
+        school_Id:dto.school_Id,
+        image:photo
+      },
+    });
+
+
+
+    return {adminUser, msg: 'Sucess' };
   }
 }

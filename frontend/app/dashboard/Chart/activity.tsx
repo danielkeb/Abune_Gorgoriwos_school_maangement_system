@@ -9,9 +9,20 @@ const Activity = () => {
   
       const fetchData = async () => {
         try {
+          if(decodedToken?.role=="admin"){
+            const response = await axios.get(`http://localhost:3333/callander/all_admin/${decodedToken?.school_Id}`);
+         
+            setEvents(response.data);
+          }else if (decodedToken?.role=="superadmin"){
+            const response = await axios.get(`http://localhost:3333/callander/all/${0}`);
+         
+            setEvents(response.data);
+          }else{
             const response = await axios.get(`http://localhost:3333/callander/all/${decodedToken?.school_Id}`);
          
-          setEvents(response.data);
+            setEvents(response.data);
+          }
+            
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -41,19 +52,20 @@ const Activity = () => {
       
   
   return (
-<div className=" w-full lg:w-[80%]  p-6 border-solid border-2 border-gray-200 flex  flex-col  justify-start items-start text-lg ">
-     {upcomingEvents.map((e:any) => ( 
-        <div key={e.id}>
-          <p><PanoramaFishEyeIcon sx={{ color: isWithinWeek(e.start) ? 'red' : 'green', fontSize: '15px' }} /> <span className="text-gray-500">{formatDate(e?.start)}</span></p>
-          <p className="mt-1 mb-2 ml-8">{e?.title}</p>
-        </div>
-      ))}
-      
-   
-   
-   
-
+<div className="w-full lg:w-4/5 p-6 border border-gray-200 flex flex-col justify-start items-start text-lg bg-white  rounded-md">
+  {upcomingEvents.map((e) => (
+    <div key={e.id} className="mb-4">
+      <p className="flex items-center">
+        <PanoramaFishEyeIcon sx={{ color: isWithinWeek(e.start) ? 'red' : 'green', fontSize: '15px' }} />
+        <span className="ml-2 text-gray-500">
+          {formatDate(e?.start)} {parseInt(e.school_Id) === 0 && "Main"}
+        </span>
+      </p>
+      <p className="mt-1 mb-2 ml-8">{e?.title}</p>
+    </div>
+  ))}
 </div>
+
   )
 }
 
