@@ -35,12 +35,12 @@ export class SubjectsController {
   deleteSubject(@Param('id', ParseIntPipe) id: number) {
     return this.subjectsService.deleteSubject(id);
   }
-  @Get('get/:id/:schoolId')
+  @Get('get/:schoolId/:id')
   searchSubjects(
-    @Param('id', ParseIntPipe) subId: number,
     @Param('schoolId', ParseIntPipe) schoolId: number,
+    @Param('id', ParseIntPipe) subId: number,
   ) {
-    return this.subjectsService.searchSubjects(subId, schoolId);
+    return this.subjectsService.searchSubjects(schoolId, subId);
   }
   @Patch('update/:id')
   updateSubjects(

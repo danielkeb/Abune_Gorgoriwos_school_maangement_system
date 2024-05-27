@@ -94,16 +94,15 @@ const SectionComponent = () => {
   };
 
   const handleSubmit = async () => {
-    if (!sectionName || !gradeId || !teacherId) {
+    if (!sectionName || !gradeId) {
       setError('Please fill in all the fields');
       return;
     }
 
     try {
-      await axios.post(`http://localhost:3333/section/add/${decodedToken.school_Id}`, { name: sectionName, gradeId, teacherId });
+      await axios.post(`http://localhost:3333/section/add/${decodedToken.school_Id}`, { name: sectionName, gradeId });
       setSectionName('');
       setGradeId('');
-      setTeacherId('');
       setError('');
       fetchClassData();
       toast.success("Section added successfully");
@@ -143,7 +142,7 @@ const SectionComponent = () => {
                   </option>
                 ))}
               </select>
-              <select
+              {/* <select
                 className="w-full p-3 border border-gray-300 rounded-md mb-4"
                 value={teacherId}
                 onChange={handleChange}
@@ -155,7 +154,7 @@ const SectionComponent = () => {
                     {teacher.frist_name} {teacher.last_name}
                   </option>
                 ))}
-              </select>
+              </select> */}
               {error && <p className="text-red-500 mb-4">{error}</p>}
               <button
                 className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md w-full"

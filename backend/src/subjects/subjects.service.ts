@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   // InternalServerErrorException,
@@ -42,17 +43,18 @@ export class SubjectsService {
       });
 
       if (existingSubject) {
-        await this.prisma.teacher.update({
-          where: { user_Id: dto.teacherId },
-          data: {
-            subject: {
-              connect: { id: existingSubject.id },
-            },
-          },
-        });
-        return {
-          msg: 'Subject already exists!',
-        };
+        // await this.prisma.teacher.update({
+        //   where: { user_Id: dto.teacherId },
+        //   data: {
+        //     subject: {
+        //       connect: { id: existingSubject.id },
+        //     },
+        //   },
+        // });
+        // return {
+        //   msg: 'Subject already exists!',
+        // };
+        throw new ForbiddenException('Subject already exists!');
       }
 
       // If no subject with the same gradeId and name exists, create the new subject
@@ -64,20 +66,21 @@ export class SubjectsService {
           schoolId: school_id,
         },
       });
+      return { msg: 'Subject added!', addSubject };
 
       // Connect the newly created subject to the teacher and grade level
-      await this.prisma.teacher.update({
-        where: { user_Id: dto.teacherId },
-        data: {
-          subject: {
-            connect: { id: addSubject.id },
-          },
-        },
-      });
-      return {
-        msg: 'Subject added!',
-        addSubject,
-      };
+      // await this.prisma.teacher.update({
+      //   where: { user_Id: dto.teacherId },
+      //   data: {
+      //     subject: {
+      //       connect: { id: addSubject.id },
+      //     },
+      //   },
+      // });
+      // return {
+      //   msg: 'Subject added!',
+      //   addSubject,
+      // };
     } catch (error) {
       console.error('Error adding section:', error);
       return {
@@ -118,7 +121,7 @@ export class SubjectsService {
 
     return subjects;
   }
-  async searchSubjects(subj: number, schoolId: number) {
+  async searchSubjects(schoolId: number, subj: number) {
     const searchSubjects = await this.prisma.subject.findUnique({
       where: { id: subj, schoolId: schoolId },
       include: {

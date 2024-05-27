@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { SectionAddDto, SectionUpdateAddDto } from './dto/sectionAdd.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -53,51 +57,25 @@ export class SectionService {
         },
       });
 
-      if (existingSection) {
-        await this.prismaService.teacher.update({
-          where: { user_Id: dto.teacherId },
+      if (!existingSection) {
+        const addSection = await this.prismaService.section.create({
           data: {
-            section: {
-              connect: { id: existingSection.id },
-            },
-            gradelevel: {
-              connect: { id: dto.gradeId },
-            },
+            name: dto.name,
+            gradeId: dto.gradeId,
+            schoolId: schoolId,
           },
         });
         return {
-          msg: 'Section already exists!',
+          msg: 'Section added!',
+          addSection,
         };
+      }
+      if (existingSection) {
+        throw new ForbiddenException('section arleady exists');
       }
 
       // If no section with the same gradeId and name exists, create the new section
-      const addSection = await this.prismaService.section.create({
-        data: {
-          name: dto.name,
-          gradeId: dto.gradeId,
-          schoolId: schoolId,
-        },
-      });
-
-      // Connect the newly created section to the teacher and grade level
-      await this.prismaService.teacher.update({
-        where: { user_Id: dto.teacherId },
-        data: {
-          section: {
-            connect: { id: addSection.id },
-          },
-          gradelevel: {
-            connect: { id: dto.gradeId },
-          },
-        },
-      });
-
-      return {
-        msg: 'Section added!',
-        addSection,
-      };
     } catch (error) {
-      console.error('Error adding section:', error);
       return {
         msg: 'An error occurred while adding the section.',
       };

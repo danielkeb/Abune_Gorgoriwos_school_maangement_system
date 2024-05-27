@@ -185,16 +185,15 @@ const SubjectComponent = () => {
   };
 
   const handleSubmit = async () => {
-    if (!subject || !gradeId || !teacherId) {
+    if (!subject || !gradeId) {
       setError('Please fill in all the fields');
       return;
     }
 
     try {
-      await axios.post(`http://localhost:3333/subjects/add/${decodedToken.school_Id}`, { name: subject, gradeId, teacherId });
+      await axios.post(`http://localhost:3333/subjects/add/${decodedToken.school_Id}`, { name: subject, gradeId});
       setSubject('');
       setGradeId(null);
-      setTeacherId(null);
       setError('');
       handleManageSubject();
       toast.success('Subject added successfully');
@@ -264,21 +263,6 @@ const SubjectComponent = () => {
                     </option>
                   ))}
                 </select>
-                {gradeId !== null && (
-                  <select
-                    className="w-full p-3 border border-gray-300 rounded-md mb-4"
-                    value={teacherId || ''}
-                    onChange={handleChange}
-                    name="teacherId"
-                  >
-                    <option value="">Select Teacher</option>
-                    {filteredTeachers.map((teacher) => (
-                      <option key={teacher.id} value={teacher.id}>
-                        {teacher.first_name} {teacher.last_name}
-                      </option>
-                    ))}
-                  </select>
-                )}
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 <div className="flex justify-center">
                 <button

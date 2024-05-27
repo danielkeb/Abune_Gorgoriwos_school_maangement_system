@@ -174,7 +174,7 @@ export default function Home() {
     <>
       <div className="w-full h-full  flex flex-col  justify-center  items-center mt-[100px] ">
         {
-          decodedToken.role =="superadmin"?<SuperCardAdmin/>:<CardAdmin/>
+          decodedToken?.role =="superadmin"?<SuperCardAdmin/>:<CardAdmin/>
         }
        
 
