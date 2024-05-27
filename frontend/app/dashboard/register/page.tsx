@@ -57,7 +57,7 @@ const page = () => {
       username: "",
       image: null,
       phone: "",
-      password: "1234",
+      password: "12345678",
       gender: "",
       date_of_birth: "",
       careOf_contact1: "",

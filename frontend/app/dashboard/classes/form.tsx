@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './class.module.css';
 import error from 'next/error';
 import { AppContext } from '@/components/context/UserContext';
+import { string } from 'yup';
 
 // Enum defining class types
 enum ClassType {
@@ -34,6 +35,7 @@ const ClassForm = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [manage, setManage] =useState(false);
   const {decodedToken} = React.useContext(AppContext);
+  const [error, setError] = useState('');
 
   // Handle change in class type select
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,7 +73,12 @@ const ClassForm = () => {
   // Handle form submission
   const handleSubmit = async () => {
     if (!grade || !classType) {
-      toast.error('Please fill in all the fields');
+      setError('Please fill in all the fields');
+      return;
+    }
+
+    if (isNaN(grade)) {
+      setError('Grade must be a valid integer.');
       return;
     }
 
@@ -81,14 +88,13 @@ const ClassForm = () => {
         toast.success('Update successful');
       } else {
         await axios.post(`http://localhost:3333/grade/add/${decodedToken.school_Id}`, { grade, classType });
-        toast.success('Add successful');
+        toast.success('New grade registered successfully');
       }
       setGrade('');
       setClassType(ClassType.nursery);
       handleManageClasses();
     } catch (error) {
-      console.error('Error registering grade:', error);
-      toast.error('An error occurred while registering the grade');
+      toast.error('Grade already registered');
     }
   };
 useEffect(()=>{
@@ -132,13 +138,19 @@ useEffect(()=>{
               <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">Create New Class</h3>
               <div className="mt-2 mx-auto max-w-md">
                 {/* Grade input */}
-                <input
-                  type="text"
-                  className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
-                  placeholder="Grade"
-                  value={grade}
-                  onChange={(e) => setGrade(e.target.value)}
-                />
+                <select
+                className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                value={grade}
+                onChange={(e) => setGrade(e.target.value)}
+              >
+                <option value="">Select Grade</option>
+                {[...Array(12)].map((_, index) => (
+                  <option key={index + 1} value={index + 1}>
+                    {index + 1}
+                  </option>
+                ))}
+              </select>
+
                 {/* Class type select */}
                 <select
                   className="w-full p-3 border border-gray-300 rounded-md mb-4"

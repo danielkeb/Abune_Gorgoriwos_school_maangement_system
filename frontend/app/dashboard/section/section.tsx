@@ -98,17 +98,22 @@ const SectionComponent = () => {
       setError('Please fill in all the fields');
       return;
     }
-
+    if (!sectionName || !isNaN(sectionName)) {
+      setError('Section name must be a non-integer string.');
+      return;
+    }
+  
     try {
-      await axios.post(`http://localhost:3333/section/add/${decodedToken.school_Id}`, { name: sectionName, gradeId });
-      setSectionName('');
+    const response=  await axios.post(`http://localhost:3333/section/add/${decodedToken.school_Id}`, { name: sectionName, gradeId });
+    toast.success("Section added successfully");
+    setSectionName('');
       setGradeId('');
       setError('');
       fetchClassData();
-      toast.success("Section added successfully");
+      
     } catch (error) {
-      console.error('Error registering section:', error);
-      setError('An error occurred while registering the section');
+        toast.error('Section already exists');
+      
     }
   };
 

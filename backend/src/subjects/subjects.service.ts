@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  NotAcceptableException,
   NotFoundException,
   // InternalServerErrorException,
   //NotAcceptableException,
@@ -66,26 +67,12 @@ export class SubjectsService {
           schoolId: school_id,
         },
       });
+      if (!addSubject) {
+        throw new NotAcceptableException('subject already exists');
+      }
       return { msg: 'Subject added!', addSubject };
-
-      // Connect the newly created subject to the teacher and grade level
-      // await this.prisma.teacher.update({
-      //   where: { user_Id: dto.teacherId },
-      //   data: {
-      //     subject: {
-      //       connect: { id: addSubject.id },
-      //     },
-      //   },
-      // });
-      // return {
-      //   msg: 'Subject added!',
-      //   addSubject,
-      // };
     } catch (error) {
-      console.error('Error adding section:', error);
-      return {
-        msg: 'An error occurred while adding the subject.',
-      };
+      throw new NotAcceptableException('subject already exists');
     }
   }
   async getSubject(schoolId: number) {

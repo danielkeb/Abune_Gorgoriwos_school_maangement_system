@@ -119,7 +119,7 @@ const SubjectComponent = () => {
       if (subjectId) {
         response = await axios.get<SubjectData>(`http://localhost:3333/subjects/get/${decodedToken.school_Id}/${subjectId}`);
         setSelectedSubject(response.data);
-        setShowModal(true);
+        setShowModal(true); 
       } else {
         response = await axios.get<SubjectData[]>(`http://localhost:3333/subjects/get/${decodedToken.school_Id}`);
         setClassData(response.data);
@@ -189,18 +189,27 @@ const SubjectComponent = () => {
       setError('Please fill in all the fields');
       return;
     }
+    if (typeof subject !== 'string' || subject.length <= 3) {
+      setError('Subject name must be a string with length more than three characters.');
+      return;
+    }
+  
+    if (!isNaN(subject)) {
+      setError('Subject name cannot be a number.');
+      return;
+    }
 
     try {
       await axios.post(`http://localhost:3333/subjects/add/${decodedToken.school_Id}`, { name: subject, gradeId});
+      toast.success('Subject added successfully');
       setSubject('');
       setGradeId(null);
       setError('');
       handleManageSubject();
-      toast.success('Subject added successfully');
+     
     } catch (error) {
-      console.error('Error registering subject:', error);
-      setError('An error occurred while registering the subject');
-      toast.error('An error occurred while registering the subject');
+      
+      toast.error('subject already exists');
     }
   };
 

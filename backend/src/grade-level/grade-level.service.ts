@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotAcceptableException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GradeLevel } from './dto';
 
@@ -46,10 +46,7 @@ export class GradeLevelService {
 
       return { newGradeLevel, newSection };
     } catch (error) {
-      console.error('Error adding grade level:', error);
-      throw new Error(
-        'An error occurred while adding the grade level and section.',
-      );
+      throw new NotAcceptableException('Grade and section already exists');
     }
   }
 

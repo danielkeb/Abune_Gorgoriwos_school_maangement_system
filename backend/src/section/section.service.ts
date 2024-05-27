@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { SectionAddDto, SectionUpdateAddDto } from './dto/sectionAdd.dto';
@@ -71,14 +72,12 @@ export class SectionService {
         };
       }
       if (existingSection) {
-        throw new ForbiddenException('section arleady exists');
+        throw new NotAcceptableException('section arleady exists');
       }
 
       // If no section with the same gradeId and name exists, create the new section
     } catch (error) {
-      return {
-        msg: 'An error occurred while adding the section.',
-      };
+      throw new NotAcceptableException('section already exists');
     }
   }
 
