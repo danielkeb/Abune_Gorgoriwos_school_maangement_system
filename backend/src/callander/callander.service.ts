@@ -22,6 +22,14 @@ export class CallanderService {
     return callanders;
   }
 
+  async getAllCallandersAdmin(school_Id:number){
+    const callanders = await this.prismaService.calander.findMany({where:{OR: [
+      { schoolId: school_Id },
+      { schoolId: 0 } // Add this condition to handle schoolId 0
+    ]}});
+    return callanders;
+  }
+
   async removeById(id: number) {
     const getPost = await this.prismaService.calander.findMany({
       where: { id: id },

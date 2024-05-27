@@ -14,6 +14,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ToGetContext } from "@/app/context/toget";
+import SchoolIcon from '@mui/icons-material/School';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -70,7 +71,7 @@ const SchoolList = () => {
         onClick={handleExpandClick}
       >
         <ListItemIcon>
-          <PeopleIcon />
+          <SchoolIcon />
         </ListItemIcon>
         <ListItemText primary="Schools" />
         <ExpandMore expand={expanded} aria-expanded={expanded}>

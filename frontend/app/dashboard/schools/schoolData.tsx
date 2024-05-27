@@ -1,14 +1,14 @@
-import * as React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { ToGetContext } from '@/app/context/toget';
 
 const A: React.FC = () => {
-  const [students, setStudents] = React.useState([]);
-  const [teachers, setTeachers] = React.useState([]);
-  const [schools, setSchools] = React.useState([]);
-  const { schoolId } = React.useContext(ToGetContext);
+  const [students, setStudents] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [schools, setSchools] = useState([]);
+  const { schoolId } = useContext(ToGetContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const [schoolsResponse, studentsResponse, teachersResponse] = await Promise.all([
@@ -62,7 +62,7 @@ const A: React.FC = () => {
 
   return (
     <div>
-      <div className='text-7xl mt-1 mb-5'>School Name: {currentSchool.school_name}</div>
+      <div className='text-xl mt-1 mb-5'>School Name: {currentSchool.school_name}</div>
       <div className="flex md:flex-row flex-col w-full items-center justify-evenly gap-4">
         <div className="flex md:flex-row flex-col w-full items-center justify-center md:gap-4 gap-4">
           <div className="boxshadow p-6 bg-gradient-to-r from-green-400 to-sky-500">
@@ -157,6 +157,7 @@ const A: React.FC = () => {
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
