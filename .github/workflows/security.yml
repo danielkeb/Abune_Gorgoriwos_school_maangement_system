@@ -14,12 +14,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_USERNAME }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      - name: Pull OWASP ZAP Docker Image
+        run: docker pull owasp/zap2docker-stable
+
       - name: Start OWASP ZAP
         run: docker run -u zap -p 8080:8080 -d owasp/zap2docker-stable zap.sh -daemon -port 8080 -host 0.0.0.0
 
       - name: Run ZAP Scan
         run: |
-          docker exec $(docker ps -q --filter ancestor=owasp/zap2docker-stable) zap-cli quick-scan --self-contained --start-options '-config api.disablekey=true' http://localhost:8080
+          ZAP_CONTAINER_ID=$(docker ps -q --filter ancestor=owasp/zap2docker-stable)
+          docker exec $ZAP_CONTAINER_ID zap-cli quick-scan --self-contained --start-options '-config api.disablekey=true' http://localhost:8080
 
   dependency_check:
     runs-on: ubuntu-latest
