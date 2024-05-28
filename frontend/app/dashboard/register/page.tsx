@@ -122,7 +122,7 @@ const page = () => {
       gender: yup.string().required("Gender is Required !"),
       date_of_birth: yup.string().required("Date of birth  is Required !"),
       gradeId: yup.string().required("Grade level is Required"),
-      section: yup.string().required("Section is Required"),
+      sectionId: yup.string().required("Section is Required"),
       careOf_contact1: yup.string().required("care of contact required"),
       careOf_contact2: yup.string().notRequired(),
     }),

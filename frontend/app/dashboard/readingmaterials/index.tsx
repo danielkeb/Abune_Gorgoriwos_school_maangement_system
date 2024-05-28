@@ -87,10 +87,10 @@ const ReadingMaterials = () => {
     };
 
     return (
-        <div className="w-full p-2 mt-0 text-center  ">
+        <div className="w-full p-2 mt-0 text-center   ">
             {!showPdf && (
                 <div className="w-full flex-col p-4   ">
-                    <div className=" w-full  flex justify-center items-center  gap-2 p-6 boxshadow ">
+                    <div className=" w-full  flex justify-center items-center  gap-2 p-6 boxshadow bg-white ">
                         <input
                             type="text"
                             className="w-full p-3 border border-gray-300 rounded-md mb-4 block"

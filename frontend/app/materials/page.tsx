@@ -77,9 +77,9 @@ const Page = () => {
     };
 
     return (
-        <div className="w-full p-0 mt-0 text-center">
+        <div className="w-full p-0 mt-0 text-center  ">
             {!showPdf && (
-                <div className="w-full p-0 mt-10 text-center">
+                <div className="w-full p-0 mt-10 text-center ">
                     <div className="flex justify-center mb-4 mr-14 ">
                         <p className="mr-10 mt-5">courses</p>
                         <input

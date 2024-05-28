@@ -18,6 +18,11 @@ const Page = () => {
   const [call, setCall]= useState([]);
   const [daysLeft, setDaysLeft] = useState(null);
   const [semesterEnd, setSemesterEnd] = useState(null);
+  const [isAlertVisible, setIsAlertVisible] = useState(true);
+
+  const handleClose = () => {
+    setIsAlertVisible(false);
+  };
 
   // const[searchId, setSearchId]= useState();
   // const [selectedSection, setSelectedSection] = useState(); // State to store the selected section
@@ -135,16 +140,19 @@ const Page = () => {
 
    
         <form onSubmit={formik.handleSubmit} className=" bg-white box boxshadow w-[80%] justify-center mt-5  p-4">
-        {daysLeft !== null && (
-
-<div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
-  
-    <p className="text-red-600 text-center">
-      {daysLeft} left until the end of the semester!
-    </p>
- 
-</div>
-)}
+        {daysLeft !== null && isAlertVisible && (
+        <div className="relative bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+          <button
+            className="absolute top-0 right-0 mt-1 mr-2 text-red-600 font-bold z-10"
+            onClick={handleClose}
+          >
+            X
+          </button>
+          <p className="text-red-600 text-center">
+            {daysLeft}  left until the end of the semester!
+          </p>
+        </div>
+      )}
           <div className=" flex mt-8   ">
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">

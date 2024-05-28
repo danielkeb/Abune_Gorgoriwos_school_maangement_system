@@ -116,7 +116,7 @@ const CourseMaterials: React.FC = () => {
   };
 
   return (
-    <div className="boxshadow flex flex-col w-[70%] justify-center items-center p-16 mt-8 text-center ">
+    <div className="boxshadow flex flex-col w-[70%] justify-center items-center p-16 mt-8 text-center bg-white ">
                 <div className='text-lg w-full flex justify-start mb-6'>
                 <h6 className="text-blueGray-400 text-sm   font-bold uppercase">
                 Add Your course materials here
