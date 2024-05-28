@@ -21,7 +21,7 @@
    ### __ Frontend __ ###
      -npm run dev
    ### __ Backend __ ###
-   -create .env file then setup the following
+   #### __create .env file then setup the following __####
      -DATABASE_URL
      -JWT_SECRET
      -EMAIL_ADDRESS
