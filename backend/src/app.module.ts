@@ -15,6 +15,7 @@ import { YearModule } from './year/year.module';
 import { CallanderModule } from './callander/callander.module';
 import { CoursematerialModule } from './coursematerial/coursematerial.module';
 import { ProfileController } from './profile/profile.controller';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ProfileController } from './profile/profile.controller';
     YearModule,
     CallanderModule,
     CoursematerialModule,
+    AiModule,
   ],
   controllers: [ProfileController],
 })
