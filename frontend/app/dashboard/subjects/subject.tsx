@@ -49,7 +49,7 @@ const SubjectComponent = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filterTeacher, setFilterTeacher] = useState('');
   const [filterSubject, setFilterSubject] = useState('');
-  const [filterGrade, setFilterGrade] = useState('');
+  const [filterGrade, setFilterGrade] = useState();
   const [page, setPage] = useState(0);
   
   const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
@@ -119,10 +119,16 @@ const SubjectComponent = () => {
       if (subjectId) {
         response = await axios.get<SubjectData>(`http://localhost:3333/subjects/get/${decodedToken.school_Id}/${subjectId}`);
         setSelectedSubject(response.data);
-        setShowModal(true); 
+        setShowModal(true);
       } else {
         response = await axios.get<SubjectData[]>(`http://localhost:3333/subjects/get/${decodedToken.school_Id}`);
-        setClassData(response.data);
+        let subjects = response.data;
+
+        if (filterGrade) {
+          subjects = subjects.filter(subject => subject.gradelevel.id === filterGrade);
+        }
+
+        setClassData(subjects);
       }
       setError('');
       setSuccessMessage('');
@@ -131,6 +137,7 @@ const SubjectComponent = () => {
       setError('An error occurred while fetching class data');
     }
   };
+
 
   const handleUpdateSubject = async () => {
     if (!selectedSubject) {
@@ -224,7 +231,7 @@ const SubjectComponent = () => {
   return (
     <div className="w-full p-8 mt-8 text-center">
       {/* {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>} */}
-      <div className="w-full flex flex-wrap gap-4 mb-4">
+      <div className=" flex flex-wrap gap-4 mb-4">
         <button
           className="bg-blue-50 hover:bg-blue-100 text-green-900 font-semibold py-2 px-4 rounded-md"
           onClick={() => handleManageSubject()}
@@ -237,6 +244,22 @@ const SubjectComponent = () => {
         >
           Create New Subject
         </button>
+      </div>
+      {/* bellow are to filter grade for displAY ON BELLOW TABLE */}
+      <div className="flex justify-end w-full">
+        <select
+          className="w-auto p-3 border border-gray-300 rounded-md mb-0"
+          value={filterGrade || ''}
+          onChange={(e) => setFilterGrade(e.target.value ? parseInt(e.target.value) : undefined)} // Correctly update state
+          name="filterGrade"
+        >
+          <option value="">Filter by Grade</option>
+          {grades.map((grade) => (
+            <option key={grade.id} value={grade.id}>
+              {grade.grade}
+            </option>
+          ))}
+        </select>
       </div>
       {/* Create new subject form */}
       {showCreateForm && (
