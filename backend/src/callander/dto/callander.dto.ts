@@ -8,9 +8,11 @@ export class CallanderDto {
   @IsString()
   title: string;
   @IsNotEmpty()
-  @IsString()
+  @IsString()   
   start: string;
   @IsNotEmpty()
   @IsBoolean()
   allDay: boolean;
+
+ 
 }

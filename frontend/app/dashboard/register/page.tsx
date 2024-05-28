@@ -150,6 +150,7 @@ const page = () => {
                       Username
                     </label>
                     <input
+                    data-testId = "username"
                       type="text"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400"
                       placeholder="username"

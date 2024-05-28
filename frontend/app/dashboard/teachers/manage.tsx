@@ -12,11 +12,48 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useRouter } from "next/navigation";
 import { AppContext } from "@/components/context/UserContext";
+<<<<<<< HEAD
+
+interface User {
+  id: number;
+  image: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  education_level: string;
+  grade: string[];
+  section: { id: number, name: string }[][];
+  subject: { id: number, name: string }[][];
+}
+
+interface Teacher {
+  id: number;
+  user: User;
+}
+
+=======
+>>>>>>> a3dec359946a0fdea1e2420e8ac4469bf9595991
 function Manage() {
   const [teachers, setTeachers] = useState([]);
   const [pageSize, setPageSize] = useState(5);
   const [rowId, setRowId] = useState(null);
   const router = useRouter();
+<<<<<<< HEAD
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const {decodedToken} = React.useContext(AppContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get<Teacher[]>(`http://localhost:3333/teachers/get/${decodedToken.school_Id}`);
+        setTeachers(res.data);
+        console.log(res.data[0].image);
+    
+=======
   const [imageUrl, setImageUrl] =useState('');
   const { decodedToken } = React.useContext(AppContext);
   useEffect(() => {
@@ -27,6 +64,7 @@ function Manage() {
         // const responseImg = await axios.get(`http://localhost:3333/${res.data.user.image}`, { responseType: 'blob' });
         //     const url = URL.createObjectURL(responseImg.data);
         //     setImageUrl(url);
+>>>>>>> a3dec359946a0fdea1e2420e8ac4469bf9595991
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -120,12 +158,21 @@ function Manage() {
             top: params.isFirstVisible ? 0 : 5,
             bottom: params.isLastVisible ? 0 : 5,
           })}
+<<<<<<< HEAD
+          // sx={{
+          //   [`& .${Grid.row}`]: {
+          //     bgcolor: (theme) =>
+          //       theme.palette.mode === "light" ? grey[200] : grey[900],
+          //   },
+          // }}
+=======
           sx={{
             [`& .${gridClasses.row}`]: {
               bgcolor: (theme) =>
                 theme.palette.mode == "light" ? grey[200] : grey[900],
             },
           }}
+>>>>>>> a3dec359946a0fdea1e2420e8ac4469bf9595991
           slots={{ toolbar: GridToolbar }}
           onCellKeyDown={(params) => setRowId(params.id)}
           onCellEditStart={(params) => setRowId(params.id)}>
