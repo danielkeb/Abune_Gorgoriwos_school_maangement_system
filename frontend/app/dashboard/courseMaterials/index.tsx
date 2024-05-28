@@ -34,7 +34,7 @@ const CourseMaterials: React.FC = () => {
   useEffect(() => {
     const fetchGradeLevelsAndSubjects = async () => {
       try {
-        const response = await axios.get('http://localhost:3333/grade/get');
+        const response = await axios.get(`http://localhost:3333/grade/get/${decodedToken.school_Id}`);
         const gradeLevelsData: GradeLevel[] = response.data;
 
         // Filter grade levels assigned to the logged-in teacher

@@ -63,7 +63,7 @@ const SectionUpdate = ({ selectedSection, fetchClassData }) => {
                   {error && <p className="text-red-500 mb-4">{error}</p>}
                   <div className='bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse'>
                     <button
-                      className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md w-full"
+                      className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md"
                       onClick={handleSubmit}
                     >
                       <SendIcon sx={{ marginRight: 1 }} />

@@ -15,7 +15,7 @@ import {
   //Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { DtoAdmin, DtoSignin, DtoStudent } from './dto';
+import { DtoAdmin, DtoSignin, DtoStudent, UpdateSuperAdminAdminDto } from './dto';
 //import { Response, response } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DtoUpdateUser } from './dto/dto.update';
@@ -136,6 +136,40 @@ export class AuthController {
     return this.authService.resetPassword(dto, id, token);
   }
 
+  @Get('all_admins')
+  async getAllAdmins(){
+    return this.authService.getAllAdmins();
+  }
+
+  @Get('single_admins/:id')
+  async getSingleAdmins(@Param('id', ParseIntPipe) id: number){
+    return this.authService.getSingleAdmins(id);
+  }
+
+  @Patch('single_admin_update/:id')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const ext = extname(file?.originalname).toLowerCase();
+          if (['.jpg', '.png', '.jpeg'].includes(ext)) {
+            cb(null, `${file?.fieldname}-${Date.now()}${ext}`);
+          } else {
+            cb(new Error('File extension is not allowed'), null);
+          }
+        },
+      }),
+    }),
+  )
+  async updateAdmin( @UploadedFile() photo: Express.Multer.File, @Body() dto:UpdateSuperAdminAdminDto,  @Param('id', ParseIntPipe) id: number){
+    let photoPath = null;
+    if (photo) {
+      photoPath = photo.path;
+    }
+   return this.authService.updateAdmin(dto, id,photoPath)
+  }
+
   @Get('role/:role/:schoolsId')
   getUsers(
     @Param('role') role: string,
@@ -147,9 +181,9 @@ export class AuthController {
   getAdmin() {
     return this.authService.getAdmin();
   }
-  @Get("status/:id")
-  getStatus(@Param('id', ParseIntPipe) id: number){
-    return this.authService.getStatus(id)
+  @Get('status/:id')
+  getStatus(@Param('id', ParseIntPipe) id: number) {
+    return this.authService.getStatus(id);
   }
   @Get('user/:id')
   getUser(@Param('id', ParseIntPipe) id: number) {

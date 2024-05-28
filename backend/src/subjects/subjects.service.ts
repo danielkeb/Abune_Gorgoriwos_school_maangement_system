@@ -1,5 +1,7 @@
 import {
+  ForbiddenException,
   Injectable,
+  NotAcceptableException,
   NotFoundException,
   // InternalServerErrorException,
   //NotAcceptableException,
@@ -14,6 +16,7 @@ export class SubjectsService {
   constructor(private prisma: PrismaService) {}
 
   async addSubject(
+    school_id: number,
     dto: AddSubjectsDto,
   ): Promise<{ msg: string; addSubject?: any }> {
     try {
@@ -41,17 +44,18 @@ export class SubjectsService {
       });
 
       if (existingSubject) {
-        await this.prisma.teacher.update({
-          where: { user_Id: dto.teacherId },
-          data: {
-            subject: {
-              connect: { id: existingSubject.id },
-            },
-          },
-        });
-        return {
-          msg: 'Subject already exists!',
-        };
+        // await this.prisma.teacher.update({
+        //   where: { user_Id: dto.teacherId },
+        //   data: {
+        //     subject: {
+        //       connect: { id: existingSubject.id },
+        //     },
+        //   },
+        // });
+        // return {
+        //   msg: 'Subject already exists!',
+        // };
+        throw new ForbiddenException('Subject already exists!');
       }
 
       // If no subject with the same gradeId and name exists, create the new subject
@@ -60,31 +64,22 @@ export class SubjectsService {
           name: dto.name,
           gradeId: dto.gradeId,
           teacherId: dto.teacherId,
+          schoolId: school_id,
         },
       });
-
-      // Connect the newly created subject to the teacher and grade level
-      await this.prisma.teacher.update({
-        where: { user_Id: dto.teacherId },
-        data: {
-          subject: {
-            connect: { id: addSubject.id },
-          },
-        },
-      });
-      return {
-        msg: 'Subject added!',
-        addSubject,
-      };
+      if (!addSubject) {
+        throw new NotAcceptableException('subject already exists');
+      }
+      return { msg: 'Subject added!', addSubject };
     } catch (error) {
-      console.error('Error adding section:', error);
-      return {
-        msg: 'An error occurred while adding the subject.',
-      };
+      throw new NotAcceptableException('subject already exists');
     }
   }
-  async getSubject() {
+  async getSubject(schoolId: number) {
     const subjects = await this.prisma.subject.findMany({
+      where: {
+        schoolId: schoolId,
+      },
       select: {
         name: true,
         id: true,
@@ -113,9 +108,9 @@ export class SubjectsService {
 
     return subjects;
   }
-  async searchSubjects(subj: number) {
+  async searchSubjects(schoolId: number, subj: number) {
     const searchSubjects = await this.prisma.subject.findUnique({
-      where: { id: subj },
+      where: { id: subj, schoolId: schoolId },
       include: {
         gradelevel: { select: { grade: true } },
         teacher: {

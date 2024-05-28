@@ -9,7 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { SectionService } from './section.service';
-import { SectionAddDto, } from './dto/sectionAdd.dto';
+import { SectionAddDto } from './dto/sectionAdd.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { SectionUpdateAddDto } from './dto/sectionadd.update.dto';
 
@@ -18,9 +18,12 @@ import { SectionUpdateAddDto } from './dto/sectionadd.update.dto';
 export class SectionController {
   constructor(private sectionService: SectionService) {}
 
-  @Post('add')
-  addSection(@Body() dto: SectionAddDto) {
-    return this.sectionService.addSection(dto);
+  @Post('add/:schoolId')
+  addSection(
+    @Param('schoolId', ParseIntPipe) schoolId: number,
+    @Body() dto: SectionAddDto,
+  ) {
+    return this.sectionService.addSection(schoolId, dto);
   }
 
   @Get('get/:id/students')
@@ -35,9 +38,9 @@ export class SectionController {
   deleteSection(@Param('id', ParseIntPipe) id: number) {
     return this.sectionService.deleteSection(id);
   }
-  @Get('manage')
-  manageSection() {
-    return this.sectionService.manageSection();
+  @Get('manage/:schoolId')
+  manageSection(@Param('schoolId', ParseIntPipe) schoolId: number) {
+    return this.sectionService.manageSection(schoolId);
   }
   @Patch('update/:id')
   updateSection(

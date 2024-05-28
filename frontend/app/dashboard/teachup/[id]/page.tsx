@@ -17,6 +17,7 @@ const page = () => {
     const [schoolss, setSchoolss] = useState([]);
     const [disData, setDisData]=useState()
     const router = useParams();
+    const { decodedToken } = React.useContext(AppContext);
   
     const { id } = router;
 
@@ -26,8 +27,9 @@ const page = () => {
         
       
           const res = await axios.get(`http://localhost:3333/teachers/single_teacher/${id}`);
-          const school = await axios.get("http://localhost:3333/grade/get");
+          const school = await axios.get(`http://localhost:3333/grade/get/${decodedToken.school_Id}`);
           const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
+          // const result = await response.json();
           setSchoolss(school.data);
           setTeachers(res.data);
           setDisData(disconnectData.data)
@@ -122,6 +124,9 @@ const page = () => {
         const subjectId = parseInt(formik.values.subjectId)
         console.log(gradeId,sectionId,subjectId)
         const response = await axios.patch(`http://localhost:3333/teachers/connnect/all/${id}`,{gradeId,sectionId,subjectId});
+        const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
+
+        setDisData(disconnectData.data);
       }
       toast.success("Teacher record Updated ");
     }catch(error:any){
@@ -131,45 +136,28 @@ const page = () => {
     
     
   } 
- 
+  const handleDisconnect = async (grade, section, subject) => {
+    const gradeId = parseInt(grade);
+    const sectionId = parseInt(section);
+    const subjectId = parseInt(subject);
 
-  const handleDisconnect = async (grade:string, section:string, subject:string) => {
-    const gradeId= parseInt(grade) 
-    const sectionId= parseInt(section) 
-    const subjectId= parseInt(subject) 
+    try {
+        const response = await axios.patch(
+            `http://localhost:3333/teachers/disconnect/all/${id}`,
+            { gradeId, sectionId, subjectId }
+        );
 
-    try{
-      const response = await axios.patch(`http://localhost:3333/teachers/disconnect/all/${id}`,{gradeId, sectionId,subjectId});
-    
-      // Filter out the clicked row from the state
-      const updatedGradeLevels = disData.gradelevel.map((gradeLevel) => {
-        if (gradeLevel.id === gradeId) {
-          gradeLevel.section = gradeLevel.section.map((section) => {
-            if (section.id === sectionId) {
-              section.subjects = section.subjects.filter(
-                (subject) => subject.id !== subjectId
-              );
-            }
-            return section;
-          });
-        }
-        return gradeLevel;
-      });
+        // Update the local state
+        const disconnectData= await axios.get(`http://localhost:3333/teachers/fetch/${id}`)
 
-      setDisData({
-        ...disData,
-        gradelevel: updatedGradeLevels,
-      });
-
-      toast.success("Teacher record Updated ");
-
-    }catch(error:any){
-      toast.error(error?.response?.data.message);
+        setDisData(disconnectData.data);
+        toast.success('Teacher record updated');
+    } catch (error) {
+        toast.error(error?.response?.data?.message || 'Error updating record');
     }
+};
 
 
-
-  };
   const secc=schoolss.find((school:any) => school.id == formik.values.gradeId)
 
    console.log("if I get it", disData);
@@ -546,38 +534,34 @@ const page = () => {
           <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase w-[70%] bg-white boxshadow p-6">
                 Disconnect Subject
                 <table className="w-full h-auto border-collapse border border-gray-300 mt-2">
-  <thead>
-    <tr className="bg-gray-100 border-b border-gray-300">
-      <th className="p-4 text-left">Grade</th>
-      <th className="p-4 text-left">Section</th>
-      <th className="p-4 text-left">Subject</th>
-      <th className="p-4 text-left">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {disData?.gradelevel.map((gradeLevel) =>
-      gradeLevel.section.map((section) =>
-        section.subjects.map((subject) => (
-          <tr key={subject.id} className="border-b border-gray-300">
-            <td className="p-4">{gradeLevel.grade}</td>
-            <td className="p-4">{section.name}</td>
-            <td className="p-4">{subject.name}</td>
-            <td className="p-4">
-              <button
-                onClick={() =>
-                  handleDisconnect(gradeLevel.id, section.id, subject.id)
-                }
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-              >
-                Disconnect
-              </button>
-            </td>
-          </tr>
-        ))
-      )
-    )}
-  </tbody>
-</table>
+      <thead>
+        <tr className="bg-gray-100 border-b border-gray-300">
+          <th className="p-4 text-left">Grade</th>
+          <th className="p-4 text-left">Section</th>
+          <th className="p-4 text-left">Subject</th>
+          <th className="p-4 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {disData?.map((subject) =>
+          subject.sections.map((section) => (
+            <tr key={`${subject.id}-${section.id}`} className="border-b border-gray-300">
+              <td className="p-4">{subject.gradeId}</td>
+              <td className="p-4">{section.name}</td>
+              <td className="p-4">{subject.name}</td>
+              <td className="p-4">
+                <button
+                  onClick={() => handleDisconnect(subject.gradeId, section.id, subject.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                >
+                  Disconnect
+                </button>
+              </td>
+            </tr>
+          ))
+        )}
+      </tbody>
+    </table>
 
 
               </h6>

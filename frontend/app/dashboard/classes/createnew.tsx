@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './class.module.css';
 import error from 'next/error';
+import { AppContext } from '@/components/context/UserContext';
 
 // Enum defining class types
 enum ClassType {
@@ -24,6 +25,7 @@ const ClassForm = () => {
   // State variables
   const [grade, setGrade] = useState('');
   const [classType, setClassType] = useState<ClassType | ''>(ClassType.nursery);
+  const {decodedToken} =React.useContext(AppContext);
 
   // Handle change in class type select
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -41,7 +43,7 @@ const ClassForm = () => {
 
     try {
      
-        await axios.post('http://localhost:3333/grade/add', { grade, classType });
+        await axios.post(`http://localhost:3333/grade/add/${decodedToken.school_Id}`, { grade, classType });
         toast.success('Add successful');
       
   

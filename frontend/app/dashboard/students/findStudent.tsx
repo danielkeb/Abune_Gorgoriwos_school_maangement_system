@@ -14,7 +14,20 @@ function FindStudent({teacherView,sectionToDisplay}) {
 
     const secc= sectionToDisplay[0]?.section.map(s=>s.name)
     const  columns= useMemo(()=> [
-        { field: 'id', headerName: 'ID', width: 150 },
+        { field: 'id', headerName: 'ID', width: 50},
+        {
+          field: "image",
+          headerName: "Photo",
+          width: "100",
+          height:"100",
+          renderCell: (params) => (
+            <img
+              src={`http://localhost:3333/${params.row?.image}`}
+              alt={`${params.row.frist_name} ${params.row?.last_name}`}
+              style={{ width: "100%", height: "100%", borderRadius: "50" }}
+            />
+          ),
+        },
         { field: 'first_name', headerName: 'First Name', width: 150, type:'string', editable:true },
         { field: 'middle_name', headerName: 'Middle Name', width: 150, type:'string', editable:true },
         { field: 'last_name', headerName: 'Last Name', width: 150, type:'string', editable:true },

@@ -24,7 +24,7 @@ const Manage = () => {
     const fetchData = async () => {
       try {
         const school = await axios.get(
-          `http://localhost:3333/grade/get/`
+          `http://localhost:3333/grade/get/${decodedToken.school_Id}`
         );
        
         setSchoolss(school.data);
@@ -54,6 +54,7 @@ const Manage = () => {
             `http://localhost:3333/students/getstu/${decodedToken?.school_Id}/${dork}/${formik.values.selectedSection}`
           );
           setTeacherView(res.data);
+          console.log("student data flow", res.data);
         } else {
           toast.error("Please Select all fields!");
         }

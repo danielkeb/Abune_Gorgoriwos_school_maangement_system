@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './class.module.css';
 import error from 'next/error';
+import { AppContext } from '@/components/context/UserContext';
 
 // Enum defining class types
 enum ClassType {
@@ -31,6 +32,7 @@ const ManageClass = () => {
   const [selectedGrade, setSelectedGrade] = useState<GradeLevel | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const {decodedToken} =React.useContext(AppContext);
 
   // Handle change in class type select
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -55,7 +57,7 @@ const ManageClass = () => {
   const handleManageClasses = async () => {
     setShowUpdateForm(false);
     try {
-      const response = await axios.get<GradeLevel[]>('http://localhost:3333/grade/manage');
+      const response = await axios.get<GradeLevel[]>(`http://localhost:3333/grade/manage/${decodedToken.school_Id}`);
       setClassData(response.data);
     } catch (error) {
       console.error('Error fetching class data:', error);

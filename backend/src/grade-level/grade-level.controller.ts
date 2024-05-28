@@ -16,9 +16,12 @@ import { ApiTags } from '@nestjs/swagger';
 export class GradeLevelController {
   constructor(private gradeLevelService: GradeLevelService) {}
 
-  @Post('add')
-  addGradeLevel(@Body() dto: GradeLevel) {
-    return this.gradeLevelService.addGradeLevel(dto);
+  @Post('add/:schoolId')
+  addGradeLevel(
+    @Param('schoolId', ParseIntPipe) schoolId: number,
+    @Body() dto: GradeLevel,
+  ) {
+    return this.gradeLevelService.addGradeLevel(schoolId, dto);
   }
 
   @Patch('update/:id')
@@ -29,12 +32,12 @@ export class GradeLevelController {
     return this.gradeLevelService.updateGradeLevel(gradeId, dto);
   }
 
-  @Get('get')
-  getGradeLevel() {
-    return this.gradeLevelService.getGradeLevel();
+  @Get('get/:id')
+  getGradeLevel(@Param('id', ParseIntPipe) id: number) {
+    return this.gradeLevelService.getGradeLevel(id);
   }
-  @Get('manage')
-  manageGradeLevel() {
-    return this.gradeLevelService.manageGradeLevel();
+  @Get('manage/:id')
+  manageGradeLevel(@Param('id', ParseIntPipe) id: number) {
+    return this.gradeLevelService.manageGradeLevel(id);
   }
 }

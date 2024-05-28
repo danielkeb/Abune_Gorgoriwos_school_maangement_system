@@ -28,7 +28,7 @@ const page = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const school = await axios.get("http://localhost:3333/grade/get");
+        const school = await axios.get(`http://localhost:3333/grade/get/${decodedToken.school_Id}`);
         setSchoolss(school.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -57,7 +57,7 @@ const page = () => {
       username: "",
       image: null,
       phone: "",
-      password: "1234",
+      password: "12345678",
       gender: "",
       date_of_birth: "",
       careOf_contact1: "",

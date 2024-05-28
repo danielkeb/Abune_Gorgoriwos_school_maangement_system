@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { AppContext } from '@/components/context/UserContext';
 
 interface Teacher {
   id: number;
@@ -52,6 +53,7 @@ const SubjectComponent = () => {
   const [page, setPage] = useState(0);
   
   const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
+  const {decodedToken} = React.useContext(AppContext);
 
   // ... (other useEffect hooks)
 
@@ -76,7 +78,7 @@ const SubjectComponent = () => {
 
   const fetchGrades = async () => {
     try {
-      const response = await axios.get<Grade[]>('http://localhost:3333/grade/get');
+      const response = await axios.get<Grade[]>(`http://localhost:3333/grade/get/${decodedToken.school_Id}`);
       setGrades(response.data);
     } catch (error) {
       console.error('Error fetching grades:', error);
@@ -86,7 +88,7 @@ const SubjectComponent = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get<Teacher[]>('http://localhost:3333/teachers/get');
+      const response = await axios.get<Teacher[]>(`http://localhost:3333/teachers/get/${decodedToken.school_Id}`);
       setTeachers(response.data);
     } catch (error) {
       console.error('Error fetching teachers:', error);
@@ -115,11 +117,11 @@ const SubjectComponent = () => {
     try {
       let response;
       if (subjectId) {
-        response = await axios.get<SubjectData>(`http://localhost:3333/subjects/get/${subjectId}`);
+        response = await axios.get<SubjectData>(`http://localhost:3333/subjects/get/${decodedToken.school_Id}/${subjectId}`);
         setSelectedSubject(response.data);
-        setShowModal(true);
+        setShowModal(true); 
       } else {
-        response = await axios.get<SubjectData[]>('http://localhost:3333/subjects/get');
+        response = await axios.get<SubjectData[]>(`http://localhost:3333/subjects/get/${decodedToken.school_Id}`);
         setClassData(response.data);
       }
       setError('');
@@ -183,23 +185,31 @@ const SubjectComponent = () => {
   };
 
   const handleSubmit = async () => {
-    if (!subject || !gradeId || !teacherId) {
+    if (!subject || !gradeId) {
       setError('Please fill in all the fields');
+      return;
+    }
+    if (typeof subject !== 'string' || subject.length <= 3) {
+      setError('Subject name must be a string with length more than three characters.');
+      return;
+    }
+  
+    if (!isNaN(subject)) {
+      setError('Subject name cannot be a number.');
       return;
     }
 
     try {
-      await axios.post('http://localhost:3333/subjects/add', { name: subject, gradeId, teacherId });
+      await axios.post(`http://localhost:3333/subjects/add/${decodedToken.school_Id}`, { name: subject, gradeId});
+      toast.success('Subject added successfully');
       setSubject('');
       setGradeId(null);
-      setTeacherId(null);
       setError('');
       handleManageSubject();
-      toast.success('Subject added successfully');
+     
     } catch (error) {
-      console.error('Error registering subject:', error);
-      setError('An error occurred while registering the subject');
-      toast.error('An error occurred while registering the subject');
+      
+      toast.error('subject already exists');
     }
   };
 
@@ -262,21 +272,6 @@ const SubjectComponent = () => {
                     </option>
                   ))}
                 </select>
-                {gradeId !== null && (
-                  <select
-                    className="w-full p-3 border border-gray-300 rounded-md mb-4"
-                    value={teacherId || ''}
-                    onChange={handleChange}
-                    name="teacherId"
-                  >
-                    <option value="">Select Teacher</option>
-                    {filteredTeachers.map((teacher) => (
-                      <option key={teacher.id} value={teacher.id}>
-                        {teacher.first_name} {teacher.last_name}
-                      </option>
-                    ))}
-                  </select>
-                )}
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 <div className="flex justify-center">
                 <button

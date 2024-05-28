@@ -7,9 +7,9 @@ const Dashboard = () => {
   return (
     <Main>
   
-  <div className='flex justify-center text-center text-3xl h-full items-center'>
+ 
     <Page/>
-    </div>
+  
     </Main>
   
   )

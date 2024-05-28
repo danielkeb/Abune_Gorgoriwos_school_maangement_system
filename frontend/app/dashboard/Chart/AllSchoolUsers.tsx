@@ -14,7 +14,7 @@ const A: React.FC = () => {
       try {
         const schoolsResponse = await axios.get('http://localhost:3333/schools/get');
         const studentsResponse = await axios.get('http://localhost:3333/students/get');
-        const teachersResponse = await axios.get('http://localhost:3333/teachers/get');
+        const teachersResponse = await axios.get(`http://localhost:3333/teachers/get/${decodedToken.school_Id}`);
 
         if (schoolsResponse.status === 200 && studentsResponse.status === 200 && teachersResponse.status === 200) {
           setSchools(schoolsResponse.data);

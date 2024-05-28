@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SendIcon from '@mui/icons-material/Send';
+import { AppContext } from '@/components/context/UserContext';
 
 interface Teacher {
   id: number;
@@ -34,6 +35,7 @@ const SectionComponent = () => {
   const [classData, setClassData] = useState<SectionData[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(true);
   const popupRef = useRef<HTMLDivElement>(null);
+  const { decodedToken } = React.useContext(AppContext);
 
   useEffect(() => {
     fetchGrades();
@@ -54,7 +56,7 @@ const SectionComponent = () => {
 
   const fetchGrades = async () => {
     try {
-      const response = await axios.get<Grade[]>('http://localhost:3333/grade/get');
+      const response = await axios.get<Grade[]>(`http://localhost:3333/grade/get/${decodedToken.school_Id}`);
       setGrades(response.data);
     } catch (error) {
       console.error('Error fetching grades:', error);
@@ -64,7 +66,7 @@ const SectionComponent = () => {
 
   const fetchClassData = async () => {
     try {
-      const response = await axios.get<SectionData[]>('http://localhost:3333/section/manage');
+      const response = await axios.get<SectionData[]>(`http://localhost:3333/section/manage/${decodedToken.school_Id}`);
       setClassData(response.data);
     } catch (error) {
       console.error('Error fetching class data:', error);
@@ -74,7 +76,7 @@ const SectionComponent = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get<Teacher[]>('http://localhost:3333/teachers/get');
+      const response = await axios.get<Teacher[]>(`http://localhost:3333/teachers/get/${decodedToken.school_Id}`);
       setTeachers(response.data);
     } catch (error) {
       console.error('Error fetching teachers:', error);
@@ -92,22 +94,26 @@ const SectionComponent = () => {
   };
 
   const handleSubmit = async () => {
-    if (!sectionName || !gradeId || !teacherId) {
+    if (!sectionName || !gradeId) {
       setError('Please fill in all the fields');
       return;
     }
-
+    if (!sectionName || !isNaN(sectionName)) {
+      setError('Section name must be a non-integer string.');
+      return;
+    }
+  
     try {
-      await axios.post('http://localhost:3333/section/add', { name: sectionName, gradeId, teacherId });
-      setSectionName('');
+    const response=  await axios.post(`http://localhost:3333/section/add/${decodedToken.school_Id}`, { name: sectionName, gradeId });
+    toast.success("Section added successfully");
+    setSectionName('');
       setGradeId('');
-      setTeacherId('');
       setError('');
       fetchClassData();
-      toast.success("Section added successfully");
+      
     } catch (error) {
-      console.error('Error registering section:', error);
-      setError('An error occurred while registering the section');
+        toast.error('Section already exists');
+      
     }
   };
 
@@ -141,7 +147,7 @@ const SectionComponent = () => {
                   </option>
                 ))}
               </select>
-              <select
+              {/* <select
                 className="w-full p-3 border border-gray-300 rounded-md mb-4"
                 value={teacherId}
                 onChange={handleChange}
@@ -153,7 +159,7 @@ const SectionComponent = () => {
                     {teacher.frist_name} {teacher.last_name}
                   </option>
                 ))}
-              </select>
+              </select> */}
               {error && <p className="text-red-500 mb-4">{error}</p>}
               <button
                 className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md w-full"
