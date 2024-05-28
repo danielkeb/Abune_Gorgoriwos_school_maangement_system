@@ -23,7 +23,7 @@ const Promote = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const school = await axios.get(`http://localhost:3333/grade/get/`);
+        const school = await axios.get(`http://localhost:3333/grade/get/${decodedToken?.school_Id}`);
 
         setSchoolss(school.data);
       } catch (error) {
