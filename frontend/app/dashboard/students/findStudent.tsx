@@ -19,13 +19,14 @@ function FindStudent({teacherView,sectionToDisplay}) {
           field: "image",
           headerName: "Photo",
           width: "100",
-          height:"100",
+     
           renderCell: (params) => (
             <img
-              src={`http://localhost:3333/${params.row?.image}`}
-              alt={`${params.row.frist_name} ${params.row?.last_name}`}
-              style={{ width: "100%", height: "100%", borderRadius: "50" }}
-            />
+            src={`http://localhost:3333/${params.row?.image}`}
+            alt={`${params.row.frist_name} ${params.row?.last_name}`}
+            className='rounded-full w-[50px] h-[50px]'
+           
+          />
           ),
         },
         { field: 'first_name', headerName: 'First Name', width: 150, type:'string', editable:true },

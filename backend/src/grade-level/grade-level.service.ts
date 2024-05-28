@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotAcceptableException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GradeLevel } from './dto';
 

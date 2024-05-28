@@ -1,0 +1,395 @@
+{
+    "title": "Recording 5/27/2024 at 2:59:31 PM",
+    "selectorAttribute": "test",
+    "steps": [
+        {
+            "type": "setViewport",
+            "width": 1069,
+            "height": 790,
+            "deviceScaleFactor": 1,
+            "isMobile": false,
+            "hasTouch": false,
+            "isLandscape": false
+        },
+        {
+            "type": "navigate",
+            "url": "http://localhost:3000/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "http://localhost:3000/",
+                    "title": "AGSMS"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "a > button"
+                ],
+                [
+                    "xpath//html/body/div[1]/header/div/div[3]/a/button"
+                ],
+                [
+                    "pierce/a > button"
+                ],
+                [
+                    "aria/PORTAL[role=\"button\"]"
+                ]
+            ],
+            "offsetY": 18.236979484558105,
+            "offsetX": 37.9349365234375
+        },
+        {
+            "type": "change",
+            "value": "zewdu@gmail.com",
+            "selectors": [
+                [
+                    "#email"
+                ],
+                [
+                    "xpath///*[@id=\"email\"]"
+                ],
+                [
+                    "pierce/#email"
+                ],
+                [
+                    "aria/Email Address"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "change",
+            "value": "1234",
+            "selectors": [
+                [
+                    "#password"
+                ],
+                [
+                    "xpath///*[@id=\"password\"]"
+                ],
+                [
+                    "pierce/#password"
+                ],
+                [
+                    "aria/Password"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#email"
+                ],
+                [
+                    "xpath///*[@id=\"email\"]"
+                ],
+                [
+                    "pierce/#email"
+                ],
+                [
+                    "aria/Email Address"
+                ],
+                [
+                    "text/zewdu@gmail.com"
+                ]
+            ],
+            "offsetY": 39.0234375,
+            "offsetX": 161.17449951171875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#password"
+                ],
+                [
+                    "xpath///*[@id=\"password\"]"
+                ],
+                [
+                    "pierce/#password"
+                ],
+                [
+                    "aria/Password"
+                ],
+                [
+                    "text/1234"
+                ]
+            ],
+            "offsetY": 30.049484252929688,
+            "offsetX": 92.17449951171875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#email"
+                ],
+                [
+                    "xpath///*[@id=\"email\"]"
+                ],
+                [
+                    "pierce/#email"
+                ],
+                [
+                    "aria/Email Address"
+                ],
+                [
+                    "text/zewdu@gmail.com"
+                ]
+            ],
+            "offsetY": 21.0234375,
+            "offsetX": 167.17449951171875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button"
+                ],
+                [
+                    "xpath//html/body/main/div[2]/div/form/button"
+                ],
+                [
+                    "pierce/button"
+                ],
+                [
+                    "aria/Submit"
+                ],
+                [
+                    "text/Submit"
+                ]
+            ],
+            "offsetY": 2.07293701171875,
+            "offsetX": 85.17449951171875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "a:nth-of-type(3) span"
+                ],
+                [
+                    "xpath//html/body/div/div/div/nav/a[3]/div/div[2]/span"
+                ],
+                [
+                    "pierce/a:nth-of-type(3) span"
+                ],
+                [
+                    "text/Grades"
+                ]
+            ],
+            "offsetY": 18.231781005859375,
+            "offsetX": 77.02083587646484
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.flex > button:nth-of-type(2)"
+                ],
+                [
+                    "xpath//html/body/div/main/div[2]/div[1]/button[2]"
+                ],
+                [
+                    "pierce/div.flex > button:nth-of-type(2)"
+                ],
+                [
+                    "aria/Create New Class"
+                ],
+                [
+                    "text/Create New Class"
+                ]
+            ],
+            "offsetY": 9.018234252929688,
+            "offsetX": 47.03387451171875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.fixed input"
+                ],
+                [
+                    "xpath//html/body/div/main/div[2]/div[2]/div/div[2]/div/div/div/div/input"
+                ],
+                [
+                    "pierce/div.fixed input"
+                ],
+                [
+                    "aria/Grade"
+                ]
+            ],
+            "offsetY": 31.4765625,
+            "offsetX": 91.015625
+        },
+        {
+            "type": "change",
+            "value": "12",
+            "selectors": [
+                [
+                    "div.fixed input"
+                ],
+                [
+                    "xpath//html/body/div/main/div[2]/div[2]/div/div[2]/div/div/div/div/input"
+                ],
+                [
+                    "pierce/div.fixed input"
+                ],
+                [
+                    "aria/Grade"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "select"
+                ],
+                [
+                    "xpath//html/body/div/main/div[2]/div[2]/div/div[2]/div/div/div/div/select"
+                ],
+                [
+                    "pierce/select"
+                ]
+            ],
+            "offsetY": 36.8515625,
+            "offsetX": 67.015625
+        },
+        {
+            "type": "change",
+            "value": "senior secondary",
+            "selectors": [
+                [
+                    "select"
+                ],
+                [
+                    "xpath//html/body/div/main/div[2]/div[2]/div/div[2]/div/div/div/div/select"
+                ],
+                [
+                    "pierce/select"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-green-500"
+                ],
+                [
+                    "xpath//html/body/div/main/div[2]/div[2]/div/div[2]/div/div/div/div/div/button[2]"
+                ],
+                [
+                    "pierce/button.bg-green-500"
+                ],
+                [
+                    "aria/Register"
+                ],
+                [
+                    "text/Register"
+                ]
+            ],
+            "offsetY": 23.5546875,
+            "offsetX": 26.27606201171875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "p.MuiTypography-body1"
+                ],
+                [
+                    "xpath//html/body/div/header/div/button[2]/div[2]/p[1]"
+                ],
+                [
+                    "pierce/p.MuiTypography-body1"
+                ],
+                [
+                    "text/zewdu"
+                ]
+            ],
+            "offsetY": 15.013021469116211,
+            "offsetX": 39.6328125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.MuiPopover-root button"
+                ],
+                [
+                    "xpath//html/body/div[2]/div[3]/div[2]/button"
+                ],
+                [
+                    "pierce/div.MuiPopover-root button"
+                ],
+                [
+                    "aria/SIGN OUT"
+                ],
+                [
+                    "text/Sign out"
+                ]
+            ],
+            "offsetY": 9.393234252929688,
+            "offsetX": 79.015625
+        },
+        {
+            "type": "change",
+            "value": "zewdu@gmail.com",
+            "selectors": [
+                [
+                    "#email"
+                ],
+                [
+                    "xpath///*[@id=\"email\"]"
+                ],
+                [
+                    "pierce/#email"
+                ],
+                [
+                    "aria/Email Address"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "change",
+            "value": "1234",
+            "selectors": [
+                [
+                    "#password"
+                ],
+                [
+                    "xpath///*[@id=\"password\"]"
+                ],
+                [
+                    "pierce/#password"
+                ],
+                [
+                    "aria/Password"
+                ]
+            ],
+            "target": "main"
+        }
+    ]
+}

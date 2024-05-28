@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-enum ClassType {
+export enum ClassType {
   nursery = 'nursery',
   junior_primary = 'junior primary',
   senior_primary = 'senior primary',

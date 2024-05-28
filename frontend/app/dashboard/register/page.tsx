@@ -62,8 +62,8 @@ const page = () => {
       date_of_birth: "",
       careOf_contact1: "",
       careOf_contact2: "",
-      gradeId: 0,
-      sectionId: 0,
+      gradeId: "",
+      sectionId: "",
     },
     onSubmit: async (values) => {
       try {
@@ -121,8 +121,8 @@ const page = () => {
       phone: yup.string().required("Phone number is Required !"),
       gender: yup.string().required("Gender is Required !"),
       date_of_birth: yup.string().required("Date of birth  is Required !"),
-      gradeId: yup.number().required("Grade level is Required"),
-      section: yup.number().notRequired(),
+      gradeId: yup.string().required("Grade level is Required"),
+      sectionId: yup.string().required("Section is Required"),
       careOf_contact1: yup.string().required("care of contact required"),
       careOf_contact2: yup.string().notRequired(),
     }),
@@ -150,6 +150,7 @@ const page = () => {
                       Username
                     </label>
                     <input
+                    data-testId = "username"
                       type="text"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400"
                       placeholder="username"
@@ -470,7 +471,7 @@ const page = () => {
                       value={formik.values.careOf_contact2}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      required
+                      
                     />
                     {formik.errors.careOf_contact2 && (
                       <small className="text-red-500 ">

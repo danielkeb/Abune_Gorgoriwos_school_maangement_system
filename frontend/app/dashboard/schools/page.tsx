@@ -8,7 +8,7 @@ import DummyData from './dumydata';
 const Dashboard = () => {
   return (
     <Main>
-      <div className='m-20'>
+      <div className='mt-6'>
     <A/>
     {/* <AdmissionRateLineChart/> */}
     <DummyData/>

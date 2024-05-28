@@ -12,6 +12,26 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useRouter } from "next/navigation";
 import { AppContext } from "@/components/context/UserContext";
+
+interface User {
+  id: number;
+  image: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  education_level: string;
+  grade: string[];
+  section: { id: number, name: string }[][];
+  subject: { id: number, name: string }[][];
+}
+
+interface Teacher {
+  id: number;
+  user: User;
+}
+
 function Manage() {
   const [teachers, setTeachers] = useState([]);
   const [pageSize, setPageSize] = useState(5);
@@ -64,12 +84,12 @@ function Manage() {
         field: "image",
         headerName: "Photo",
         width: "100",
-        height:"100",
+       
         renderCell: (params) => (
           <img
             src={`http://localhost:3333/${params.row?.image}`}
             alt={`${params.row.frist_name} ${params.row?.last_name}`}
-            style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+           className="rounded-full w-[50px] h-[50px]"
           />
         ),
       },
@@ -120,12 +140,12 @@ function Manage() {
             top: params.isFirstVisible ? 0 : 5,
             bottom: params.isLastVisible ? 0 : 5,
           })}
-          sx={{
-            [`& .${gridClasses.row}`]: {
-              bgcolor: (theme) =>
-                theme.palette.mode == "light" ? grey[200] : grey[900],
-            },
-          }}
+          // sx={{
+          //   [`& .${Grid.row}`]: {
+          //     bgcolor: (theme) =>
+          //       theme.palette.mode === "light" ? grey[200] : grey[900],
+          //   },
+          // }}
           slots={{ toolbar: GridToolbar }}
           onCellKeyDown={(params) => setRowId(params.id)}
           onCellEditStart={(params) => setRowId(params.id)}>
