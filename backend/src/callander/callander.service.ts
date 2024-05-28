@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CallanderDto } from './dto/callander.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class CallanderService {
@@ -26,6 +26,10 @@ export class CallanderService {
     const getPost = await this.prismaService.calander.findMany({
       where: { id: id },
     });
+//after testing 
+
+
+
     // const go= (await getPost).map(p=>p.id)
 
     const deletePost = await this.prismaService.calander.delete({
@@ -35,7 +39,7 @@ export class CallanderService {
     });
 
     return {
-      msg: 'Post Deleted succesfully ',
+      msg: 'Post Deleted succesfully',
     };
   }
 }

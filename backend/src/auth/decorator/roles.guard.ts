@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { ROLE_KEY } from '../decorator/roles.decorator';
 import { Role } from './enums/role.enum';
-import { AccessContorlService } from 'src/shared/access-control.service';
+import { AccessContorlService } from '../../shared/access-control.service';
 
 export class TokenDto {
   id: number;

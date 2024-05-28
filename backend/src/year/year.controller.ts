@@ -9,9 +9,9 @@ import {
 import { YearService } from './year.service';
 import { YearDto } from './dto';
 import { JwtGuard } from '../auth/guard';
-import { RoleGuard } from 'src/auth/decorator/roles.guard';
-import { Roles } from 'src/auth/decorator/roles.decorator';
-import { Role } from 'src/auth/decorator/enums/role.enum';
+import { RoleGuard } from '../auth/decorator/roles.guard';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { Role } from '../auth/decorator/enums/role.enum';
 
 @Controller('year')
 export class YearController {

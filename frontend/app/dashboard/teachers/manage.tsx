@@ -10,6 +10,7 @@ import { grey } from "@mui/material/colors";
 import EditIcon from "@mui/icons-material/Edit";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/navigation";
+import { AppContext } from "@/components/context/UserContext";
 
 interface User {
   id: number;
@@ -38,24 +39,15 @@ function Manage() {
   const [imageUrl, setImageUrl] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const {decodedToken} = React.useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get<Teacher[]>("http://localhost:3333/teachers/get");
+        const res = await axios.get<Teacher[]>(`http://localhost:3333/teachers/get/${decodedToken.school_Id}`);
         setTeachers(res.data);
         console.log(res.data[0].image);
-        if (res.data.length > 0) {
-
-          const responseImg = await axios.get(`http://localhost:3333/uploads/${res.data[0].image}`, { responseType: 'blob' });
-
-          const url = URL.createObjectURL(responseImg.data);
-
-          setImageUrl(url);
-
-          console.log("url data", url)
-
-        }
+    
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -134,12 +126,12 @@ function Manage() {
             top: params.isFirstVisible ? 0 : 5,
             bottom: params.isLastVisible ? 0 : 5,
           })}
-          sx={{
-            [`& .${Grid.row}`]: {
-              bgcolor: (theme) =>
-                theme.palette.mode === "light" ? grey[200] : grey[900],
-            },
-          }}
+          // sx={{
+          //   [`& .${Grid.row}`]: {
+          //     bgcolor: (theme) =>
+          //       theme.palette.mode === "light" ? grey[200] : grey[900],
+          //   },
+          // }}
           slots={{ toolbar: GridToolbar }}
           onCellKeyDown={(params) => setRowId(params.id)}
           onCellEditStart={(params) => setRowId(params.id)}
