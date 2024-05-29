@@ -86,13 +86,13 @@ export default function RecipeReviewCard() {
         <ListItem disablePadding className="flex flex-col ml-10">
           {schoolss?.map((s: any) => {
             return (
-              <ListItemButton className={`w-full ${color== s.id? "bg-green-700":"bg-transparent"}` } onClick={()=>handleGradeClick(s.id)}>
+              <ListItemButton className="w-full " onClick={()=>handleGradeClick(s.id)}>
                 <ListItemIcon>
-                  <PeopleIcon className={`w-full ${color== s.id? "text-white":""}` } />
+                  <PeopleIcon className={`w-full ${color== s.id? "text-green-700":""}` } />
 
                 </ListItemIcon>
 
-                <ListItemText className={`w-full ${color== s.id? "text-white":""}` } primary={` Grade ${s.grade}`} />
+                <ListItemText className={`w-full ${color== s.id? "text-green-700":"text-black"}` } primary={` Grade ${s.grade}`} />
               </ListItemButton>
             );
           })}

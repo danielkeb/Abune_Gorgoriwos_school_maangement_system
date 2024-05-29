@@ -216,9 +216,9 @@ const SectionUpdate = () => {
                     ))}
                   </select>
                   {error && <p className="text-red-500 mb-4">{error}</p>}
-                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
-                    <button className="bg-green-700 hover:bg-green-500 text-white  py-2 px-4 rounded" onClick={handleUpdateSection}>
-                       Update
+                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md ml-2" onClick={handleUpdateSection}>
+                      <SendIcon className="mr-1" /> Update
                     </button>
                     <button onClick={handleManageSection} className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md">Cancel</button>
                   </div>
@@ -235,11 +235,11 @@ const SectionUpdate = () => {
     <table className="min-w-full h-auto border-collapse border border-gray-300">
       <thead className="bg-gray-100 border-b border-gray-300">
         <tr>
-          <th className="p-4 text-center">ID</th>
-          <th className="p-4 text-center">Section Name</th>
-          <th className="p-4 text-center">Grade</th>
-          <th className="p-4 text-center">Teacher(s)</th>
-          <th className="p-4 text-center">Action</th>
+          <th className="p-4 text-left">ID</th>
+          <th className="p-4 text-left">Section Name</th>
+          <th className="p-4 text-left">Grade</th>
+          <th className="p-4 text-left">Teacher(s)</th>
+          <th className="p-4 text-left">Action</th>
         </tr>
       </thead>
       <tbody>
