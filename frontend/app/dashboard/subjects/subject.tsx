@@ -6,7 +6,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { IconButton, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { AppContext } from '@/components/context/UserContext';
-
+import AddIcon from '@mui/icons-material/Add';
 interface Teacher {
   id: number;
   first_name: string;
@@ -229,38 +229,19 @@ const SubjectComponent = () => {
     setPage(0);
   };
   return (
-    <div className="w-full p-8 mt-8 text-center">
+    <div className="w-full p-6  text-center">
       {/* {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>} */}
       <div className=" flex flex-wrap gap-4 mb-4">
+
         <button
-          className="bg-blue-50 hover:bg-blue-100 text-green-900 font-semibold py-2 px-4 rounded-md"
-          onClick={() => handleManageSubject()}
-        >
-          Manage Subject
-        </button>
-        <button
-          className="bg-blue-50 hover:bg-blue-100 text-green-900 font-semibold py-2 px-4 rounded-md"
+          className=" bg-green-700 hover:bg-green-500 text-white  py-2 px-4 rounded"
           onClick={handleCreateNewClass}
         >
-          Create New Subject
+        Create new Subject
         </button>
       </div>
       {/* bellow are to filter grade for displAY ON BELLOW TABLE */}
-      <div className="flex justify-end w-full">
-        <select
-          className="w-auto p-3 border border-gray-300 rounded-md mb-0"
-          value={filterGrade || ''}
-          onChange={(e) => setFilterGrade(e.target.value ? parseInt(e.target.value) : undefined)} // Correctly update state
-          name="filterGrade"
-        >
-          <option value="">Filter by Grade</option>
-          {grades.map((grade) => (
-            <option key={grade.id} value={grade.id}>
-              {grade.grade}
-            </option>
-          ))}
-        </select>
-      </div>
+
       {/* Create new subject form */}
       {showCreateForm && (
   <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -296,7 +277,7 @@ const SubjectComponent = () => {
                   ))}
                 </select>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-4">
                 <button
                     onClick={() => setShowCreateForm(false)}
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
@@ -304,10 +285,10 @@ const SubjectComponent = () => {
                     Cancel
                   </button>
                   <button
-                    className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-8 flex items-center"
+                    className="bg-green-700 hover:bg-green-500 text-white font-bold py-2 px-4 rounded"
                     onClick={handleSubmit}
                   >
-                    <SendIcon sx={{ marginRight: 1 }} />
+                    
                     Submit
                   </button>
                  
@@ -322,57 +303,70 @@ const SubjectComponent = () => {
 )}
 
       {/* Table with Paginated and Filtered Data */}
-      
-        <div className="mt-8 w-full">
-          
-          <table className="min-w-full bg-white border border-gray-300">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border-b">ID</th>
-                <th className="py-2 px-4 border-b">Subject Name</th>
-                <th className="py-2 px-4 border-b">Grade</th>
-                <th className="py-2 px-4 border-b">Teacher</th>
-                <th className="py-2 px-4 border-b">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {classData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((subject,index) => (
-                <tr key={subject.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                  <td className="py-2 px-4 border-b">{subject.id}</td>
-                  <td className="py-2 px-4 border-b">{subject.name}</td>
-                  <td className="py-2 px-4 border-b">{subject.gradelevel?.grade}</td>
-                  <td className="py-2 px-4 border-b">
-                    {subject.teacherId ? (
-                      <span>
-                        {subject.gradelevel?.teacher?.find(teacher => teacher.user.id === (subject.teacherId || 0))?.user.first_name}{' '}
-                        {subject.gradelevel?.teacher?.find(teacher => teacher.user.id === (subject.teacherId || 0))?.user.last_name}
-                      </span>
-                    ) : (
-                      <span>No teacher assigned</span>
-                    )}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    <IconButton color="primary" size="small" onClick={() => handleManageSubject(subject.id)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton color="secondary" size="small" onClick={() => handleDeleteSubject(subject.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={classData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-        </div>
+      <div className='flex flex-col w-full justify-center items-center '>
+
+      <div className="flex justify-center w-full">
+        <select
+          className="w-auto p-3 border border-gray-300 rounded-md mb-0"
+          value={filterGrade || ''}
+          onChange={(e) => setFilterGrade(e.target.value ? parseInt(e.target.value) : undefined)} // Correctly update state
+          name="filterGrade"
+        >
+          <option value="">Filter by Grade</option>
+          {grades.map((grade) => (
+            <option key={grade.id} value={grade.id}>
+              {grade.grade}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="mt-4 w-[100%] p-6 overflow-x-auto bg-white boxshadow">
+  <table className="min-w-full bg-white border border-gray-300">
+    <thead className="bg-gray-100 border-b">
+      <tr>
+        <th className="p-4  text-center">ID</th>
+        <th className="p-4  text-center">Subject Name</th>
+        <th className="p-4  text-center">Grade</th>
+        <th className="p-4  text-center">Teacher</th>
+        <th className="p-4  text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {classData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((subject, index) => (
+        <tr key={subject.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+          <td className="p-4  border-b">{subject.id}</td>
+          <td className="p-4  border-b">{subject.name}</td>
+          <td className="p-4  border-b">{subject.gradelevel?.grade}</td>
+          <td className="p-4  border-b">
+            {subject.teacherId ? (
+              <span>
+                {subject.gradelevel?.teacher?.find(teacher => teacher.user.id === (subject.teacherId || 0))?.user.first_name}{' '}
+                {subject.gradelevel?.teacher?.find(teacher => teacher.user.id === (subject.teacherId || 0))?.user.last_name}
+              </span>
+            ) : (
+              <span>No teacher assigned</span>
+            )}
+          </td>
+          <td className="py-2 flex  gap-4 px-2 border-b">
+            <button className="text-gray-700" onClick={() => handleManageSubject(subject.id)}><EditIcon/></button>
+            <button className="text-gray-700" onClick={() => handleDeleteSubject(subject.id)}><DeleteIcon/></button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <TablePagination
+    rowsPerPageOptions={[5, 10, 25]}
+    component="div"
+    count={classData.length}
+    rowsPerPage={rowsPerPage}
+    page={page}
+    onPageChange={handleChangePage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
+  />
+</div>
+
+</div>
       
    
       {/* Existing code... */}

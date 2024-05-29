@@ -7,7 +7,7 @@ import SectionComponent from "./section";
 const Page= ()=> {
     const [activeTab, setActiveTab] = useState(0);
 
-    const handleTabClick = (tabIndex) => {
+    const handleTabClick = (tabIndex:any) => {
       setActiveTab(tabIndex);
     };
     let componentToRender;
@@ -18,31 +18,22 @@ const Page= ()=> {
     }
     return (
         <Main>
-        <div className="w-full mt-1 ml-4">
-        <div className="flex border-b border-gray-300">
-          <div
-            className={`py-2 px-4 cursor-pointer ${
-              activeTab === 0
-                ? 'text-green-500 border-b-2 border-green-500 transition-all duration-300'
-                : 'text-gray-600'
-            }`}
+        <div className="w-full mt-4 flex gap-3 ml-4">
+       
+          <button
+            className="bg-green-700 hover:bg-green-500 text-white  py-2 px-4 rounded"
             onClick={() => handleTabClick(0)}
           >
             Manage class
-          </div>
-          <div
-            className={`py-2 px-4 cursor-pointer ${
-              activeTab === 1
-                ? 'text-green-500 border-b-2 border-green-500 transition-all duration-300'
-                : 'text-gray-600'
-            }`}
+          </button>
+          <button
+            className="border border-gray-700 py-2 px-4 rounded"
             onClick={() => handleTabClick(1)}
           >
             Create new class
-          </div>
+          </button>
          
-          
-        </div>
+  
       
       </div>
       {

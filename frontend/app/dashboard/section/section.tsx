@@ -162,10 +162,10 @@ const SectionComponent = () => {
               </select> */}
               {error && <p className="text-red-500 mb-4">{error}</p>}
               <button
-                className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md w-full"
+                className="bg-green-700 hover:bg-green-500 text-white  py-2 px-4 rounded"
                 onClick={handleSubmit}
               >
-                <SendIcon sx={{ marginRight: 1 }}  />
+               
                 Submit
               </button>
             </div>

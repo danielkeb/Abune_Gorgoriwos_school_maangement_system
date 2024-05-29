@@ -109,7 +109,7 @@ const ManageClass = () => {
   return (
     <div className="w-full p-8 mt-3 text-center">
       {showUpdateForm && (
-  <div className="fixed z-10 inset-0 overflow-y-auto">
+  <div className="fixed z-10 inset-0 overflow-y-auto ">
     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div className="fixed inset-0 transition-opacity" aria-hidden="true">
         <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -147,7 +147,7 @@ const ManageClass = () => {
                     onClick={handleSubmit}
                     className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-2"
                   >
-                    Update
+                    Update 
                   </button>
                   <button
                     onClick={() => setShowUpdateForm(false)}
@@ -166,8 +166,8 @@ const ManageClass = () => {
 )}
 
 
-        <div className="mt-8 w-full">
-          <table className="min-w-full bg-white border border-gray-300">
+        <div className="mt-8 w-full bg-red-700 ">
+          <table className="min-w-full border border-gray-300 ">
             <thead>
               <tr>
                 <th className="py-2 px-4 border-b">Grade ID</th>

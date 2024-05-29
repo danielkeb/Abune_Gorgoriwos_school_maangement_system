@@ -188,157 +188,107 @@ const SectionUpdate = () => {
   };
 
   return (
-    <div className="w-full p-8 mt-8 text-center ">
-      {showUpdateForm && selectedSection && (
-        <div className="fixed z-10 inset-0 overflow-y-auto ">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
-              &#8203;
-            </span>
-            <div
-              className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-              ref={popupRef}
-            >
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start">
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">Update Section</h3>
-                    <div className="mt-2 mx-auto max-w-md">
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-md mb-4 block"
-                        placeholder="Section"
-                        value={sectionName}
-                        onChange={(e) => setSectionName(e.target.value)}
-                      />
-                      <select
-                        className="w-full p-3 border border-gray-300 rounded-md mb-4"
-                        value={gradeId}
-                        onChange={(e) => setGradeId(parseInt(e.target.value))}
-                        name="gradeId"
-                      >
-                        <option value="">{selectedSection.gradelevel.grade}</option>
-                        {grades.map((grade) => (
-                          <option key={grade.id} value={grade.id}>
-                            {grade.grade}
-                          </option>
-                        ))}
-                      </select>
-                      <select
-                        className="w-full p-3 border border-gray-300 rounded-md mb-4"
-                        value={teacherId}
-                        onChange={(e) => setTeacherId(parseInt(e.target.value))}
-                        name="teacherId"
-                      >
-                        <option value="">
-                          {selectedSection.teacher.length > 0
-                            ? `${selectedSection.teacher[0].user.frist_name} ${selectedSection.teacher[0].user.last_name}`
-                            : 'Teacher not assigned'}
-                        </option>
-                        {teachers.map((teacher) => (
-                          <option key={teacher.id} value={teacher.id}>
-                            {teacher.frist_name} {teacher.last_name}
-                          </option>
-                        ))}
-                      </select>
-                      {error && <p className="text-red-500 mb-4">{error}</p>}
-                      <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button
-                          className="bg-green-500 hover:bg-blue-300 text-white font-semibold py-2 px-4 rounded-md ml-2"
-                          onClick={handleUpdateSection}
-                        >
-                          <SendIcon sx={{ marginRight: 1 }} />
-                          Update
-                        </button>
-                        <button
-                          onClick={handleManageSection}
-                          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 m-7 rounded-md"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
+    <div className="w-full p-8 text-center">
+  {showUpdateForm && selectedSection && (
+    <div className="fixed z-10 inset-0 overflow-y-auto">
+      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" ref={popupRef}>
+          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="sm:flex sm:items-start">
+              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 className="text-lg leading-6 text-center font-medium text-gray-900 mb-4">Update Section</h3>
+                <div className="mt-2 mx-auto max-w-md">
+                  <input type="text" className="w-full p-3 border border-gray-300 rounded-md mb-4 block" placeholder="Section" value={sectionName} onChange={(e) => setSectionName(e.target.value)} />
+                  <select className="w-full p-3 border border-gray-300 rounded-md mb-4" value={gradeId} onChange={(e) => setGradeId(parseInt(e.target.value))} name="gradeId">
+                    <option value="">{selectedSection.gradelevel.grade}</option>
+                    {grades.map((grade) => (
+                      <option key={grade.id} value={grade.id}>{grade.grade}</option>
+                    ))}
+                  </select>
+                  <select className="w-full p-3 border border-gray-300 rounded-md mb-4" value={teacherId} onChange={(e) => setTeacherId(parseInt(e.target.value))} name="teacherId">
+                    <option value="">{selectedSection.teacher.length > 0 ? `${selectedSection.teacher[0].user.frist_name} ${selectedSection.teacher[0].user.last_name}` : 'Teacher not assigned'}</option>
+                    {teachers.map((teacher) => (
+                      <option key={teacher.id} value={teacher.id}>{teacher.frist_name} {teacher.last_name}</option>
+                    ))}
+                  </select>
+                  {error && <p className="text-red-500 mb-4">{error}</p>}
+                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
+                    <button className="bg-green-700 hover:bg-green-500 text-white  py-2 px-4 rounded" onClick={handleUpdateSection}>
+                       Update
+                    </button>
+                    <button onClick={handleManageSection} className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md">Cancel</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
-      <div className="mt-8 w-full ">
-        <table className="min-w-full bg-white border border-gray-300">
-          {/* Table Head */}
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">ID</th>
-              <th className="py-2 px-4 border-b">Section Name</th>
-              <th className="py-2 px-4 border-b">Grade</th>
-              <th className="py-2 px-4 border-b">Teacher(s)</th>
-              <th className="py-2 px-4 border-b">Action</th>
-            </tr>
-          </thead>
-          {/* Table Body */}
-          <tbody>
-            {classData
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((section, sectionIndex) => (
-                <tr key={section.id} className={sectionIndex % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                  <td className="py-2 px-4 border-b">{section.id}</td>
-                  <td className="py-2 px-4 border-b">{section.name}</td>
-                  <td className="py-2 px-4 border-b">{section.gradelevel?.grade}</td>
-                  <td className="py-2 px-4 border-b">
-                    {section.teacher.length > 0
-                      ? section.teacher.map((teacher, teacherIndex) => (
-                          <span key={teacherIndex}>
-                            {teacher.user.frist_name} {teacher.user.last_name}
-                            {teacherIndex < section.teacher.length - 1 ? ', ' : ''}
-                          </span>
-                        ))
-                      : 'Teacher not assigned'}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    <IconButton color="primary" size="small" onClick={() => handleEdit(section.id)}>
-                      <EditIcon style={{ color: 'green' }} />
-                    </IconButton>
-                    <IconButton color="secondary" size="small" onClick={() => handleDeleteSection(section.id)}>
-                      <DeleteIcon style={{ color: 'red' }} />
-                    </IconButton>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={classData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
       </div>
-      {showModalDelete && selectedSection && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
-          <div className="bg-white rounded-lg p-8 z-10">
-            <p className="mb-4 text-xl">Are you sure you want to delete this section?</p>
-            <div className="flex justify-end">
-              <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mr-2 rounded" onClick={() => setShowModalDelete(false)}>
-                Cancel
-              </button>
-              <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" onClick={confirmDelete}>
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      <ToastContainer position="bottom-right" />
     </div>
+  )}
+
+  <div className="mt-4 w-full sm:w-4/5 mx-auto bg-white boxshadow p-6 overflow-x-auto">
+    <table className="min-w-full h-auto border-collapse border border-gray-300">
+      <thead className="bg-gray-100 border-b border-gray-300">
+        <tr>
+          <th className="p-4 text-center">ID</th>
+          <th className="p-4 text-center">Section Name</th>
+          <th className="p-4 text-center">Grade</th>
+          <th className="p-4 text-center">Teacher(s)</th>
+          <th className="p-4 text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {classData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((section, sectionIndex) => (
+          <tr key={section.id} className={sectionIndex % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+            <td className="p-4 border-b">{section.id}</td>
+            <td className="p-4 border-b">{section.name}</td>
+            <td className="p-4 border-b">{section.gradelevel?.grade}</td>
+            <td className="p-4 border-b">
+              {section.teacher.length > 0 ? section.teacher.map((teacher, teacherIndex) => (
+                <span key={teacherIndex}>{teacher.user.frist_name} {teacher.user.last_name}{teacherIndex < section.teacher.length - 1 ? ', ' : ''}</span>
+              )) : 'Teacher not assigned'}
+            </td>
+            <td className="p-4 border-b">
+              <button className="text-gray-700" onClick={() => handleEdit(section.id)}><EditIcon/></button>
+              <button className="text-gray-700" onClick={() => handleDeleteSection(section.id)}><DeleteIcon/></button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <TablePagination
+      rowsPerPageOptions={[5, 10, 25]}
+      component="div"
+      count={classData.length}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+    />
+  </div>
+
+  {showModalDelete && selectedSection && (
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-gray-900 opacity-50"></div>
+      <div className="bg-white rounded-lg p-8 z-10">
+        <p className="mb-4 text-xl">Are you sure you want to delete this section?</p>
+        <div className="flex justify-end">
+          <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mr-2 rounded" onClick={() => setShowModalDelete(false)}>Cancel</button>
+          <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" onClick={confirmDelete}>Delete</button>
+        </div>
+      </div>
+    </div>
+  )}
+
+  <ToastContainer position="bottom-right" />
+</div>
+
+
   );
 };
 

@@ -113,11 +113,11 @@ useEffect(()=>{
     <div className="w-full p-8 mt-3 text-center">
       {/* Manage class and section buttons */}
   <div className="w-full flex flex-wrap gap-4 mb-4 mx-auto relative ">
-  <button className="button-primary hover:bg-blue-100" onClick={handleManageClasses}>
+  <button className=" bg-green-700 hover:bg-green-500 text-white  py-2 px-4 rounded" onClick={handleManageClasses}>
     Manage Classes
   </button>
   <div className="line"></div>
-  <button className="button-primary hover:bg-blue-100" onClick={handleCreateNewClass}>
+  <button className="border border-gray-700 py-2 px-4 rounded" onClick={handleCreateNewClass}>
     Create New Class
   </button>
 </div>
@@ -191,46 +191,45 @@ useEffect(()=>{
 
       {/* Conditional rendering for manage classes information */}
       {manage && (
-        <div className="mt-8 w-full">
-          {/* Table content */}
-          
-          <table className="min-w-full bg-white border border-gray-300">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border-b">Grade ID</th>
-                <th className="py-2 px-4 border-b">Grade Name</th>
-                <th className="py-2 px-4 border-b">Class Type</th>
-                <th className="py-2 px-4 border-b">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(rowsPerPage > 0
-                ? classData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : classData
-              ).map((gradeLevel, index) => (
-                <tr key={gradeLevel.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                  <td className="py-2 px-4 border-b">{gradeLevel.id}</td>
-                  <td className="py-2 px-4 border-b">{gradeLevel.grade}</td>
-                  <td className="py-2 px-4 border-b">{gradeLevel.classType}</td>
-                  <td className="py-2 px-4 border-b">
-                    <IconButton color="primary" size="small" onClick={() => handleEdit(gradeLevel.id)}>
-                      <EditIcon />
-                    </IconButton>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={classData.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </div>
+        <div className="mt-8 w-full bg-white boxshadow p-6">
+  <table className="w-full h-auto border-collapse border border-gray-300">
+    <thead className="bg-gray-100 border-b border-gray-300">
+      <tr>
+        <th className="p-4 text-center">Grade ID</th>
+        <th className="p-4 text-center">Grade Name</th>
+        <th className="p-4 text-center">Class Type</th>
+        <th className="p-4 text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {(rowsPerPage > 0
+        ? classData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        : classData
+      ).map((gradeLevel, index) => (
+        <tr key={gradeLevel.id} className={index % 2 === 0 ? 'bg-white' : 'bg-white'}>
+          <td className="p-4 border-b">{gradeLevel.id}</td>
+          <td className="p-4 border-b">{gradeLevel.grade}</td>
+          <td className="p-4 border-b">{gradeLevel.classType}</td>
+          <td className="p-4 border-b">
+            <button className=" text-gray-700" onClick={() => handleEdit(gradeLevel.id)}>
+              <EditIcon/>
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <TablePagination
+    rowsPerPageOptions={[5, 10, 25]}
+    component="div"
+    count={classData.length}
+    rowsPerPage={rowsPerPage}
+    page={page}
+    onPageChange={handleChangePage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
+  />
+</div>
+
          )},
       
       <ToastContainer position="bottom-right" />
