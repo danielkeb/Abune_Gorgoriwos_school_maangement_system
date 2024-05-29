@@ -223,7 +223,7 @@ const Main: React.FC<MainProps> = ({children})=> {
               noWrap
               sx={{ flexGrow: 1, color:'black' }}
             >
-              Dashboard
+              <img src="/abglogo-removebg-preview.png" className='w-[150px] h-[60px]'  />
             </Typography>
            
             <UserBoxButton className='normal-case' ref={ref} onClick={handleOpen}>

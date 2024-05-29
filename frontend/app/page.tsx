@@ -51,7 +51,7 @@ export default function DrawerAppBar(props: Props) {
       icon: <AccessibilityOutline color="green" style={{ width: 60, height: 60 }} />,
       title: "Students",
       description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+        "Empowering over 1,200 students to achieve greatness with unwavering dedication. Shaping future leaders with knowledge, integrity, and a passion for excellence!",
     },
     {
       icon: (
@@ -62,13 +62,13 @@ export default function DrawerAppBar(props: Props) {
       ),
       title: "Employees",
       description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+        "Supporting over 150 dedicated employees in their mission to educate and inspire. Our staff is committed to excellence, innovation, and nurturing future leaders every day!",
     },
     {
       icon: <SchoolOutline color="green" style={{ width: 60, height: 60 }} />,
       title: "Branchs",
       description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores laudantium vero quod sapiente adipisci sint perferendis ut praesentium repellat amet!",
+        "Across our network of 6 branches, we are shaping minds, fostering creativity, and building a brighter future. Each branch is a beacon of education, guiding students toward success with innovation and care.",
     },
   ];
 
@@ -171,9 +171,8 @@ export default function DrawerAppBar(props: Props) {
               </span>
               <span className="text-white font-medium text-[60px]"></span>
               <span className="text-white leading-7 max-w-[500px] text-justify">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quisquam nulla ipsa unde inventore minus commodi saepe? Eos
-                cumque aliquam consequatur id optio dolorum modi quod?
+              Empowering young minds to achieve excellence through education, integrity, and community spirit.
+               Inspiring the leaders of tomorrow with knowledge and values today.
               </span>
               <div className="flex items-center gap-7 mt-5">
                 <button className="bg-green-400 px-6 py-3 text-gray-900 font-semibold rounded-full">
@@ -221,8 +220,7 @@ export default function DrawerAppBar(props: Props) {
               Our Priceless Features
             </span>
             <p className="max-w-[400px] text-center mt-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure
-              animi et quidem quis quas nisi.
+              
             </p>
           </div>
           <div className="flex md:flex-row flex-col w-full items-center justify-between md:gap-0 gap-5">
@@ -260,34 +258,31 @@ export default function DrawerAppBar(props: Props) {
               We Are Here To Bring You All The <br /> Comfort And Pleasure
             </span>
             <p className="max-w-[650px] text-gray-600 leading-7 mt-5">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur dignissimos ratione, excepturi explicabo non quasi
-              velit pariatur ipsa mollitia voluptate nemo similique recusandae,
-              doloribus porro expedita eius. Magnam, laudantium velit.
+            At Abune Gorgorious Schools, we're dedicated to providing more than just education;
+           we offer an environment where students thrive.
+            With a focus on excellence and a commitment to nurturing every individual, we aim to make learning an enjoyable and fulfilling experience.
             </p>
             <div className="flex flex-col gap-3 mt-5">
               <div className="flex items-center gap-3">
                 <CheckmarkCircleOutline color="green" />
                 <span>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Comprehensive Extracurricular Activities
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckmarkCircleOutline color="green" />
                 <span>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Cutting-Edge Educational Technology
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckmarkCircleOutline color="green" />
                 <span>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Holistic Education
                 </span>
               </div>
             </div>
-            <button className="bg-green-700 px-6 py-3 text-white font-semibold rounded-full w-[200px] mt-12 shadow-md">
-              Discover More
-            </button>
+
           </div>
         </div><br/>
         <div className="map-responsive">

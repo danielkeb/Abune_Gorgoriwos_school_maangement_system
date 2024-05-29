@@ -365,6 +365,26 @@ export class AuthService {
   async getUser(id: number, path: string) {
     const user = await this.prismaService.user.findUnique({
       where: { id: id },
+      select:{
+ 
+          frist_name: true,
+              middle_name: true,
+              last_name: true,
+              username: true,
+              email: true,
+              image: true,
+              address: true,
+              phone: true,
+              gender: true,
+              role:true,
+              date_of_birth: true,
+              school:{
+                select:{
+                  school_name:true
+                }
+              }
+        
+      }
     });
     const imageUrl = `${path}/${user.image}`;
     return { user, imageUrl };

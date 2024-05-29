@@ -159,11 +159,9 @@ const page = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.errors.username && (
-                      <small className="text-red-500 ">
-                        {formik.errors.username}
-                      </small>
-                    )}
+    {formik.touched.username && formik.errors.username ? (
+      <div className="text-red-500 text-sm">{formik.errors.username}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -183,11 +181,9 @@ const page = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.errors.middle_name && (
-                      <small className="text-red-500 ">
-                        {formik.errors.middle_name}
-                      </small>
-                    )}
+    {formik.touched.middle_name && formik.errors.middle_name ? (
+      <div className="text-red-500 text-sm">{formik.errors.middle_name}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -207,11 +203,9 @@ const page = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.errors.frist_name && (
-                      <small className="text-red-500 ">
-                        {formik.errors.frist_name}
-                      </small>
-                    )}
+    {formik.touched.frist_name && formik.errors.frist_name ? (
+      <div className="text-red-500 text-sm">{formik.errors.frist_name}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -231,11 +225,9 @@ const page = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.errors.last_name && (
-                      <small className="text-red-500 ">
-                        {formik.errors.last_name}
-                      </small>
-                    )}
+    {formik.touched.last_name && formik.errors.last_name ? (
+      <div className="text-red-500 text-sm">{formik.errors.last_name}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -259,11 +251,9 @@ const page = () => {
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
                     </select>
-                    {formik.errors.gender && (
-                      <small className="text-red-500 ">
-                        {formik.errors.gender}
-                      </small>
-                    )}
+                    {formik.touched.gender && formik.errors.gender ? (
+      <div className="text-red-500 text-sm">{formik.errors.gender}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -283,11 +273,9 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none  w-full  focus:border-2 focus:border-gray-400"
                     />
-                    {formik.errors.date_of_birth && (
-                      <small className="text-red-500 ">
-                        {formik.errors.date_of_birth}
-                      </small>
-                    )}
+                    {formik.touched.gender && formik.errors.date_of_birth ? (
+      <div className="text-red-500 text-sm">{formik.errors.date_of_birth}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -313,11 +301,9 @@ const page = () => {
                         </option>
                       ))}
                     </select>
-                    {formik.errors.gradeId && (
-                      <small className="text-red-500 ">
-                        {formik.errors.gradeId}
-                      </small>
-                    )}
+                    {formik.touched.gradeId && formik.errors.gradeId ? (
+      <div className="text-red-500 text-sm">{formik.errors.gradeId}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -343,11 +329,9 @@ const page = () => {
                         </option>
                       ))}
                     </select>
-                    {formik.errors.section && (
-                      <small className="text-red-500 ">
-                        {formik.errors.section}
-                      </small>
-                    )}
+                    {formik.touched.sectionId && formik.errors.sectionId ? (
+      <div className="text-red-500 text-sm">{formik.errors.sectionId}</div>
+    ) : null}
                   </div>
                 </div>
               </div>
@@ -373,11 +357,9 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       required
                     />
-                    {formik.errors.email && (
-                      <small className="text-red-500 ">
-                        {formik.errors.email}
-                      </small>
-                    )}
+                    {formik.touched.email && formik.errors.email ? (
+      <div className="text-red-500 text-sm">{formik.errors.email}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -398,11 +380,9 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       required
                     />
-                    {formik.errors.address && (
-                      <small className="text-red-500 ">
-                        {formik.errors.address}
-                      </small>
-                    )}
+                     {formik.touched.address && formik.errors.address ? (
+      <div className="text-red-500 text-sm">{formik.errors.address}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -423,11 +403,9 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       required
                     />
-                    {formik.errors.phone && (
-                      <small className="text-red-500 ">
-                        {formik.errors.phone}
-                      </small>
-                    )}
+                     {formik.touched.phone && formik.errors.phone ? (
+      <div className="text-red-500 text-sm">{formik.errors.phone}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -448,11 +426,9 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       required
                     />
-                    {formik.errors.careOf_contact1 && (
-                      <small className="text-red-500 ">
-                        {formik.errors.careOf_contact1}
-                      </small>
-                    )}
+                     {formik.touched.careOf_contact1 && formik.errors.careOf_contact1 ? (
+      <div className="text-red-500 text-sm">{formik.errors.careOf_contact1}</div>
+    ) : null}
                   </div>
                 </div>
 
@@ -473,11 +449,9 @@ const page = () => {
                       onBlur={formik.handleBlur}
                       
                     />
-                    {formik.errors.careOf_contact2 && (
-                      <small className="text-red-500 ">
-                        {formik.errors.careOf_contact2}
-                      </small>
-                    )}
+                     {formik.touched.careOf_contact2 && formik.errors.careOf_contact2 ? (
+      <div className="text-red-500 text-sm">{formik.errors.careOf_contact2}</div>
+    ) : null}
                   </div>
                 </div>
               </div>

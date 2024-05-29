@@ -22,9 +22,26 @@ export class EmailService {
       const mailConfigs = {
         from: this.config.get('EMAIL_ADDRESS'),
         to: email,
-        subject: 'Password reset link',
-        text: `http://localhost:3000/login/reset/pass/${id}/${token}`,
+        subject: 'Password Reset Link',
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #dddddd; border-radius: 10px;">
+          <div style="text-align: center; padding: 10px; background-color: #28a745; border-radius: 10px 10px 0 0; color: white;">
+            <h2>Password Reset Request</h2>
+          </div>
+          <div style="padding: 20px; background-color: #f9f9f9; border-radius: 0 0 10px 10px;">
+            <p>Dear User,</p>
+            <p>We received a request to reset your password for the Aubne Gorgorious School Management System account associated with this email address. You can reset your password by clicking the link below:</p>
+            <p style="text-align: center;">
+              <a href="http://localhost:3000/login/reset/pass/${id}/${token}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #28a745; border-radius: 5px; text-decoration: none;">Reset Password</a>
+            </p>
+            <p>If you did not request a password reset, please ignore this email or contact support if you have any questions.</p>
+            <p>Thank you!</p>
+            <p>Best regards,<br>Aubne Gorgorious School Management System Team</p>
+          </div>
+        </div>
+        `,
       };
+      
 
       transporter.sendMail(mailConfigs, function (error, info) {
         if (error) {

@@ -149,6 +149,7 @@ export class StudentsService {
             console.error(errorMessage);
             incompleteStudents.push(errorMessage);
             continue;
+        
           }
           // const totalScores_one = totalScores1.map(
           //   (score, index) => (score + totalScores2[index]) / 2,

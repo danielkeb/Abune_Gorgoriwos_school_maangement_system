@@ -48,6 +48,7 @@ export default function Login() {
   const param = useParams();
   // Access parameters using the `useParams` hook
   const { id, token } = param;
+
   const formik = useFormik({
     initialValues: {
       password: "",
@@ -70,7 +71,12 @@ export default function Login() {
       }
     },
     validationSchema: yup.object({
-      password: yup.string().trim().required("password is required"),
+      password: yup.string()
+      .trim().
+      required("password is required")
+      .min(6, 'Password must be at least 6 characters')
+      .matches(/[a-zA-Z]/, 'Password must contain at least one letter')
+      .matches(/\d/, 'Password must contain at least one number')
     }),
   });
   return (

@@ -44,6 +44,9 @@ export default function Login() {
 
   const router = useRouter();
   const {token, setToken, decodedToken,setDecodedToken} = React.useContext(AppContext) 
+  
+
+  
   const formik = useFormik({
     initialValues: {
       email: ''
@@ -116,7 +119,7 @@ export default function Login() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Please Enter your Email address"
                 name="email"
                 autoComplete="email"
                 autoFocus

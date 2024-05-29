@@ -61,6 +61,7 @@ const validationSchema = Yup.object({
  
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
+    .max(12,'Password must not be greater than 12 characters' )
     .matches(/[a-zA-Z]/, 'Password must contain at least one letter')
     .matches(/\d/, 'Password must contain at least one number')
 });
