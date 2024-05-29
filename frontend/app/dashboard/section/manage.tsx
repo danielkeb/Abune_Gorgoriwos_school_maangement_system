@@ -188,7 +188,7 @@ const SectionUpdate = () => {
   };
 
   return (
-    <div className="w-full p-8 mt-8 text-center ">
+    <div className="w-full text-center ">
       {showUpdateForm && selectedSection && (
         <div className="fixed z-10 inset-0 overflow-y-auto ">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -269,48 +269,63 @@ const SectionUpdate = () => {
         </div>
       )}
       <div className="mt-8 w-full ">
-        <table className="min-w-full bg-white border border-gray-300">
-          {/* Table Head */}
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">ID</th>
-              <th className="py-2 px-4 border-b">Section Name</th>
-              <th className="py-2 px-4 border-b">Grade</th>
-              <th className="py-2 px-4 border-b">Teacher(s)</th>
-              <th className="py-2 px-4 border-b">Action</th>
-            </tr>
-          </thead>
-          {/* Table Body */}
-          <tbody>
-            {classData
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((section, sectionIndex) => (
-                <tr key={section.id} className={sectionIndex % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                  <td className="py-2 px-4 border-b">{section.id}</td>
-                  <td className="py-2 px-4 border-b">{section.name}</td>
-                  <td className="py-2 px-4 border-b">{section.gradelevel?.grade}</td>
-                  <td className="py-2 px-4 border-b">
-                    {section.teacher.length > 0
-                      ? section.teacher.map((teacher, teacherIndex) => (
-                          <span key={teacherIndex}>
-                            {teacher.user.frist_name} {teacher.user.last_name}
-                            {teacherIndex < section.teacher.length - 1 ? ', ' : ''}
-                          </span>
-                        ))
-                      : 'Teacher not assigned'}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    <IconButton color="primary" size="small" onClick={() => handleEdit(section.id)}>
-                      <EditIcon style={{ color: 'green' }} />
-                    </IconButton>
-                    <IconButton color="secondary" size="small" onClick={() => handleDeleteSection(section.id)}>
-                      <DeleteIcon style={{ color: 'red' }} />
-                    </IconButton>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+      <table className="min-w-full bg-white border border-gray-300">
+    {/* Table Head */}
+    <thead>
+      <tr>
+        <th className="py-2 px-4 border-b">ID</th>
+        <th className="py-2 px-4 border-b">Section Name</th>
+        <th className="py-2 px-4 border-b">Grade</th>
+        <th className="py-2 px-4 border-b">Teacher</th>
+        <th className="py-2 px-4 border-b">Action</th>
+      </tr>
+    </thead>
+    {/* Table Body */}
+    <tbody>
+      {classData
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        .flatMap((section, sectionIndex) => {
+          const teachers = section.teacher || [];
+          if (teachers.length === 0) {
+            return (
+              <tr key={`${section.id}-no-teacher`} className={sectionIndex % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+                <td className="py-2 px-4 border-b">{section.id}</td>
+                <td className="py-2 px-4 border-b">{section.name}</td>
+                <td className="py-2 px-4 border-b">{section.gradelevel?.grade}</td>
+                <td className="py-2 px-4 border-b">Teacher not assigned</td>
+                <td className="py-2 px-4 border-b">
+                  <IconButton color="primary" size="small" onClick={() => handleEdit(section.id)}>
+                    <EditIcon style={{ color: 'green' }} />
+                  </IconButton>
+                  <IconButton color="secondary" size="small" onClick={() => handleDeleteSection(section.id)}>
+                    <DeleteIcon style={{ color: 'red' }} />
+                  </IconButton>
+                </td>
+              </tr>
+            );
+          } else {
+            return teachers.map((teacher, teacherIndex) => (
+              <tr key={`${section.id}-${teacher.user.id}`} className={sectionIndex % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+                <td className="py-2 px-4 border-b">{section.id}</td>
+                <td className="py-2 px-4 border-b">{section.name}</td>
+                <td className="py-2 px-4 border-b">{section.gradelevel?.grade}</td>
+                <td className="py-2 px-4 border-b">
+                  {teacher.user.first_name} {teacher.user.last_name}
+                </td>
+                <td className="py-2 px-4 border-b">
+                  <IconButton color="primary" size="small" onClick={() => handleEdit(section.id)}>
+                    <EditIcon style={{ color: 'green' }} />
+                  </IconButton>
+                  <IconButton color="secondary" size="small" onClick={() => handleDeleteSection(section.id)}>
+                    <DeleteIcon style={{ color: 'red' }} />
+                  </IconButton>
+                </td>
+              </tr>
+            ));
+          }
+        })}
+    </tbody>
+  </table>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
