@@ -112,7 +112,7 @@ const SectionComponent = () => {
       fetchClassData();
       
     } catch (error) {
-        toast.error('Section already exists');
+        toast.error('Section already exist');
       
     }
   };
