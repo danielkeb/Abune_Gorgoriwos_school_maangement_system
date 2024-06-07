@@ -94,6 +94,7 @@ const SectionComponent = () => {
   };
 
   const handleSubmit = async () => {
+    // If sectionName or GradeId is not  Empty  then return ;
     if (!sectionName || !gradeId) {
       setError('Please fill in all the fields');
       return;
