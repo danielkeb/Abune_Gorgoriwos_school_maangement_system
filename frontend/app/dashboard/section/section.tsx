@@ -99,6 +99,7 @@ const SectionComponent = () => {
       setError('Please fill in all the fields');
       return;
     }
+     // If sectionName or GradeId is not  Empty  then return ;
     if (!sectionName || !isNaN(sectionName)) {
       setError('Section name must be a non-integer string.');
       return;
