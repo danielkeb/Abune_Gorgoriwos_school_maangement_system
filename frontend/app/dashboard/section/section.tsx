@@ -104,7 +104,7 @@ const SectionComponent = () => {
       setError('Section name must be a non-integer string.');
       return;
     }
-  
+  // If sectionName or GradeId is not  Empty  then return ;
     try {
     const response=  await axios.post(`http://localhost:3333/section/add/${decodedToken.school_Id}`, { name: sectionName, gradeId });
     toast.success("Section added successfully");
