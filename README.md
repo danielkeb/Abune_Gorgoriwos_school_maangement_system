@@ -1,4 +1,4 @@
-# Abune Gorgoriwos school management System project
+# Abune Gorgoriwos School Management System Project
 ## About Abune gorgorios school management system
    ### __ The system has the following basic functionalities __ ###
  - Enroll students,directors and teachers in the system.
